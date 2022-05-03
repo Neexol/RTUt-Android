@@ -11,9 +11,8 @@ import okhttp3.Interceptor
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import ru.neexol.rtut.data.LessonsDataSource
 import ru.neexol.rtut.data.sources.api.API
-import ru.neexol.rtut.data.sources.api.LessonsAPIDataSource
+import ru.neexol.rtut.data.sources.api.LessonsRemoteDataSource
 import ru.neexol.rtut.domain.repositories.LessonsRepository
 import ru.neexol.rtut.domain.usecases.GetGroupLessons
 import javax.inject.Singleton
@@ -21,18 +20,20 @@ import javax.inject.Singleton
 @ExperimentalSerializationApi
 @Module
 @InstallIn(SingletonComponent::class)
-class DI {
+object DI {
 	@Provides
 	@Singleton
 	fun provideGetGroupLessons(repository: LessonsRepository) = GetGroupLessons(repository)
 
 	@Provides
 	@Singleton
-	fun provideLessonsRepository(dataSource: LessonsDataSource) = LessonsRepository(dataSource)
+	fun provideLessonsRepository(
+		remoteDataSource: LessonsRemoteDataSource
+	) = LessonsRepository(remoteDataSource)
 
 	@Provides
 	@Singleton
-	fun provideLessonsDataSource(api: API): LessonsDataSource = LessonsAPIDataSource(api)
+	fun provideLessonsRemoteDataSource(api: API) = LessonsRemoteDataSource(api)
 
 
 	@Provides

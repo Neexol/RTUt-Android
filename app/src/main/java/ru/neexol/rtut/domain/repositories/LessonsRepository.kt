@@ -1,10 +1,13 @@
 package ru.neexol.rtut.domain.repositories
 
-import ru.neexol.rtut.data.LessonsDataSource
+import ru.neexol.rtut.core.Resource
+import ru.neexol.rtut.data.sources.api.LessonsRemoteDataSource
 import javax.inject.Inject
 
 class LessonsRepository @Inject constructor(
-	private val dataSource: LessonsDataSource
+	private val remoteDataSource: LessonsRemoteDataSource
 ) {
-	suspend fun getGroupLessons() = dataSource.getGroupLessons("ИКБО-12-19").lessons
+	suspend fun getGroupLessons() = Resource.from {
+		(remoteDataSource.getGroupLessons("ИКБО-12-19") as Resource.Success).data.lessons
+	}
 }
