@@ -1,4 +1,4 @@
-package ru.neexol.rtut.core
+package ru.neexol.rtut.core.di
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
@@ -11,35 +11,18 @@ import okhttp3.Interceptor
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import ru.neexol.rtut.core.Constants
 import ru.neexol.rtut.data.sources.api.API
-import ru.neexol.rtut.data.sources.api.LessonsRemoteDataSource
-import ru.neexol.rtut.domain.repositories.LessonsRepository
-import ru.neexol.rtut.domain.usecases.GetGroupLessons
 import javax.inject.Singleton
 
-@ExperimentalSerializationApi
 @Module
 @InstallIn(SingletonComponent::class)
-object DI {
-	@Provides
-	@Singleton
-	fun provideGetGroupLessons(repository: LessonsRepository) = GetGroupLessons(repository)
-
-	@Provides
-	@Singleton
-	fun provideLessonsRepository(
-		remoteDataSource: LessonsRemoteDataSource
-	) = LessonsRepository(remoteDataSource)
-
-	@Provides
-	@Singleton
-	fun provideLessonsRemoteDataSource(api: API) = LessonsRemoteDataSource(api)
-
-
+object RemoteDI {
 	@Provides
 	@Singleton
 	fun provideApi(retrofit: Retrofit): API = retrofit.create(API::class.java)
 
+	@ExperimentalSerializationApi
 	@Provides
 	@Singleton
 	fun provideRetrofit(client: OkHttpClient): Retrofit = Retrofit.Builder()
