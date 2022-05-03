@@ -67,4 +67,7 @@ dependencies {
 
     // Serialization
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion"
+
+    // DataStore
+    implementation "androidx.datastore:datastore-preferences:$dataStoreVersion"
 }

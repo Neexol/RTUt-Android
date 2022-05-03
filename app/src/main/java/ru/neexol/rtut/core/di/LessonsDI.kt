@@ -4,8 +4,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ru.neexol.rtut.data.sources.api.API
-import ru.neexol.rtut.data.sources.api.LessonsRemoteDataSource
+import ru.neexol.rtut.data.local.LessonsLocalDataSource
+import ru.neexol.rtut.data.remote.LessonsRemoteDataSource
 import ru.neexol.rtut.domain.repositories.LessonsRepository
 import ru.neexol.rtut.domain.usecases.GetGroupLessons
 import javax.inject.Singleton
@@ -20,10 +20,7 @@ object LessonsDI {
 	@Provides
 	@Singleton
 	fun provideLessonsRepository(
+		localDataSource: LessonsLocalDataSource,
 		remoteDataSource: LessonsRemoteDataSource
-	) = LessonsRepository(remoteDataSource)
-
-	@Provides
-	@Singleton
-	fun provideLessonsRemoteDataSource(api: API) = LessonsRemoteDataSource(api)
+	) = LessonsRepository(localDataSource, remoteDataSource)
 }

@@ -1,4 +1,4 @@
-package ru.neexol.rtut.data.sources.api.models.responses
+package ru.neexol.rtut.data.remote.models
 
 import ru.neexol.rtut.domain.models.Lesson
 

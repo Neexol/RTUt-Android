@@ -12,12 +12,17 @@ import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import ru.neexol.rtut.core.Constants
-import ru.neexol.rtut.data.sources.api.API
+import ru.neexol.rtut.data.remote.API
+import ru.neexol.rtut.data.remote.LessonsRemoteDataSource
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object RemoteDI {
+	@Provides
+	@Singleton
+	fun provideLessonsRemoteDataSource(api: API) = LessonsRemoteDataSource(api)
+
 	@Provides
 	@Singleton
 	fun provideApi(retrofit: Retrofit): API = retrofit.create(API::class.java)
