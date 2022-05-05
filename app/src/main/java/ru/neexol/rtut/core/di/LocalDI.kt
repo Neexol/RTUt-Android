@@ -13,8 +13,6 @@ import dagger.hilt.components.SingletonComponent
 import ru.neexol.rtut.core.Constants
 import ru.neexol.rtut.data.local.LessonsLocalDataSource
 import ru.neexol.rtut.data.local.LessonsPrefsManager
-import ru.neexol.rtut.data.remote.API
-import ru.neexol.rtut.data.remote.LessonsRemoteDataSource
 import javax.inject.Singleton
 
 @Module

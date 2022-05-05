@@ -1,5 +1,6 @@
 package ru.neexol.rtut.presentation.grouplessons
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,11 +21,15 @@ fun GroupLessonsList(vm: GroupLessonsViewModel) {
 			)
 		}
 	) {
-		val lessons by vm.groupLessonsResource.collectAsState()
+		val lessons by vm.lessonsResource.collectAsState()
 		lessons(
 			onSuccess = {
 				LazyColumn(modifier = Modifier.fillMaxHeight()) {
-					items(it) { lesson ->
+					items(it.times) { time ->
+						Text("${time.begin} ${time.end}")
+						Divider()
+					}
+					items(it.lessons) { lesson ->
 						Text("${lesson.name} ${lesson.classroom} ${lesson.teacher}")
 						Divider()
 					}
