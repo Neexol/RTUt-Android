@@ -11,6 +11,7 @@ import okhttp3.Interceptor
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import ru.neexol.rtut.core.Constants
 import ru.neexol.rtut.data.remote.API
 import ru.neexol.rtut.data.remote.LessonsRemoteDataSource
@@ -33,6 +34,7 @@ object RemoteDI {
 	fun provideRetrofit(client: OkHttpClient): Retrofit = Retrofit.Builder()
 		.baseUrl(Constants.BASE_URL)
 		.client(client)
+		.addConverterFactory(ScalarsConverterFactory.create())
 		.addConverterFactory(Json.asConverterFactory(MediaType.get("application/json")))
 		.build()
 

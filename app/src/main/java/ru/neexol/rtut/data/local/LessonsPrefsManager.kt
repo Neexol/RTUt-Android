@@ -25,7 +25,7 @@ class LessonsPrefsManager @Inject constructor(
 	}
 
 	private suspend fun <T> get(key: Preferences.Key<T>) = dataStore.data.map { it[key] }.first()
-	suspend fun getGroup() = get(GROUP)
+	suspend fun getGroup() = get(GROUP) ?: "ИКБО-12-19"
 	suspend fun getChecksum() = get(CHECKSUM)
 	suspend fun getLessons() = get(LESSONS)?.let { Json.decodeFromString<List<Lesson>>(it) }
 	suspend fun getTimes() = get(TIMES)?.let { Json.decodeFromString<List<LessonTime>>(it) }

@@ -1,5 +1,6 @@
 package ru.neexol.rtut.domain.repositories
 
+import kotlinx.coroutines.flow.flow
 import ru.neexol.rtut.core.Resource
 import ru.neexol.rtut.data.local.LessonsLocalDataSource
 import ru.neexol.rtut.data.remote.LessonsRemoteDataSource
@@ -9,11 +10,22 @@ class LessonsRepository @Inject constructor(
 	private val localDataSource: LessonsLocalDataSource,
 	private val remoteDataSource: LessonsRemoteDataSource
 ) {
-	private companion object {
-		const val GROUP = "ИКБО-12-19"
-	}
+	suspend fun getGroupLessons() = flow {
+		localDataSource.getLessons()?.let {
+			emit(Resource.Success(it))
+		}
 
-	suspend fun getGroupLessons() = Resource.from {
-		(remoteDataSource.getGroupLessons(GROUP) as Resource.Success).data.lessons
+		try {
+			val group = localDataSource.getGroup()
+			if (localDataSource.getChecksum() != remoteDataSource.getGroupChecksum(group)) {
+				localDataSource.putGroupLessons(remoteDataSource.getGroupLessons(group))
+			}
+		} catch (t: Throwable) {
+			emit(Resource.Error(Exception("Не удалось синхронизировать расписание")))
+		} finally {
+			localDataSource.getLessons()?.let {
+				emit(Resource.Success(it))
+			}
+		}
 	}
 }

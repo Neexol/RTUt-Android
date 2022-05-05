@@ -63,6 +63,7 @@ dependencies {
 
     // Retrofit2
     implementation "com.squareup.retrofit2:retrofit:$retrofit2Version"
+    implementation "com.squareup.retrofit2:converter-scalars:$retrofit2Version"
     implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$retrofit2ConverterVersion"
 
     // Serialization
