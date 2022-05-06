@@ -8,4 +8,5 @@ class LessonsRemoteDataSource @Inject constructor(
 	suspend fun getGroupLessons(group: String) = api.getGroupLessons(group).toGroupLessons()
 	suspend fun getGroupChecksum(group: String) = api.getGroupChecksum(group)
 	suspend fun getTimes() = api.getTimes().map { it.toLessonTime() }
+	suspend fun getTeacherLessons(teacher: String) = api.getTeacherLessons(teacher).map { it.toLesson() }
 }

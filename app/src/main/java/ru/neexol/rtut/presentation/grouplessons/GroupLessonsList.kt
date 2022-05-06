@@ -132,13 +132,20 @@ fun GroupLessonsList(vm: GroupLessonsViewModel) {
 					.fillMaxSize()
 					.padding(16.dp)
 			) {
-				val lessonsWithTimesResource by vm.lessonsResource.collectAsState()
-				(lessonsWithTimesResource as? Resource.Success)?.let { res ->
-					val lessons = res.data.lessons.filter {
+				val lessonsResource by vm.lessonsResource.collectAsState()
+				val times by vm.times.collectAsState()
+				(lessonsResource as? Resource.Success)?.let { res ->
+					val lessons = res.data.filter {
 						weekPagerState.currentPage + 1 in it.weeks && it.day == day
 					}
 					lessons.forEach {
-						Text("${it.name} ${it.teacher}")
+						Row {
+							Column {
+								Text(times[it.number].begin)
+								Text(times[it.number].end)
+							}
+							Text("${it.name} ${it.teacher}")
+						}
 						Divider()
 					}
 				}

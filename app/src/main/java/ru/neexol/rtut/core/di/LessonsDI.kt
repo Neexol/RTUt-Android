@@ -8,11 +8,16 @@ import ru.neexol.rtut.data.local.LessonsLocalDataSource
 import ru.neexol.rtut.data.remote.LessonsRemoteDataSource
 import ru.neexol.rtut.domain.repositories.LessonsRepository
 import ru.neexol.rtut.domain.usecases.GetGroupLessons
+import ru.neexol.rtut.domain.usecases.GetTeacherLessons
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object LessonsDI {
+	@Provides
+	@Singleton
+	fun provideGetTeacherLessons(repository: LessonsRepository) = GetTeacherLessons(repository)
+
 	@Provides
 	@Singleton
 	fun provideGetGroupLessons(repository: LessonsRepository) = GetGroupLessons(repository)
