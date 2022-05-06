@@ -7,6 +7,7 @@ buildscript {
         coreVersion = '1.7.0'
         lifecycleRuntimeVersion = '2.4.1'
         activityComposeVersion = '1.4.0'
+        navigationVersion = '2.4.2'
         hiltVersion = '2.41'
         retrofit2Version = '2.9.0'
         retrofit2ConverterVersion = '0.8.0'

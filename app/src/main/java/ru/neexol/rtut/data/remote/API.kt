@@ -3,6 +3,7 @@ package ru.neexol.rtut.data.remote
 import retrofit2.http.GET
 import retrofit2.http.Query
 import ru.neexol.rtut.data.remote.models.GroupLessonsResponse
+import ru.neexol.rtut.data.remote.models.LessonResponse
 import ru.neexol.rtut.data.remote.models.LessonTimeResponse
 
 interface API {
@@ -14,4 +15,7 @@ interface API {
 
 	@GET("/api/schedule/times")
 	suspend fun getTimes(): List<LessonTimeResponse>
+
+	@GET("/api/schedule")
+	suspend fun getTeacherLessons(@Query("teacher") teacher: String): List<LessonResponse>
 }
