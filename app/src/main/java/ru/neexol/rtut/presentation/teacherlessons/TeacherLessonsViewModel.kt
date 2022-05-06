@@ -24,16 +24,14 @@ class TeacherLessonsViewModel @Inject constructor(
 	private val getTeacherLessonsUseCase: GetTeacherLessons,
 	private val getTimesUseCase: GetTimes
 ) : ViewModel() {
-	init {
-		viewModelScope.launch(Dispatchers.IO) {
-			_times.emit(getTimesUseCase())
-		}
-	}
-
 	private val _lessonsResource = MutableStateFlow<Resource<List<Lesson>>>(Resource.Success(emptyList()))
 	val lessonsResource = _lessonsResource.asStateFlow()
 
-	private val _times = MutableStateFlow(Constants.DEFAULT_TIMES)
+	private val _times = MutableStateFlow(Constants.DEFAULT_TIMES).apply {
+		viewModelScope.launch(Dispatchers.IO) {
+			emit(getTimesUseCase())
+		}
+	}
 	val times = _times.asStateFlow()
 
 	var teacher by mutableStateOf("")

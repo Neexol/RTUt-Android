@@ -55,10 +55,12 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleRuntimeVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleRuntimeVersion"
     implementation "androidx.activity:activity-compose:$activityComposeVersion"
+    implementation "androidx.navigation:navigation-compose:$navigationVersion"
     debugImplementation "androidx.compose.ui:ui-tooling:$composeVersion"
 
     // Hilt
     implementation "com.google.dagger:hilt-android:$hiltVersion"
+    implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
     kapt "com.google.dagger:hilt-compiler:$hiltVersion"
 
     // Retrofit2

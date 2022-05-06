@@ -9,6 +9,7 @@ import ru.neexol.rtut.data.remote.LessonsRemoteDataSource
 import ru.neexol.rtut.domain.repositories.LessonsRepository
 import ru.neexol.rtut.domain.usecases.GetGroupLessons
 import ru.neexol.rtut.domain.usecases.GetTeacherLessons
+import ru.neexol.rtut.domain.usecases.GetTimes
 import javax.inject.Singleton
 
 @Module
@@ -21,6 +22,10 @@ object LessonsDI {
 	@Provides
 	@Singleton
 	fun provideGetGroupLessons(repository: LessonsRepository) = GetGroupLessons(repository)
+
+	@Provides
+	@Singleton
+	fun provideGetTimes(localDataSource: LessonsLocalDataSource) = GetTimes(localDataSource)
 
 	@Provides
 	@Singleton
