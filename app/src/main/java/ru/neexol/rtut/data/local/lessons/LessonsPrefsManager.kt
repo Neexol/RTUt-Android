@@ -9,10 +9,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import ru.neexol.rtut.core.Constants
-import ru.neexol.rtut.domain.models.GroupLessons
-import ru.neexol.rtut.domain.models.Lesson
-import ru.neexol.rtut.domain.models.LessonTime
+import ru.neexol.rtut.domain.lessons.models.DEFAULT_TIMES
+import ru.neexol.rtut.domain.lessons.models.GroupLessons
+import ru.neexol.rtut.domain.lessons.models.Lesson
+import ru.neexol.rtut.domain.lessons.models.LessonTime
 import javax.inject.Inject
 
 class LessonsPrefsManager @Inject constructor(
@@ -32,7 +32,7 @@ class LessonsPrefsManager @Inject constructor(
 	suspend fun getTimes() = get(TIMES)?.let {
 		Json.decodeFromString<List<LessonTime>>(it)
 	} ?: run {
-		Constants.DEFAULT_TIMES
+		DEFAULT_TIMES
 	}
 
 	private suspend fun <T> put(key: Preferences.Key<T>, value: T) {

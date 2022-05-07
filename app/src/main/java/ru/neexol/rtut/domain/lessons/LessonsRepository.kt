@@ -1,4 +1,4 @@
-package ru.neexol.rtut.domain.repositories
+package ru.neexol.rtut.domain.lessons
 
 import kotlinx.coroutines.flow.flow
 import ru.neexol.rtut.core.Resource

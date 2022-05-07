@@ -1,4 +1,4 @@
-package ru.neexol.rtut.domain.models
+package ru.neexol.rtut.domain.lessons.models
 
 @kotlinx.serialization.Serializable
 data class Lesson(

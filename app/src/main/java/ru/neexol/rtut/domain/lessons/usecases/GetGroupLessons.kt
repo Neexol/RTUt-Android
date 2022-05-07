@@ -1,6 +1,6 @@
-package ru.neexol.rtut.domain.usecases
+package ru.neexol.rtut.domain.lessons.usecases
 
-import ru.neexol.rtut.domain.repositories.LessonsRepository
+import ru.neexol.rtut.domain.lessons.LessonsRepository
 import javax.inject.Inject
 
 class GetGroupLessons @Inject constructor(

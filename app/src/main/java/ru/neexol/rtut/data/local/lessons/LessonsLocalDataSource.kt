@@ -1,7 +1,7 @@
 package ru.neexol.rtut.data.local.lessons
 
-import ru.neexol.rtut.domain.models.GroupLessons
-import ru.neexol.rtut.domain.models.LessonTime
+import ru.neexol.rtut.domain.lessons.models.GroupLessons
+import ru.neexol.rtut.domain.lessons.models.LessonTime
 import javax.inject.Inject
 
 class LessonsLocalDataSource @Inject constructor(

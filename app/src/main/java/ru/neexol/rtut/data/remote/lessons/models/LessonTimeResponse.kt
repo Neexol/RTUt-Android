@@ -1,6 +1,6 @@
 package ru.neexol.rtut.data.remote.lessons.models
 
-import ru.neexol.rtut.domain.models.LessonTime
+import ru.neexol.rtut.domain.lessons.models.LessonTime
 
 @kotlinx.serialization.Serializable
 data class LessonTimeResponse(

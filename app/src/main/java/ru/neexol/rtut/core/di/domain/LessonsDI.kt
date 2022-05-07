@@ -6,10 +6,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import ru.neexol.rtut.data.local.lessons.LessonsLocalDataSource
 import ru.neexol.rtut.data.remote.lessons.LessonsRemoteDataSource
-import ru.neexol.rtut.domain.repositories.LessonsRepository
-import ru.neexol.rtut.domain.usecases.GetGroupLessons
-import ru.neexol.rtut.domain.usecases.GetTeacherLessons
-import ru.neexol.rtut.domain.usecases.GetTimes
+import ru.neexol.rtut.domain.lessons.LessonsRepository
+import ru.neexol.rtut.domain.lessons.usecases.GetGroupLessons
+import ru.neexol.rtut.domain.lessons.usecases.GetTeacherLessons
+import ru.neexol.rtut.domain.lessons.usecases.GetTimes
 import javax.inject.Singleton
 
 @Module

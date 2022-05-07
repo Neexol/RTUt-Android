@@ -1,4 +1,4 @@
-package ru.neexol.rtut.domain.usecases
+package ru.neexol.rtut.domain.lessons.usecases
 
 import ru.neexol.rtut.data.local.lessons.LessonsLocalDataSource
 import javax.inject.Inject

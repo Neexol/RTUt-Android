@@ -1,6 +1,6 @@
 package ru.neexol.rtut.data.remote.lessons.models
 
-import ru.neexol.rtut.domain.models.GroupLessons
+import ru.neexol.rtut.domain.lessons.models.GroupLessons
 
 @kotlinx.serialization.Serializable
 data class GroupLessonsResponse(
