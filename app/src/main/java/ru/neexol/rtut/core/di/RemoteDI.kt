@@ -7,13 +7,13 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
-import okhttp3.Interceptor
 import okhttp3.MediaType
-import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import retrofit2.create
 import ru.neexol.rtut.core.Constants
-import ru.neexol.rtut.data.remote.API
+import ru.neexol.rtut.core.di.annotations.LessonsRetrofit
+import ru.neexol.rtut.data.remote.LessonsAPI
 import ru.neexol.rtut.data.remote.LessonsRemoteDataSource
 import javax.inject.Singleton
 
@@ -22,33 +22,19 @@ import javax.inject.Singleton
 object RemoteDI {
 	@Provides
 	@Singleton
-	fun provideLessonsRemoteDataSource(api: API) = LessonsRemoteDataSource(api)
+	fun provideLessonsRemoteDataSource(api: LessonsAPI) = LessonsRemoteDataSource(api)
 
 	@Provides
 	@Singleton
-	fun provideApi(retrofit: Retrofit): API = retrofit.create(API::class.java)
+	fun provideLessonsApi(@LessonsRetrofit retrofit: Retrofit): LessonsAPI = retrofit.create()
 
 	@ExperimentalSerializationApi
+	@LessonsRetrofit
 	@Provides
 	@Singleton
-	fun provideRetrofit(client: OkHttpClient): Retrofit = Retrofit.Builder()
-		.baseUrl(Constants.BASE_URL)
-		.client(client)
+	fun provideLessonsRetrofit(): Retrofit = Retrofit.Builder()
+		.baseUrl(Constants.LESSONS_URL)
 		.addConverterFactory(ScalarsConverterFactory.create())
 		.addConverterFactory(Json.asConverterFactory(MediaType.get("application/json")))
 		.build()
-
-	@Provides
-	@Singleton
-	fun provideOkHttpClient(interceptor: Interceptor): OkHttpClient = OkHttpClient().newBuilder()
-		.addInterceptor(interceptor)
-		.build()
-
-	@Provides
-	@Singleton
-	fun provideInterceptor() = Interceptor {
-		val requestBuilder = it.request().newBuilder()
-		// requestBuilder.addHeader(name ,  value)
-		it.proceed(requestBuilder.build())
-	}
 }

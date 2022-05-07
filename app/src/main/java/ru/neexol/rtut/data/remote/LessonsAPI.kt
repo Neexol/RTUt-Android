@@ -6,16 +6,16 @@ import ru.neexol.rtut.data.remote.models.GroupLessonsResponse
 import ru.neexol.rtut.data.remote.models.LessonResponse
 import ru.neexol.rtut.data.remote.models.LessonTimeResponse
 
-interface API {
-	@GET("api/schedule")
+interface LessonsAPI {
+	@GET
 	suspend fun getGroupLessons(@Query("group") group: String): GroupLessonsResponse
 
-	@GET("api/schedule/checksum")
+	@GET
+	suspend fun getTeacherLessons(@Query("teacher") teacher: String): List<LessonResponse>
+
+	@GET("/checksum")
 	suspend fun getGroupChecksum(@Query("group") group: String): String
 
-	@GET("/api/schedule/times")
+	@GET("/times")
 	suspend fun getTimes(): List<LessonTimeResponse>
-
-	@GET("/api/schedule")
-	suspend fun getTeacherLessons(@Query("teacher") teacher: String): List<LessonResponse>
 }
