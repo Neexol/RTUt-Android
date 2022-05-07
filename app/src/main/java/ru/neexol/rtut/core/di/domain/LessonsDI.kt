@@ -1,4 +1,4 @@
-package ru.neexol.rtut.core.di
+package ru.neexol.rtut.core.di.domain
 
 import dagger.Module
 import dagger.Provides
@@ -17,20 +17,26 @@ import javax.inject.Singleton
 object LessonsDI {
 	@Provides
 	@Singleton
-	fun provideGetTeacherLessons(repository: LessonsRepository) = GetTeacherLessons(repository)
+	fun provideGetGroupLessons(
+		repository: LessonsRepository
+	): GetGroupLessons = GetGroupLessons(repository)
 
 	@Provides
 	@Singleton
-	fun provideGetGroupLessons(repository: LessonsRepository) = GetGroupLessons(repository)
+	fun provideGetTeacherLessons(
+		repository: LessonsRepository
+	): GetTeacherLessons = GetTeacherLessons(repository)
 
 	@Provides
 	@Singleton
-	fun provideGetTimes(localDataSource: LessonsLocalDataSource) = GetTimes(localDataSource)
+	fun provideGetTimes(
+		localDataSource: LessonsLocalDataSource
+	): GetTimes = GetTimes(localDataSource)
 
 	@Provides
 	@Singleton
-	fun provideLessonsRepository(
+	fun provideRepository(
 		localDataSource: LessonsLocalDataSource,
 		remoteDataSource: LessonsRemoteDataSource
-	) = LessonsRepository(localDataSource, remoteDataSource)
+	): LessonsRepository = LessonsRepository(localDataSource, remoteDataSource)
 }

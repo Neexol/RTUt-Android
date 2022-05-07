@@ -1,4 +1,4 @@
-package ru.neexol.rtut.core.di
+package ru.neexol.rtut.core.di.data.local
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -17,24 +17,24 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object LocalDI {
+object LessonsLocalDI {
 	@Provides
 	@Singleton
-	fun provideLessonsLocalDataSource(
+	fun provideDataSource(
 		manager: LessonsPrefsManager
-	) = LessonsLocalDataSource(manager)
+	): LessonsLocalDataSource = LessonsLocalDataSource(manager)
 
 	@Provides
 	@Singleton
-	fun provideLessonsPrefsManager(
+	fun providePrefsManager(
 		dataStore: DataStore<Preferences>
-	) = LessonsPrefsManager(dataStore)
+	): LessonsPrefsManager = LessonsPrefsManager(dataStore)
 
 	@Provides
 	@Singleton
-	fun provideLessonsPrefs(
+	fun provideDataStore(
 		@ApplicationContext context: Context
-	) = PreferenceDataStoreFactory.create(
+	): DataStore<Preferences> = PreferenceDataStoreFactory.create(
 		produceFile = { context.preferencesDataStoreFile(Constants.LESSONS_PREFS_NAME) }
 	)
 }

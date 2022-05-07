@@ -1,4 +1,4 @@
-package ru.neexol.rtut.core.di
+package ru.neexol.rtut.core.di.data.remote
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
@@ -19,20 +19,24 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object RemoteDI {
+object LessonsRemoteDI {
 	@Provides
 	@Singleton
-	fun provideLessonsRemoteDataSource(api: LessonsAPI) = LessonsRemoteDataSource(api)
+	fun provideDataSource(
+		api: LessonsAPI
+	): LessonsRemoteDataSource = LessonsRemoteDataSource(api)
 
 	@Provides
 	@Singleton
-	fun provideLessonsApi(@LessonsRetrofit retrofit: Retrofit): LessonsAPI = retrofit.create()
+	fun provideApi(
+		@LessonsRetrofit retrofit: Retrofit
+	): LessonsAPI = retrofit.create()
 
 	@ExperimentalSerializationApi
 	@LessonsRetrofit
 	@Provides
 	@Singleton
-	fun provideLessonsRetrofit(): Retrofit = Retrofit.Builder()
+	fun provideRetrofit(): Retrofit = Retrofit.Builder()
 		.baseUrl(Constants.LESSONS_URL)
 		.addConverterFactory(ScalarsConverterFactory.create())
 		.addConverterFactory(Json.asConverterFactory(MediaType.get("application/json")))
