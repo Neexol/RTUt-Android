@@ -1,4 +1,4 @@
-package ru.neexol.rtut.data.local.lessons
+package ru.neexol.rtut.data.lessons.local
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -9,10 +9,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import ru.neexol.rtut.domain.lessons.models.DEFAULT_TIMES
-import ru.neexol.rtut.domain.lessons.models.GroupLessons
-import ru.neexol.rtut.domain.lessons.models.Lesson
-import ru.neexol.rtut.domain.lessons.models.LessonTime
+import ru.neexol.rtut.data.lessons.models.DEFAULT_TIMES
+import ru.neexol.rtut.data.lessons.models.GroupLessons
+import ru.neexol.rtut.data.lessons.models.Lesson
+import ru.neexol.rtut.data.lessons.models.LessonTime
 import javax.inject.Inject
 
 class LessonsPrefsManager @Inject constructor(

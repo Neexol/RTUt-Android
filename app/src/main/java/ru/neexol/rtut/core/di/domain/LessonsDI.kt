@@ -4,8 +4,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ru.neexol.rtut.data.local.lessons.LessonsLocalDataSource
-import ru.neexol.rtut.data.remote.lessons.LessonsRemoteDataSource
+import ru.neexol.rtut.data.lessons.local.LessonsLocalDataSource
+import ru.neexol.rtut.data.lessons.remote.LessonsRemoteDataSource
 import ru.neexol.rtut.domain.lessons.LessonsRepository
 import ru.neexol.rtut.domain.lessons.usecases.GetGroupLessons
 import ru.neexol.rtut.domain.lessons.usecases.GetTeacherLessons

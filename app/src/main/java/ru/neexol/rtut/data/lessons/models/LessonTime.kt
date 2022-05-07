@@ -1,4 +1,4 @@
-package ru.neexol.rtut.domain.lessons.models
+package ru.neexol.rtut.data.lessons.models
 
 @kotlinx.serialization.Serializable
 data class LessonTime(

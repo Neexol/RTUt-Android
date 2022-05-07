@@ -72,7 +72,7 @@ fun MainContainer() {
 			}
 		}
 	) { innerPadding ->
-		NavHost(navController, Screen.Teacher.route, Modifier.padding(innerPadding)) {
+		NavHost(navController, Screen.Group.route, Modifier.padding(innerPadding)) {
 			composable(Screen.Group.route) { GroupLessonsScreen(hiltViewModel()) }
 			composable(Screen.Teacher.route) { TeacherLessonsScreen(hiltViewModel()) }
 		}

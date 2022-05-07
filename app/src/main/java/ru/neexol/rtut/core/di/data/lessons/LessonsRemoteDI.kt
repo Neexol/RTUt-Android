@@ -1,4 +1,4 @@
-package ru.neexol.rtut.core.di.data.remote
+package ru.neexol.rtut.core.di.data.lessons
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
@@ -13,8 +13,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.create
 import ru.neexol.rtut.core.Constants
 import ru.neexol.rtut.core.di.annotations.LessonsRetrofit
-import ru.neexol.rtut.data.remote.lessons.LessonsAPI
-import ru.neexol.rtut.data.remote.lessons.LessonsRemoteDataSource
+import ru.neexol.rtut.data.lessons.remote.LessonsAPI
+import ru.neexol.rtut.data.lessons.remote.LessonsRemoteDataSource
 import javax.inject.Singleton
 
 @Module

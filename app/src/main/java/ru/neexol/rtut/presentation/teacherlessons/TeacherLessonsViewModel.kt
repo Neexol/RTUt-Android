@@ -12,8 +12,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.neexol.rtut.core.Resource
-import ru.neexol.rtut.domain.lessons.models.DEFAULT_TIMES
-import ru.neexol.rtut.domain.lessons.models.Lesson
+import ru.neexol.rtut.data.lessons.models.DEFAULT_TIMES
+import ru.neexol.rtut.data.lessons.models.Lesson
 import ru.neexol.rtut.domain.lessons.usecases.GetTeacherLessons
 import ru.neexol.rtut.domain.lessons.usecases.GetTimes
 import javax.inject.Inject

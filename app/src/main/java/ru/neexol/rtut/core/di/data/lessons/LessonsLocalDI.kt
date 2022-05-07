@@ -1,4 +1,4 @@
-package ru.neexol.rtut.core.di.data.local
+package ru.neexol.rtut.core.di.data.lessons
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -11,8 +11,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ru.neexol.rtut.core.Constants
-import ru.neexol.rtut.data.local.lessons.LessonsLocalDataSource
-import ru.neexol.rtut.data.local.lessons.LessonsPrefsManager
+import ru.neexol.rtut.data.lessons.local.LessonsLocalDataSource
+import ru.neexol.rtut.data.lessons.local.LessonsPrefsManager
 import javax.inject.Singleton
 
 @Module
