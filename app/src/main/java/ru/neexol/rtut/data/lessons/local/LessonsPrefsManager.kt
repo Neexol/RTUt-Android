@@ -2,13 +2,12 @@ package ru.neexol.rtut.data.lessons.local
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import ru.neexol.rtut.core.Utils.get
+import ru.neexol.rtut.core.Utils.put
 import ru.neexol.rtut.data.lessons.models.DEFAULT_TIMES
 import ru.neexol.rtut.data.lessons.models.GroupLessons
 import ru.neexol.rtut.data.lessons.models.Lesson
@@ -25,26 +24,22 @@ class LessonsPrefsManager @Inject constructor(
 		val TIMES = stringPreferencesKey("times")
 	}
 
-	private suspend fun <T> get(key: Preferences.Key<T>) = dataStore.data.map { it[key] }.first()
-	suspend fun getGroup() = get(GROUP) ?: "ИКБО-12-19"
-	suspend fun getChecksum() = get(CHECKSUM)
-	suspend fun getLessons() = get(LESSONS)?.let { Json.decodeFromString<List<Lesson>>(it) }
-	suspend fun getTimes() = get(TIMES)?.let {
+	suspend fun getGroup() = dataStore.get(GROUP) ?: "ИКБО-12-19"
+	suspend fun getChecksum() = dataStore.get(CHECKSUM)
+	suspend fun getLessons() = dataStore.get(LESSONS)?.let {
+		Json.decodeFromString<List<Lesson>>(it)
+	} ?: emptyList()
+	suspend fun getTimes() = dataStore.get(TIMES)?.let {
 		Json.decodeFromString<List<LessonTime>>(it)
-	} ?: run {
-		DEFAULT_TIMES
-	}
+	} ?: DEFAULT_TIMES
 
-	private suspend fun <T> put(key: Preferences.Key<T>, value: T) {
-		dataStore.edit { it[key] = value }
-	}
-	private suspend fun putGroup(group: String) = put(GROUP, group)
-	private suspend fun putChecksum(checksum: String) = put(CHECKSUM, checksum)
-	private suspend fun putLessons(lessons: List<Lesson>) = put(LESSONS, Json.encodeToString(lessons))
+	private suspend fun putGroup(group: String) = dataStore.put(GROUP, group)
+	private suspend fun putChecksum(checksum: String) = dataStore.put(CHECKSUM, checksum)
+	private suspend fun putLessons(lessons: List<Lesson>) = dataStore.put(LESSONS, Json.encodeToString(lessons))
 	suspend fun putGroupLessons(groupLessons: GroupLessons) = groupLessons.apply {
 		putGroup(group)
 		putChecksum(checksum)
 		putLessons(lessons)
 	}
-	suspend fun putTimes(times: List<LessonTime>)  = put(TIMES, Json.encodeToString(times))
+	suspend fun putTimes(times: List<LessonTime>) = dataStore.put(TIMES, Json.encodeToString(times))
 }

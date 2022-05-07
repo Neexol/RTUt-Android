@@ -13,9 +13,9 @@ interface LessonsAPI {
 	@GET("/api/schedule")
 	suspend fun getTeacherLessons(@Query("teacher") teacher: String): List<Lesson>
 
-	@GET("checksum")
+	@GET("/api/schedule/checksum")
 	suspend fun getGroupChecksum(@Query("group") group: String): String
 
-	@GET("times")
+	@GET("/api/schedule/times")
 	suspend fun getTimes(): List<LessonTime>
 }
