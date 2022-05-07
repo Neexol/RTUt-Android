@@ -1,6 +1,6 @@
 package ru.neexol.rtut.domain.usecases
 
-import ru.neexol.rtut.data.local.LessonsLocalDataSource
+import ru.neexol.rtut.data.local.lessons.LessonsLocalDataSource
 import javax.inject.Inject
 
 class GetTimes @Inject constructor(

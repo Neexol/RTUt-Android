@@ -2,8 +2,8 @@ package ru.neexol.rtut.domain.repositories
 
 import kotlinx.coroutines.flow.flow
 import ru.neexol.rtut.core.Resource
-import ru.neexol.rtut.data.local.LessonsLocalDataSource
-import ru.neexol.rtut.data.remote.LessonsRemoteDataSource
+import ru.neexol.rtut.data.local.lessons.LessonsLocalDataSource
+import ru.neexol.rtut.data.remote.lessons.LessonsRemoteDataSource
 import javax.inject.Inject
 
 class LessonsRepository @Inject constructor(

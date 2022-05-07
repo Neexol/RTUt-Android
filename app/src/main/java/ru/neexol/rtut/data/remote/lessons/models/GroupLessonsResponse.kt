@@ -1,4 +1,4 @@
-package ru.neexol.rtut.data.remote.models
+package ru.neexol.rtut.data.remote.lessons.models
 
 import ru.neexol.rtut.domain.models.GroupLessons
 

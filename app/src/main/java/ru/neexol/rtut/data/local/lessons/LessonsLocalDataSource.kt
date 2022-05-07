@@ -1,4 +1,4 @@
-package ru.neexol.rtut.data.local
+package ru.neexol.rtut.data.local.lessons
 
 import ru.neexol.rtut.domain.models.GroupLessons
 import ru.neexol.rtut.domain.models.LessonTime

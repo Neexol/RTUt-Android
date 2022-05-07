@@ -1,4 +1,4 @@
-package ru.neexol.rtut.data.remote
+package ru.neexol.rtut.data.remote.lessons
 
 import javax.inject.Inject
 

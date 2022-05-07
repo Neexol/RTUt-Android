@@ -1,4 +1,4 @@
-package ru.neexol.rtut.data.local
+package ru.neexol.rtut.data.local.lessons
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences

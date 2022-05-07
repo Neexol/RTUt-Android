@@ -13,8 +13,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.create
 import ru.neexol.rtut.core.Constants
 import ru.neexol.rtut.core.di.annotations.LessonsRetrofit
-import ru.neexol.rtut.data.remote.LessonsAPI
-import ru.neexol.rtut.data.remote.LessonsRemoteDataSource
+import ru.neexol.rtut.data.remote.lessons.LessonsAPI
+import ru.neexol.rtut.data.remote.lessons.LessonsRemoteDataSource
 import javax.inject.Singleton
 
 @Module

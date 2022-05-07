@@ -1,10 +1,10 @@
-package ru.neexol.rtut.data.remote
+package ru.neexol.rtut.data.remote.lessons
 
 import retrofit2.http.GET
 import retrofit2.http.Query
-import ru.neexol.rtut.data.remote.models.GroupLessonsResponse
-import ru.neexol.rtut.data.remote.models.LessonResponse
-import ru.neexol.rtut.data.remote.models.LessonTimeResponse
+import ru.neexol.rtut.data.remote.lessons.models.GroupLessonsResponse
+import ru.neexol.rtut.data.remote.lessons.models.LessonResponse
+import ru.neexol.rtut.data.remote.lessons.models.LessonTimeResponse
 
 interface LessonsAPI {
 	@GET

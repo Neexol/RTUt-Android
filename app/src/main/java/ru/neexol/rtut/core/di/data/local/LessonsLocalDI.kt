@@ -11,8 +11,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import ru.neexol.rtut.core.Constants
-import ru.neexol.rtut.data.local.LessonsLocalDataSource
-import ru.neexol.rtut.data.local.LessonsPrefsManager
+import ru.neexol.rtut.data.local.lessons.LessonsLocalDataSource
+import ru.neexol.rtut.data.local.lessons.LessonsPrefsManager
 import javax.inject.Singleton
 
 @Module
