@@ -7,9 +7,9 @@ import dagger.hilt.components.SingletonComponent
 import ru.neexol.rtut.data.lessons.local.LessonsLocalDataSource
 import ru.neexol.rtut.data.lessons.remote.LessonsRemoteDataSource
 import ru.neexol.rtut.domain.lessons.LessonsRepository
-import ru.neexol.rtut.domain.lessons.usecases.GetGroupLessons
-import ru.neexol.rtut.domain.lessons.usecases.GetTeacherLessons
-import ru.neexol.rtut.domain.lessons.usecases.GetTimes
+import ru.neexol.rtut.domain.lessons.usecases.GetGroupLessonsUseCase
+import ru.neexol.rtut.domain.lessons.usecases.GetTeacherLessonsUseCase
+import ru.neexol.rtut.domain.lessons.usecases.GetTimesUseCase
 import javax.inject.Singleton
 
 @Module
@@ -17,21 +17,21 @@ import javax.inject.Singleton
 object LessonsDI {
 	@Provides
 	@Singleton
-	fun provideGetGroupLessons(
+	fun provideGetGroupLessonsUseCase(
 		repository: LessonsRepository
-	): GetGroupLessons = GetGroupLessons(repository)
+	): GetGroupLessonsUseCase = GetGroupLessonsUseCase(repository)
 
 	@Provides
 	@Singleton
-	fun provideGetTeacherLessons(
+	fun provideGetTeacherLessonsUseCase(
 		repository: LessonsRepository
-	): GetTeacherLessons = GetTeacherLessons(repository)
+	): GetTeacherLessonsUseCase = GetTeacherLessonsUseCase(repository)
 
 	@Provides
 	@Singleton
-	fun provideGetTimes(
+	fun provideGetTimesUseCase(
 		localDataSource: LessonsLocalDataSource
-	): GetTimes = GetTimes(localDataSource)
+	): GetTimesUseCase = GetTimesUseCase(localDataSource)
 
 	@Provides
 	@Singleton

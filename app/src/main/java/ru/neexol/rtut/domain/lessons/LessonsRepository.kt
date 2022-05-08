@@ -1,7 +1,14 @@
 package ru.neexol.rtut.domain.lessons
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
-import ru.neexol.rtut.core.Resource
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onCompletion
+import ru.neexol.rtut.core.Utils.emitError
+import ru.neexol.rtut.core.Utils.emitLoading
+import ru.neexol.rtut.core.Utils.emitSuccess
+import ru.neexol.rtut.core.Utils.resourceFlowOf
 import ru.neexol.rtut.data.lessons.local.LessonsLocalDataSource
 import ru.neexol.rtut.data.lessons.remote.LessonsRemoteDataSource
 import javax.inject.Inject
@@ -10,26 +17,21 @@ class LessonsRepository @Inject constructor(
 	private val localDataSource: LessonsLocalDataSource,
 	private val remoteDataSource: LessonsRemoteDataSource
 ) {
-	suspend fun getGroupLessons() = flow {
-		localDataSource.getLessons()?.let {
-			emit(Resource.Success(it))
+	fun getGroupLessons() = flow {
+		emitLoading()
+		emitSuccess(localDataSource.getLessons())
+		val group = localDataSource.getGroup()
+		if (localDataSource.getChecksum() != remoteDataSource.getGroupChecksum(group)) {
+			localDataSource.putGroupLessons(remoteDataSource.getGroupLessons(group))
+			localDataSource.putTimes(remoteDataSource.getTimes())
 		}
-		try {
-			val group = localDataSource.getGroup()
-			if (localDataSource.getChecksum() != remoteDataSource.getGroupChecksum(group)) {
-				localDataSource.putGroupLessons(remoteDataSource.getGroupLessons(group))
-				localDataSource.putTimes(remoteDataSource.getTimes())
-			}
-		} catch (t: Throwable) {
-			emit(Resource.Error(Exception("Не удалось синхронизировать расписание")))
-		} finally {
-			localDataSource.getLessons()?.let {
-				emit(Resource.Success(it))
-			}
-		}
-	}
+	}.catch {
+		emitError(it)
+	}.onCompletion {
+		emitSuccess(localDataSource.getLessons())
+	}.flowOn(Dispatchers.IO)
 
-	suspend fun getTeacherLessons(teacher: String) = Resource.from {
+	fun getTeacherLessons(teacher: String) = resourceFlowOf {
 		remoteDataSource.getTeacherLessons(teacher)
-	}
+	}.flowOn(Dispatchers.IO)
 }
