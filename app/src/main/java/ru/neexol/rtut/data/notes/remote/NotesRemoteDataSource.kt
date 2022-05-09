@@ -6,7 +6,7 @@ import javax.inject.Inject
 class NotesRemoteDataSource @Inject constructor(
 	private val api: NotesAPI
 ) {
-	suspend fun getNotes(lessonId: String, week: Int, authorId: String) = api.getNotes(lessonId, week, authorId)
+	suspend fun getNotes(lessonId: String, week: String, authorId: String) = api.getNotes(lessonId, week, authorId)
 	suspend fun putNote(noteId: String?, note: PutNote) = api.putNote(noteId ?: "", note)
 	suspend fun deleteNote(noteId: String, authorId: String) = api.deleteNote(noteId, authorId)
 

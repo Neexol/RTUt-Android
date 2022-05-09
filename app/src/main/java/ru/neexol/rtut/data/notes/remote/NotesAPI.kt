@@ -8,7 +8,7 @@ interface NotesAPI {
 	@GET("/api/notes")
 	suspend fun getNotes(
 		@Query("lessonId") lessonId: String,
-		@Query("week") week: Int,
+		@Query("week") week: String,
 		@Query("authorId") authorId: String
 	): List<Note>
 
