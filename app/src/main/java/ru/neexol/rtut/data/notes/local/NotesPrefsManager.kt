@@ -15,6 +15,5 @@ class NotesPrefsManager @Inject constructor(
 	}
 
 	suspend fun getAuthor() = dataStore.get(AUTHOR)
-
 	suspend fun putAuthor(author: String) = dataStore.put(AUTHOR, author)
 }
