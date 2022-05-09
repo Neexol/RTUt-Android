@@ -1,0 +1,45 @@
+package ru.neexol.rtut.data.lessons.local
+
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.stringPreferencesKey
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import ru.neexol.rtut.core.Utils.get
+import ru.neexol.rtut.core.Utils.put
+import ru.neexol.rtut.data.lessons.models.DEFAULT_TIMES
+import ru.neexol.rtut.data.lessons.models.GroupLessons
+import ru.neexol.rtut.data.lessons.models.Lesson
+import ru.neexol.rtut.data.lessons.models.LessonTime
+import javax.inject.Inject
+
+class LessonsPrefsManager @Inject constructor(
+	private val dataStore: DataStore<Preferences>
+) {
+	private companion object {
+		val GROUP = stringPreferencesKey("group")
+		val CHECKSUM = stringPreferencesKey("checksum")
+		val LESSONS = stringPreferencesKey("lessons")
+		val TIMES = stringPreferencesKey("times")
+	}
+
+	suspend fun getGroup() = dataStore.get(GROUP) ?: "ИКБО-12-19"
+	suspend fun getChecksum() = dataStore.get(CHECKSUM)
+	suspend fun getLessons() = dataStore.get(LESSONS)?.let {
+		Json.decodeFromString<List<Lesson>>(it)
+	} ?: emptyList()
+	suspend fun getTimes() = dataStore.get(TIMES)?.let {
+		Json.decodeFromString<List<LessonTime>>(it)
+	} ?: DEFAULT_TIMES
+
+	private suspend fun putGroup(group: String) = dataStore.put(GROUP, group)
+	private suspend fun putChecksum(checksum: String) = dataStore.put(CHECKSUM, checksum)
+	private suspend fun putLessons(lessons: List<Lesson>) = dataStore.put(LESSONS, Json.encodeToString(lessons))
+	suspend fun putGroupLessons(groupLessons: GroupLessons) = groupLessons.apply {
+		putGroup(group)
+		putChecksum(checksum)
+		putLessons(lessons)
+	}
+	suspend fun putTimes(times: List<LessonTime>) = dataStore.put(TIMES, Json.encodeToString(times))
+}

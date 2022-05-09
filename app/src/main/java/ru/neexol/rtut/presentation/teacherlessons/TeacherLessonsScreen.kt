@@ -72,8 +72,8 @@ fun TeacherLessonsScreen(vm: TeacherLessonsViewModel) {
 			)
 		}
 		TextField(
-			value = vm.teacher,
-			onValueChange = { vm.teacher = it.trimStart() },
+			value = vm.teacherState,
+			onValueChange = { vm.teacherState = it.trimStart() },
 			label = { Text("Teacher") },
 			singleLine = true,
 			keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
