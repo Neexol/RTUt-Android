@@ -77,4 +77,9 @@ dependencies {
     // Accompanist
     implementation "com.google.accompanist:accompanist-pager:$accompanistVersion"
 //    implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion"
+
+    // Coil
+    implementation "io.coil-kt:coil:$coilVersion"
+    implementation "io.coil-kt:coil-compose:$coilVersion"
+    implementation "io.coil-kt:coil-svg:$coilVersion"
 }
