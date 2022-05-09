@@ -7,7 +7,6 @@ import javax.inject.Inject
 
 class GetAuthorUseCase @Inject constructor(
 	private val repository: NotesRepository
-) : FlowUseCase<Resource<String>>() {
-	init { launch() }
+) : FlowUseCase<Resource<String>>(true) {
 	override fun performAction() = repository.getAuthor()
 }

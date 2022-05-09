@@ -8,7 +8,6 @@ import javax.inject.Inject
 
 class GetGroupLessonsUseCase @Inject constructor(
 	private val repository: LessonsRepository
-) : FlowUseCase<Resource<List<Lesson>>>() {
-	init { launch() }
+) : FlowUseCase<Resource<List<Lesson>>>(true) {
 	override fun performAction() = repository.getGroupLessons()
 }

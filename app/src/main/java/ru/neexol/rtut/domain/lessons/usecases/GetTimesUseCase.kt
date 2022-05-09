@@ -8,9 +8,6 @@ import javax.inject.Inject
 
 class GetTimesUseCase @Inject constructor(
 	private val localDataSource: LessonsLocalDataSource
-) : FlowUseCase<List<LessonTime>>() {
-	init {
-		launch()
-	}
+) : FlowUseCase<List<LessonTime>>(true) {
 	override fun performAction() = flow { emit(localDataSource.getTimes()) }
 }
