@@ -8,6 +8,8 @@ class LessonsLocalDataSource @Inject constructor(
 	private val manager: LessonsPrefsManager
 ) {
 	suspend fun getGroup() = manager.getGroup()
+	suspend fun putGroup(group: String) = manager.putGroup(group)
+
 	suspend fun getChecksum() = manager.getChecksum()
 	suspend fun getLessons() = manager.getLessons()
 	suspend fun putGroupLessons(groupLessons: GroupLessons) = manager.run {

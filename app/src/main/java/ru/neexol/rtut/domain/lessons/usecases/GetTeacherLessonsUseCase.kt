@@ -15,7 +15,5 @@ class GetTeacherLessonsUseCase @Inject constructor(
 
 	override fun performAction(init: GetTeacherLessonsParams.() -> Unit) = GetTeacherLessonsParams()
 		.apply(init)
-		.run {
-			repository.getTeacherLessons(teacher)
-		}
+		.run { repository.getTeacherLessons(teacher) }
 }

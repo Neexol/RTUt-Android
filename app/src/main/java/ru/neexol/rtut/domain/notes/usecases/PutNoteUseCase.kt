@@ -21,7 +21,5 @@ class PutNoteUseCase @Inject constructor(
 
 	override fun performAction(init: PutNoteParams.() -> Unit) = PutNoteParams()
 		.apply(init)
-		.run {
-			repository.putNote(noteId, text, lessonId, weeks, authorId, type)
-		}
+		.run { repository.putNote(noteId, text, lessonId, weeks, authorId, type) }
 }

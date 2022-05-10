@@ -33,4 +33,11 @@ class LessonsRepository @Inject constructor(
 	fun getTeacherLessons(teacher: String) = resourceFlowOf {
 		remoteDataSource.getTeacherLessons(teacher)
 	}.flowOn(Dispatchers.IO)
+
+	fun editGroup(group: String) = resourceFlowOf {
+		group.also {
+			remoteDataSource.getGroupChecksum(it)
+			localDataSource.putGroup(it)
+		}
+	}.flowOn(Dispatchers.IO)
 }

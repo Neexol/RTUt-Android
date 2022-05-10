@@ -22,8 +22,9 @@ object NotesDI {
 	@Provides
 	@Singleton
 	fun provideEditAuthorUseCase(
-		repository: NotesRepository
-	): EditAuthorUseCase = EditAuthorUseCase(repository)
+		repository: NotesRepository,
+		getAuthorUseCase: GetAuthorUseCase
+	): EditAuthorUseCase = EditAuthorUseCase(repository, getAuthorUseCase)
 
 	@Provides
 	@Singleton
