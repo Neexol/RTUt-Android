@@ -10,8 +10,12 @@ class LessonsLocalDataSource @Inject constructor(
 	suspend fun getGroup() = manager.getGroup()
 	suspend fun getChecksum() = manager.getChecksum()
 	suspend fun getLessons() = manager.getLessons()
-	suspend fun getTimes() = manager.getTimes()
+	suspend fun putGroupLessons(groupLessons: GroupLessons) = manager.run {
+		putGroup(groupLessons.group)
+		putChecksum(groupLessons.checksum)
+		putLessons(groupLessons.lessons)
+	}
 
-	suspend fun putGroupLessons(groupLessons: GroupLessons) = manager.putGroupLessons(groupLessons)
+	suspend fun getTimes() = manager.getTimes()
 	suspend fun putTimes(times: List<LessonTime>) = manager.putTimes(times)
 }

@@ -4,7 +4,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.onCompletion
 import ru.neexol.rtut.core.Utils.emitError
 import ru.neexol.rtut.core.Utils.emitLoading
 import ru.neexol.rtut.core.Utils.emitSuccess
@@ -24,10 +23,10 @@ class LessonsRepository @Inject constructor(
 		if (localDataSource.getChecksum() != remoteDataSource.getGroupChecksum(group)) {
 			localDataSource.putGroupLessons(remoteDataSource.getGroupLessons(group))
 			localDataSource.putTimes(remoteDataSource.getTimes())
+			emitSuccess(localDataSource.getLessons())
 		}
 	}.catch {
 		emitError(it)
-	}.onCompletion {
 		emitSuccess(localDataSource.getLessons())
 	}.flowOn(Dispatchers.IO)
 
