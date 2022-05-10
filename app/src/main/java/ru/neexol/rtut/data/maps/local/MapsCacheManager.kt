@@ -10,11 +10,15 @@ import javax.inject.Inject
 class MapsCacheManager @Inject constructor(
 	private val context: Context
 ) {
+	init { File(context.cacheDir, "maps").mkdir() }
+
+	private fun mapFile(fileName: String) = File(context.cacheDir, "maps/$fileName")
+
 	suspend fun getMap(fileName: String) = withContext(Dispatchers.IO) {
-		File(context.cacheDir, fileName).takeIf { it.exists() }?.toString()
+		mapFile(fileName).takeIf { it.exists() }?.toString()
 	}
 	suspend fun putMap(fileName: String, input: InputStream) = withContext(Dispatchers.IO) {
-		File(context.cacheDir, fileName).apply {
+		mapFile(fileName).apply {
 			input.use {
 				outputStream().use {
 					input.copyTo(it)
