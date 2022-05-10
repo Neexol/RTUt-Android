@@ -19,13 +19,13 @@ class TeacherLessonsViewModel @Inject constructor(
 	private val getTeacherLessonsUseCase: GetTeacherLessonsUseCase,
 	getTimesUseCase: GetTimesUseCase
 ) : ViewModel() {
-	val lessonsResource = getTeacherLessonsUseCase.resultFlow.stateIn(
+	val lessonsResourceFlow = getTeacherLessonsUseCase.resultFlow.stateIn(
 		viewModelScope,
 		SharingStarted.Eagerly,
 		Resource.Success(emptyList())
 	)
 
-	val times = getTimesUseCase.resultFlow.stateIn(
+	val timesFlow = getTimesUseCase.resultFlow.stateIn(
 		viewModelScope,
 		SharingStarted.Eagerly,
 		DEFAULT_TIMES

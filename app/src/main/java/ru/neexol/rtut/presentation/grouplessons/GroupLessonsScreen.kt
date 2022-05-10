@@ -132,8 +132,8 @@ fun GroupLessonsScreen(vm: GroupLessonsViewModel) {
 					.fillMaxSize()
 					.padding(16.dp)
 			) {
-				val lessonsResource by vm.lessonsResource.collectAsState()
-				val times by vm.times.collectAsState()
+				val lessonsResource by vm.lessonsResourceFlow.collectAsState()
+				val times by vm.timesFlow.collectAsState()
 				(lessonsResource as? Resource.Success)?.let { res ->
 					val lessons = res.data.filter {
 						weekPagerState.currentPage + 1 in it.weeks && it.day == day

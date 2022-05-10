@@ -16,13 +16,13 @@ class GroupLessonsViewModel @Inject constructor(
 	getGroupLessonsUseCase: GetGroupLessonsUseCase,
 	getTimesUseCase: GetTimesUseCase
 ) : ViewModel() {
-	val lessonsResource = getGroupLessonsUseCase.resultFlow.stateIn(
+	val lessonsResourceFlow = getGroupLessonsUseCase.resultFlow.stateIn(
 		viewModelScope,
 		SharingStarted.Eagerly,
 		Resource.Loading
 	)
 
-	val times = getTimesUseCase.resultFlow.stateIn(
+	val timesFlow = getTimesUseCase.resultFlow.stateIn(
 		viewModelScope,
 		SharingStarted.Eagerly,
 		DEFAULT_TIMES
