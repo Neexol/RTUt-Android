@@ -2,9 +2,11 @@ package ru.neexol.rtut.data.notes.remote
 
 import ru.neexol.rtut.data.notes.models.PutNote
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class NotesRemoteDataSource @Inject constructor(
-	private val api: NotesAPI
+	private val api: NotesApi
 ) {
 	suspend fun getNotes(lessonId: String, week: String, authorId: String) = api.getNotes(lessonId, week, authorId)
 	suspend fun putNote(noteId: String?, note: PutNote) = api.putNote(noteId ?: "", note)

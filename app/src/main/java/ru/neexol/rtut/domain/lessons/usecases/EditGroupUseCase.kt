@@ -5,7 +5,9 @@ import ru.neexol.rtut.core.DataFlowUseCase
 import ru.neexol.rtut.core.Resource
 import ru.neexol.rtut.domain.lessons.LessonsRepository
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class EditGroupUseCase @Inject constructor(
 	private val repository: LessonsRepository,
 	private val getGroupUseCase: GetGroupUseCase,

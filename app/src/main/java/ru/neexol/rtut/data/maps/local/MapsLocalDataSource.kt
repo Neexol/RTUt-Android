@@ -3,7 +3,9 @@ package ru.neexol.rtut.data.maps.local
 import ru.neexol.rtut.data.maps.models.MapsInfo
 import java.io.InputStream
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class MapsLocalDataSource @Inject constructor(
 	private val prefsManager: MapsPrefsManager,
 	private val cacheManager: MapsCacheManager

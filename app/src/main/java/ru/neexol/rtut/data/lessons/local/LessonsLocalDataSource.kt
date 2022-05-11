@@ -3,7 +3,9 @@ package ru.neexol.rtut.data.lessons.local
 import ru.neexol.rtut.data.lessons.models.GroupLessons
 import ru.neexol.rtut.data.lessons.models.LessonTime
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class LessonsLocalDataSource @Inject constructor(
 	private val manager: LessonsPrefsManager
 ) {

@@ -11,7 +11,9 @@ import ru.neexol.rtut.core.Utils.resourceFlowOf
 import ru.neexol.rtut.data.lessons.local.LessonsLocalDataSource
 import ru.neexol.rtut.data.lessons.remote.LessonsRemoteDataSource
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class LessonsRepository @Inject constructor(
 	private val localDataSource: LessonsLocalDataSource,
 	private val remoteDataSource: LessonsRemoteDataSource

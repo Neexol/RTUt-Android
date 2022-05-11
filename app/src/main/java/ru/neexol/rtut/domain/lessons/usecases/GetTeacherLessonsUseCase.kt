@@ -5,7 +5,9 @@ import ru.neexol.rtut.core.Resource
 import ru.neexol.rtut.data.lessons.models.Lesson
 import ru.neexol.rtut.domain.lessons.LessonsRepository
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class GetTeacherLessonsUseCase @Inject constructor(
 	private val repository: LessonsRepository
 ) : DataFlowUseCase<Resource<List<Lesson>>, GetTeacherLessonsUseCase.GetTeacherLessonsParams>() {

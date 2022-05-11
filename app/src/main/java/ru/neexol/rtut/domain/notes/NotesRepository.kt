@@ -8,7 +8,9 @@ import ru.neexol.rtut.data.notes.models.NoteType
 import ru.neexol.rtut.data.notes.models.PutNote
 import ru.neexol.rtut.data.notes.remote.NotesRemoteDataSource
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class NotesRepository @Inject constructor(
 	private val localDataSource: NotesLocalDataSource,
 	private val remoteDataSource: NotesRemoteDataSource
