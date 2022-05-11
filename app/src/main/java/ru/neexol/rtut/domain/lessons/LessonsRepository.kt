@@ -11,7 +11,9 @@ import ru.neexol.rtut.core.Utils.resourceFlowOf
 import ru.neexol.rtut.data.lessons.local.LessonsLocalDataSource
 import ru.neexol.rtut.data.lessons.remote.LessonsRemoteDataSource
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class LessonsRepository @Inject constructor(
 	private val localDataSource: LessonsLocalDataSource,
 	private val remoteDataSource: LessonsRemoteDataSource
@@ -32,5 +34,12 @@ class LessonsRepository @Inject constructor(
 
 	fun getTeacherLessons(teacher: String) = resourceFlowOf {
 		remoteDataSource.getTeacherLessons(teacher)
+	}.flowOn(Dispatchers.IO)
+
+	fun editGroup(group: String) = resourceFlowOf {
+		group.also {
+			remoteDataSource.getGroupChecksum(it)
+			localDataSource.putGroup(it)
+		}
 	}.flowOn(Dispatchers.IO)
 }

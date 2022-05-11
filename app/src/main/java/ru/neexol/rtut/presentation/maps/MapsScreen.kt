@@ -18,7 +18,7 @@ fun MapsScreen(vm: MapsViewModel) {
 		}
 		.build()
 
-	val mapsRes by vm.mapsResource.collectAsState()
+	val mapsRes by vm.mapsResourceFlow.collectAsState()
 	mapsRes(
 		onSuccess = {
 			LazyColumn {

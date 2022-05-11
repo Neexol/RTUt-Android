@@ -1,14 +1,17 @@
 package ru.neexol.rtut.data.maps.local
 
 import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.InputStream
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class MapsCacheManager @Inject constructor(
-	private val context: Context
+	@ApplicationContext private val context: Context
 ) {
 	init { File(context.cacheDir, "maps").mkdir() }
 

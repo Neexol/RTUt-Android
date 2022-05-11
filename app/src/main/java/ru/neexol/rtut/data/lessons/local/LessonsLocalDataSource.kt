@@ -3,11 +3,15 @@ package ru.neexol.rtut.data.lessons.local
 import ru.neexol.rtut.data.lessons.models.GroupLessons
 import ru.neexol.rtut.data.lessons.models.LessonTime
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class LessonsLocalDataSource @Inject constructor(
 	private val manager: LessonsPrefsManager
 ) {
 	suspend fun getGroup() = manager.getGroup()
+	suspend fun putGroup(group: String) = manager.putGroup(group)
+
 	suspend fun getChecksum() = manager.getChecksum()
 	suspend fun getLessons() = manager.getLessons()
 	suspend fun putGroupLessons(groupLessons: GroupLessons) = manager.run {

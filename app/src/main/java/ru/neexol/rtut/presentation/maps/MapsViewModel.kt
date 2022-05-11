@@ -13,7 +13,7 @@ import javax.inject.Inject
 class MapsViewModel @Inject constructor(
 	getMapsUseCase: GetMapsUseCase
 ) : ViewModel() {
-	val mapsResource = getMapsUseCase.resultFlow.stateIn(
+	val mapsResourceFlow = getMapsUseCase.resultFlow.stateIn(
 		viewModelScope,
 		SharingStarted.Eagerly,
 		Resource.Loading

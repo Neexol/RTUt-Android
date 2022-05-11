@@ -16,7 +16,5 @@ class GetNotesUseCase @Inject constructor(
 
 	override fun performAction(init: GetNotesParams.() -> Unit) = GetNotesParams()
 		.apply(init)
-		.run {
-			repository.getNotes(lessonId, week)
-		}
+		.run { repository.getNotes(lessonId, week) }
 }

@@ -8,11 +8,14 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.neexol.rtut.core.Utils.get
 import ru.neexol.rtut.core.Utils.put
+import ru.neexol.rtut.core.di.annotations.MapsDataStore
 import ru.neexol.rtut.data.maps.models.MapsInfo
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class MapsPrefsManager @Inject constructor(
-	private val dataStore: DataStore<Preferences>
+	@MapsDataStore private val dataStore: DataStore<Preferences>
 ) {
 	private companion object {
 		val MAPS_INFO = stringPreferencesKey("info")

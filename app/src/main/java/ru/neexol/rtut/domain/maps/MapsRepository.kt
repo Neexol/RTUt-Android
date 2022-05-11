@@ -13,7 +13,9 @@ import ru.neexol.rtut.core.Utils.emitSuccess
 import ru.neexol.rtut.data.maps.local.MapsLocalDataSource
 import ru.neexol.rtut.data.maps.remote.MapsRemoteDataSource
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class MapsRepository @Inject constructor(
 	private val localDataSource: MapsLocalDataSource,
 	private val remoteDataSource: MapsRemoteDataSource

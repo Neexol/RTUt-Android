@@ -14,7 +14,5 @@ class DeleteNoteUseCase @Inject constructor(
 
 	override fun performAction(init: DeleteNoteParams.() -> Unit) = DeleteNoteParams()
 		.apply(init)
-		.run {
-			repository.deleteNote(noteId)
-		}
+		.run { repository.deleteNote(noteId) }
 }

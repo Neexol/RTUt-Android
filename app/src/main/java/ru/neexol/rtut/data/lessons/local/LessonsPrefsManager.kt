@@ -8,13 +8,16 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.neexol.rtut.core.Utils.get
 import ru.neexol.rtut.core.Utils.put
+import ru.neexol.rtut.core.di.annotations.LessonsDataStore
 import ru.neexol.rtut.data.lessons.models.DEFAULT_TIMES
 import ru.neexol.rtut.data.lessons.models.Lesson
 import ru.neexol.rtut.data.lessons.models.LessonTime
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class LessonsPrefsManager @Inject constructor(
-	private val dataStore: DataStore<Preferences>
+	@LessonsDataStore private val dataStore: DataStore<Preferences>
 ) {
 	private companion object {
 		val GROUP = stringPreferencesKey("group")
