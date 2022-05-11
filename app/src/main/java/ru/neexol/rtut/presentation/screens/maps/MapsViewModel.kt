@@ -1,4 +1,4 @@
-package ru.neexol.rtut.presentation.maps
+package ru.neexol.rtut.presentation.screens.maps
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

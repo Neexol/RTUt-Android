@@ -1,4 +1,4 @@
-package ru.neexol.rtut.presentation.maps
+package ru.neexol.rtut.presentation.screens.maps
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items

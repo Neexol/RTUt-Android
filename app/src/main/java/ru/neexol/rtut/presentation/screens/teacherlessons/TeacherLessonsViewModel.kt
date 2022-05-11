@@ -1,4 +1,4 @@
-package ru.neexol.rtut.presentation.teacherlessons
+package ru.neexol.rtut.presentation.screens.teacherlessons
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

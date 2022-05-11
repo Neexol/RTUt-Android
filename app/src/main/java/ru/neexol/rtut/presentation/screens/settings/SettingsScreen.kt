@@ -1,4 +1,4 @@
-package ru.neexol.rtut.presentation.settings
+package ru.neexol.rtut.presentation.screens.settings
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.text.KeyboardActions

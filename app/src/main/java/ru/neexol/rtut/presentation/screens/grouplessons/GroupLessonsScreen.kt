@@ -1,4 +1,4 @@
-package ru.neexol.rtut.presentation.grouplessons
+package ru.neexol.rtut.presentation.screens.grouplessons
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
