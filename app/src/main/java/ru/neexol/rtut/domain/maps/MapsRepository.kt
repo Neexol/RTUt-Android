@@ -7,7 +7,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import ru.neexol.rtut.core.Utils.emitError
+import ru.neexol.rtut.core.Utils.emitFailure
 import ru.neexol.rtut.core.Utils.emitLoading
 import ru.neexol.rtut.core.Utils.emitSuccess
 import ru.neexol.rtut.data.maps.local.MapsLocalDataSource
@@ -40,7 +40,7 @@ class MapsRepository @Inject constructor(
 			}
 		}
 	}.catch {
-		emitError(it)
+		emitFailure(it)
 		localDataSource.getMaps()?.also { maps ->
 			emitSuccess(maps)
 		}

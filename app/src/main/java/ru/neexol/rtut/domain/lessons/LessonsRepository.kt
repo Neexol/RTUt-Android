@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import ru.neexol.rtut.core.Utils.emitError
+import ru.neexol.rtut.core.Utils.emitFailure
 import ru.neexol.rtut.core.Utils.emitLoading
 import ru.neexol.rtut.core.Utils.emitSuccess
 import ru.neexol.rtut.core.Utils.resourceFlowOf
@@ -56,7 +56,7 @@ class LessonsRepository @Inject constructor(
 			emitSuccess(localDataSource.getLessons())
 		}
 	}.catch {
-		emitError(it)
+		emitFailure(it)
 		emitSuccess(localDataSource.getLessons())
 	}.map {
 		it.map(::organizedGroupLessons)

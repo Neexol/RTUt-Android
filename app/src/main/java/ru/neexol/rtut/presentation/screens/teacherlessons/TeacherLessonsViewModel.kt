@@ -7,9 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
-import ru.neexol.rtut.core.Resource
-import ru.neexol.rtut.data.lessons.models.DEFAULT_TIMES
 import ru.neexol.rtut.domain.lessons.usecases.GetTeacherLessonsUseCase
 import ru.neexol.rtut.domain.lessons.usecases.GetTimesUseCase
 import javax.inject.Inject
@@ -19,16 +18,19 @@ class TeacherLessonsViewModel @Inject constructor(
 	private val getTeacherLessonsUseCase: GetTeacherLessonsUseCase,
 	getTimesUseCase: GetTimesUseCase
 ) : ViewModel() {
-	val lessonsResourceFlow = getTeacherLessonsUseCase.resultFlow.stateIn(
+	val uiStateFlow = combine(
+		getTeacherLessonsUseCase.resultFlow,
+		getTimesUseCase.resultFlow
+	) { lessonsResource, times ->
+		lessonsResource?.to(
+			onSuccess = { TeacherLessonsUiState(times = times, lessons = it) },
+			onFailure = { TeacherLessonsUiState(times = times, message = "Не удалось загрузить расписание") },
+			onLoading = { TeacherLessonsUiState(times = times, isLessonsLoading = true) }
+		) ?: TeacherLessonsUiState(times = times)
+	}.stateIn(
 		viewModelScope,
 		SharingStarted.Eagerly,
-		Resource.Loading
-	)
-
-	val timesFlow = getTimesUseCase.resultFlow.stateIn(
-		viewModelScope,
-		SharingStarted.Eagerly,
-		DEFAULT_TIMES
+		TeacherLessonsUiState()
 	)
 
 	var teacherState by mutableStateOf("")

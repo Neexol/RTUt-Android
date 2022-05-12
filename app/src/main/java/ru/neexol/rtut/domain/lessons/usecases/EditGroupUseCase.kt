@@ -20,9 +20,11 @@ class EditGroupUseCase @Inject constructor(
 	override fun performAction(init: EditGroupParams.() -> Unit) = EditGroupParams()
 		.apply(init)
 		.run {
-			repository.editGroup(group).onCompletion {
-				getGroupUseCase.launch()
-				getGroupLessonsUseCase.launch()
+			repository.editGroup(group).onCompletion { cause ->
+				cause ?: run {
+					getGroupUseCase.launch()
+					getGroupLessonsUseCase.launch()
+				}
 			}
 		}
 }

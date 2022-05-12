@@ -9,6 +9,6 @@ import javax.inject.Singleton
 @Singleton
 class GetGroupUseCase @Inject constructor(
 	private val dataSource: LessonsLocalDataSource
-) : FlowUseCase<String>(true) {
+) : FlowUseCase<String>() {
 	override fun performAction() = flow { emit(dataSource.getGroup()) }
 }

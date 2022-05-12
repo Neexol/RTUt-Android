@@ -19,7 +19,6 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
-import ru.neexol.rtut.core.Resource
 import java.math.BigDecimal
 
 @OptIn(ExperimentalPagerApi::class)
@@ -132,9 +131,10 @@ fun GroupLessonsScreen(vm: GroupLessonsViewModel) {
 					.fillMaxSize()
 					.padding(16.dp)
 			) {
-				val lessonsResource by vm.lessonsResourceFlow.collectAsState()
-				val times by vm.timesFlow.collectAsState()
-				(lessonsResource as? Resource.Success)?.data?.let { lessons ->
+				val uiState by vm.uiStateFlow.collectAsState()
+				val (lessons, isLessonsLoading, times, message) = uiState
+
+				if (lessons != null && times != null) {
 					lessons[weekPagerState.currentPage][day].forEachIndexed { index, lesson ->
 						Row {
 							Column {

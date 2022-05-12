@@ -1,16 +1,13 @@
 package ru.neexol.rtut.core
 
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.receiveAsFlow
 
-abstract class FlowUseCase<T>(launchOnInit: Boolean = false) {
-	private val trigger = Channel<Unit>(Channel.CONFLATED)
-	fun launch() { trigger.trySend(Unit) }
+abstract class FlowUseCase<T> {
+	private val trigger = MutableStateFlow(true)
+	fun launch() { trigger.tryEmit(!trigger.value) }
 
-	val resultFlow: Flow<T> = trigger.receiveAsFlow().flatMapLatest { performAction() }
+	val resultFlow = trigger.flatMapLatest { performAction() }
 	protected abstract fun performAction() : Flow<T>
-
-	init { if (launchOnInit) launch() }
 }

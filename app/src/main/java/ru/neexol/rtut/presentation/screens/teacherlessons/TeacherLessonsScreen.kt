@@ -27,7 +27,6 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
-import ru.neexol.rtut.core.Resource
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalComposeUiApi::class)
 @Composable
@@ -82,9 +81,10 @@ fun TeacherLessonsScreen(vm: TeacherLessonsViewModel) {
 				keyboardController?.hide()
 			}
 		)
-		val lessonsResource by vm.lessonsResourceFlow.collectAsState()
-		val times by vm.timesFlow.collectAsState()
-		(lessonsResource as? Resource.Success)?.data?.let { lessons ->
+		val uiState by vm.uiStateFlow.collectAsState()
+		val (lessons, isLessonsLoading, times, message) = uiState
+
+		if (lessons != null && times != null) {
 			LazyColumn {
 				itemsIndexed(lessons[weekPagerState.currentPage]) { day, dayLessons ->
 					if (dayLessons.isNotEmpty()) {

@@ -15,12 +15,12 @@ object Utils {
 
 	suspend inline fun FlowCollector<Resource.Loading>.emitLoading() = emit(Resource.Loading)
 	suspend inline fun <T> FlowCollector<Resource.Success<T>>.emitSuccess(value: T) = emit(Resource.Success(value))
-	suspend inline fun FlowCollector<Resource.Error>.emitError(cause: Throwable) = emit(Resource.Error(cause))
+	suspend inline fun FlowCollector<Resource.Failure>.emitFailure(cause: Throwable) = emit(Resource.Failure(cause))
 
 	inline fun <T> resourceFlowOf(crossinline block: suspend () -> T) = flow {
 		emitLoading()
 		emitSuccess(block())
 	}.catch {
-		emitError(it)
+		emitFailure(it)
 	}
 }

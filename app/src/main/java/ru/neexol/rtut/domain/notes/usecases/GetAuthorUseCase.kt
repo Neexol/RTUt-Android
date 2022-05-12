@@ -9,6 +9,6 @@ import javax.inject.Singleton
 @Singleton
 class GetAuthorUseCase @Inject constructor(
 	private val repository: NotesRepository
-) : FlowUseCase<Resource<String>>(true) {
+) : FlowUseCase<Resource<String>>() {
 	override fun performAction() = repository.getAuthor()
 }

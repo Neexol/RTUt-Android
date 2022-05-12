@@ -9,7 +9,6 @@ import androidx.compose.ui.platform.LocalContext
 import coil.ImageLoader
 import coil.compose.AsyncImage
 import coil.decode.SvgDecoder
-import ru.neexol.rtut.core.Resource
 
 @Composable
 fun MapsScreen(vm: MapsViewModel) {
@@ -19,8 +18,10 @@ fun MapsScreen(vm: MapsViewModel) {
 		}
 		.build()
 
-	val mapsRes by vm.mapsResourceFlow.collectAsState()
-	(mapsRes as? Resource.Success)?.data?.let { maps ->
+	val uiState by vm.uiStateFlow.collectAsState()
+	val (maps, isMapsLoading, message) = uiState
+
+	if (maps != null) {
 		LazyColumn {
 			items(maps) { map ->
 				AsyncImage(

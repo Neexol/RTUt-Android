@@ -9,6 +9,6 @@ import javax.inject.Singleton
 @Singleton
 class GetMapsUseCase @Inject constructor(
 	private val repository: MapsRepository
-) : FlowUseCase<Resource<List<String>>>(true) {
+) : FlowUseCase<Resource<List<String>>>() {
 	override fun performAction() = repository.getMaps()
 }

@@ -10,6 +10,6 @@ import javax.inject.Singleton
 @Singleton
 class GetTimesUseCase @Inject constructor(
 	private val dataSource: LessonsLocalDataSource
-) : FlowUseCase<List<LessonTime>>(true) {
+) : FlowUseCase<List<LessonTime>>() {
 	override fun performAction() = flow { emit(dataSource.getTimes()) }
 }

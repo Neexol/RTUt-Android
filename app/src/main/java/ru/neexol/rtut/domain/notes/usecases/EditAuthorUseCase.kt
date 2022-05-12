@@ -19,8 +19,8 @@ class EditAuthorUseCase @Inject constructor(
 	override fun performAction(init: EditAuthorParams.() -> Unit) = EditAuthorParams()
 		.apply(init)
 		.run {
-			repository.editAuthor(author).onCompletion {
-				getAuthorUseCase.launch()
+			repository.editAuthor(author).onCompletion { cause ->
+				cause ?: getAuthorUseCase.launch()
 			}
 		}
 }
