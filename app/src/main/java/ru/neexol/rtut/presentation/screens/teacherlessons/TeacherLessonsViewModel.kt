@@ -22,7 +22,7 @@ class TeacherLessonsViewModel @Inject constructor(
 	val lessonsResourceFlow = getTeacherLessonsUseCase.resultFlow.stateIn(
 		viewModelScope,
 		SharingStarted.Eagerly,
-		Resource.Success(emptyList())
+		Resource.Loading
 	)
 
 	val timesFlow = getTimesUseCase.resultFlow.stateIn(

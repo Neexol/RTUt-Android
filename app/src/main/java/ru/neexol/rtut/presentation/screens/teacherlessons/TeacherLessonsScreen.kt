@@ -5,7 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -84,33 +84,37 @@ fun TeacherLessonsScreen(vm: TeacherLessonsViewModel) {
 		)
 		val lessonsResource by vm.lessonsResourceFlow.collectAsState()
 		val times by vm.timesFlow.collectAsState()
-		(lessonsResource as? Resource.Success)?.let { res ->
-			val lessons = res.data.filter {
-				weekPagerState.currentPage + 1 in it.weeks
-			}.sortedWith(compareBy({ it.day }, { it.number }))
+		(lessonsResource as? Resource.Success)?.data?.let { lessons ->
 			LazyColumn {
-				items(lessons) {
-					Column(
-						modifier = Modifier.fillMaxWidth().padding(16.dp)
-					) {
-						Text(
-							text = listOf("ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ")[it.day],
-							modifier = Modifier.align(Alignment.CenterHorizontally)
-						)
-						Row {
-							Column {
-								Text(times[it.number].begin)
-								Text(times[it.number].end)
-							}
-							Column {
-								Text(it.name)
+				itemsIndexed(lessons[weekPagerState.currentPage]) { day, dayLessons ->
+					if (dayLessons.isNotEmpty()) {
+						Column(
+							modifier = Modifier
+								.fillMaxWidth()
+								.padding(16.dp)
+						) {
+							Text(
+								text = listOf("ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ")[day],
+								modifier = Modifier.align(Alignment.CenterHorizontally)
+							)
+							dayLessons.forEach {
 								Row {
-									Text("${it.teacher}    |   ${it.classroom}")
+									Column {
+										Text(times[it.number].begin)
+										Text(times[it.number].end)
+									}
+									Column {
+										Text(it.name)
+										Row {
+											Text("${it.teacher}    |   ${it.classroom}")
+										}
+									}
 								}
+								Divider()
 							}
 						}
+						Spacer(modifier = Modifier.height(16.dp))
 					}
-					Divider()
 				}
 			}
 		}

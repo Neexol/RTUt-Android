@@ -5,13 +5,18 @@ sealed class Resource<out T> {
 	data class Error(val cause: Throwable) : Resource<Nothing>()
 	object Loading : Resource<Nothing>()
 
-	inline operator fun invoke(
-		onLoading: () -> Unit = {},
-		onError: (Throwable) -> Unit = {},
-		onSuccess: (T) -> Unit = {},
-	) = when(this) {
-		is Success -> onSuccess(data)
-		is Error -> onError(cause)
-		Loading -> onLoading()
+	inline fun <R> map(transform: (T) -> R) = when (this) {
+		is Success -> Success(transform(data))
+		is Error -> Error(cause)
+		Loading -> Loading
 	}
+//	inline operator fun invoke(
+//		onLoading: () -> Unit = {},
+//		onError: (Throwable) -> Unit = {},
+//		onSuccess: (T) -> Unit = {},
+//	) = when(this) {
+//		is Success -> onSuccess(data)
+//		is Error -> onError(cause)
+//		Loading -> onLoading()
+//	}
 }

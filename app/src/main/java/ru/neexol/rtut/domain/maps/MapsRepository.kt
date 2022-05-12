@@ -40,9 +40,9 @@ class MapsRepository @Inject constructor(
 			}
 		}
 	}.catch {
-		emitError(Exception("Не удалось синхронизировать карты"))
-		localDataSource.getMaps()?.also {
-			emitSuccess(it)
+		emitError(it)
+		localDataSource.getMaps()?.also { maps ->
+			emitSuccess(maps)
 		}
 	}.flowOn(Dispatchers.IO)
 }

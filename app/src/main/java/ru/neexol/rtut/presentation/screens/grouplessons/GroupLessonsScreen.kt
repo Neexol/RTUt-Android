@@ -134,17 +134,14 @@ fun GroupLessonsScreen(vm: GroupLessonsViewModel) {
 			) {
 				val lessonsResource by vm.lessonsResourceFlow.collectAsState()
 				val times by vm.timesFlow.collectAsState()
-				(lessonsResource as? Resource.Success)?.let { res ->
-					val lessons = res.data.filter {
-						weekPagerState.currentPage + 1 in it.weeks && it.day == day
-					}
-					lessons.forEach {
+				(lessonsResource as? Resource.Success)?.data?.let { lessons ->
+					lessons[weekPagerState.currentPage][day].forEachIndexed { index, lesson ->
 						Row {
 							Column {
-								Text(times[it.number].begin)
-								Text(times[it.number].end)
+								Text(times[index].begin)
+								Text(times[index].end)
 							}
-							Text("${it.name} ${it.teacher}")
+							Text(lesson?.let { "${it.name} ${it.teacher}" } ?: "")
 						}
 						Divider()
 					}

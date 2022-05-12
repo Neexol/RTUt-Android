@@ -10,6 +10,6 @@ import javax.inject.Singleton
 @Singleton
 class GetGroupLessonsUseCase @Inject constructor(
 	private val repository: LessonsRepository
-) : FlowUseCase<Resource<List<Lesson>>>(true) {
+) : FlowUseCase<Resource<List<List<List<Lesson?>>>>>(true) {
 	override fun performAction() = repository.getGroupLessons()
 }

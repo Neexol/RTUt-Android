@@ -10,7 +10,7 @@ import javax.inject.Singleton
 @Singleton
 class GetTeacherLessonsUseCase @Inject constructor(
 	private val repository: LessonsRepository
-) : DataFlowUseCase<Resource<List<Lesson>>, GetTeacherLessonsUseCase.GetTeacherLessonsParams>() {
+) : DataFlowUseCase<Resource<List<List<List<Lesson>>>>, GetTeacherLessonsUseCase.GetTeacherLessonsParams>() {
 	class GetTeacherLessonsParams {
 		var teacher = ""
 	}

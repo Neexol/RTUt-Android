@@ -16,6 +16,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
+import ru.neexol.rtut.core.Resource
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -43,7 +44,8 @@ fun SettingsScreen(vm: SettingsViewModel) {
 		TextField(
 			value = vm.newAuthorState,
 			onValueChange = { vm.newAuthorState = it },
-			label = { author(onSuccess = { Text(it) }) },
+//			label = { author(onSuccess = { Text(it) }) },
+			label = { (author as? Resource.Success)?.data?.let { Text(it) } },
 			singleLine = true,
 			keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
 			keyboardActions = KeyboardActions {
