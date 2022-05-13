@@ -18,7 +18,7 @@ class MapsCacheManager @Inject constructor(
 	private fun mapFile(fileName: String) = File(context.cacheDir, "maps/$fileName")
 
 	suspend fun getMap(fileName: String) = withContext(Dispatchers.IO) {
-		mapFile(fileName).takeIf { it.exists() }?.toString()
+		mapFile(fileName).takeIf { it.exists() }
 	}
 	suspend fun putMap(fileName: String, input: InputStream) = withContext(Dispatchers.IO) {
 		mapFile(fileName).apply {
@@ -27,6 +27,6 @@ class MapsCacheManager @Inject constructor(
 					input.copyTo(it)
 				}
 			}
-		}.toString()
+		}
 	}
 }

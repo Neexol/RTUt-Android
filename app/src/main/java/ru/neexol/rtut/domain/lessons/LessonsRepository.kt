@@ -21,18 +21,19 @@ class LessonsRepository @Inject constructor(
 	private val remoteDataSource: LessonsRemoteDataSource
 ) {
 	private fun organizedGroupLessons(lessons: List<Lesson>): List<List<List<Lesson?>>> {
-		val maxWeek = lessons.maxOf { it.weeks.maxOrNull()!! }
-		return List(maxWeek) { week ->
-			val weekLessons = lessons.filter { week + 1 in it.weeks }
-			List(6) { day ->
-				val dayLessons = weekLessons.filter { day == it.day }
-				dayLessons.maxOfOrNull { it.number }?.let { maxNumber ->
-					MutableList<Lesson?>(maxNumber + 1) { null }.apply {
-						dayLessons.forEach { set(it.number, it) }
-					}
-				} ?: emptyList()
+		return lessons.maxOfOrNull { it.weeks.maxOrNull()!! }?.let { maxWeek ->
+			List(maxWeek) { week ->
+				val weekLessons = lessons.filter { week + 1 in it.weeks }
+				List(6) { day ->
+					val dayLessons = weekLessons.filter { day == it.day }
+					dayLessons.maxOfOrNull { it.number }?.let { maxNumber ->
+						MutableList<Lesson?>(maxNumber + 1) { null }.apply {
+							dayLessons.forEach { set(it.number, it) }
+						}
+					} ?: emptyList()
+				}
 			}
-		}
+		} ?: emptyList()
 	}
 
 	private fun organizedTeacherLessons(lessons: List<Lesson>): List<List<List<Lesson>>> {

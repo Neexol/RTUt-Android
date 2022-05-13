@@ -7,7 +7,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.create
@@ -38,6 +38,6 @@ object RetrofitModule {
 	fun provideRetrofit(): Retrofit = Retrofit.Builder()
 		.baseUrl(Constants.BASE_URL)
 		.addConverterFactory(ScalarsConverterFactory.create())
-		.addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+		.addConverterFactory(Json.asConverterFactory(MediaType.get("application/json")))
 		.build()
 }

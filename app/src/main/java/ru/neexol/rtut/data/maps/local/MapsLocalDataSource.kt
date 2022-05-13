@@ -13,7 +13,7 @@ class MapsLocalDataSource @Inject constructor(
 	suspend fun getMapsInfo() = prefsManager.getMapsInfo()
 	suspend fun putMapsInfo(info: MapsInfo) = prefsManager.putMapsInfo(info)
 
-	suspend fun getMaps(): List<String>? = prefsManager.getMapsInfo()?.let { mapsInfo ->
+	suspend fun getMaps() = prefsManager.getMapsInfo()?.let { mapsInfo ->
 		mapsInfo.maps.mapNotNull {
 			cacheManager.getMap(it.file)
 		}.takeIf {
