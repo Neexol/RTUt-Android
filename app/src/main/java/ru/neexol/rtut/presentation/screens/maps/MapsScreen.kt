@@ -25,8 +25,6 @@ import androidx.compose.ui.text.input.ImeAction
 @Composable
 fun MapsScreen(vm: MapsViewModel) {
 	val uiState by vm.uiStateFlow.collectAsState()
-	println("MapsScreen")
-
 	uiState.maps?.let { maps ->
 		var selected by remember(uiState.floor) { mutableStateOf(uiState.floor) }
 		Column {
@@ -48,7 +46,6 @@ fun MapsScreen(vm: MapsViewModel) {
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun FindField(vm: MapsViewModel) {
-	println("FindField")
 	val keyboardController = LocalSoftwareKeyboardController.current
 	TextField(
 		value = vm.classroomState,
@@ -65,7 +62,6 @@ fun FindField(vm: MapsViewModel) {
 
 @Composable
 fun ZoomableMap(mapProvider: () -> Bitmap) {
-	println("ZoomableMap")
 	var scale by remember { mutableStateOf(1f) }
 	var translate by remember { mutableStateOf(Offset(0f, 0f)) }
 	Image(

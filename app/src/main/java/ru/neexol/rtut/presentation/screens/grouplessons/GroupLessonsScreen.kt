@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
@@ -18,6 +20,7 @@ import androidx.compose.ui.zIndex
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
@@ -126,16 +129,16 @@ fun GroupLessonsScreen(vm: GroupLessonsViewModel) {
 			state = lessonsPagerState,
 			count = 6
 		) { day ->
-			Column(
-				modifier = Modifier
-					.fillMaxSize()
-					.padding(16.dp)
-			) {
-				val uiState by vm.uiStateFlow.collectAsState()
-				val (lessons, isLessonsLoading, times, message) = uiState
+			val uiState by vm.uiStateFlow.collectAsState()
+			val (lessons, isLessonsLoading, times, message) = uiState
 
-				if (lessons != null && times != null) {
-					lessons[weekPagerState.currentPage][day].forEachIndexed { index, lesson ->
+			if (lessons != null && times != null) {
+				LazyColumn(
+					modifier = Modifier
+						.fillMaxSize()
+						.padding(16.dp)
+				) {
+					itemsIndexed(lessons[weekPagerState.currentPage][day]) { index , lesson ->
 						Row {
 							Column {
 								Text(times[index].begin)
