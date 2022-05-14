@@ -9,12 +9,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import ru.neexol.rtut.domain.maps.usecases.GetMapsUseCase
+import ru.neexol.rtut.data.maps.MapsRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class MapsViewModel @Inject constructor(
-	private val getMapsUseCase: GetMapsUseCase
+	private val repo: MapsRepository
 ) : ViewModel() {
 	var uiState by mutableStateOf(MapsUiState())
 		private set
@@ -25,7 +25,7 @@ class MapsViewModel @Inject constructor(
 	fun fetchMaps() {
 		fetchJob?.cancel()
 		fetchJob = viewModelScope.launch {
-			getMapsUseCase(classroom).collect { maps ->
+			repo.getMaps(classroom).collect { maps ->
 				uiState = maps.to(
 					onSuccess = { MapsUiState(maps = it.maps, floor = it.floor, classroom = it.classroom) },
 					onFailure = { uiState.copy(isMapsLoading = false, message = it.toString()) },

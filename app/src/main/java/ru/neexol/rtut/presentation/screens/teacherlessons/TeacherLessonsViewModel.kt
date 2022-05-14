@@ -10,14 +10,12 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import ru.neexol.rtut.domain.lessons.usecases.GetTeacherLessonsUseCase
-import ru.neexol.rtut.domain.lessons.usecases.GetTimesUseCase
+import ru.neexol.rtut.data.lessons.LessonsRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class TeacherLessonsViewModel @Inject constructor(
-	private val getTeacherLessonsUseCase: GetTeacherLessonsUseCase,
-	private val getTimesUseCase: GetTimesUseCase
+	private val repo: LessonsRepository
 ) : ViewModel() {
 	var uiState by mutableStateOf(TeacherLessonsUiState())
 		private set
@@ -27,7 +25,7 @@ class TeacherLessonsViewModel @Inject constructor(
 	fun fetchLessons() {
 		fetchJob?.cancel()
 		fetchJob = viewModelScope.launch {
-			combine(getTeacherLessonsUseCase(teacher), getTimesUseCase()) { lessons, times ->
+			combine(repo.getTeacherLessons(teacher), repo.getTimes()) { lessons, times ->
 				lessons.to(
 					onSuccess = { TeacherLessonsUiState(lessons = it, times = times,) },
 					onFailure = { TeacherLessonsUiState(message = it.toString()) },

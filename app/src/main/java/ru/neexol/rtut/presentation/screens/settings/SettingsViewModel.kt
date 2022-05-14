@@ -9,28 +9,24 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import ru.neexol.rtut.domain.lessons.usecases.EditGroupUseCase
-import ru.neexol.rtut.domain.lessons.usecases.GetGroupUseCase
-import ru.neexol.rtut.domain.notes.usecases.EditAuthorUseCase
-import ru.neexol.rtut.domain.notes.usecases.GetAuthorUseCase
+import ru.neexol.rtut.data.lessons.LessonsRepository
+import ru.neexol.rtut.data.notes.NotesRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-	private val getGroupUseCase: GetGroupUseCase,
-	private val editGroupUseCase: EditGroupUseCase,
-	private val getAuthorUseCase: GetAuthorUseCase,
-	private val editAuthorUseCase: EditAuthorUseCase
+	private val lessonsRepo: LessonsRepository,
+	private val notesRepo: NotesRepository
 ) : ViewModel() {
 	var groupUiState by mutableStateOf(SettingsGroupUiState())
 		private set
 
 	private var fetchGroupJob: Job? = null
 	init { fetchGroup() }
-	fun fetchGroup() {
+	private fun fetchGroup() {
 		fetchGroupJob?.cancel()
 		fetchGroupJob = viewModelScope.launch {
-			getGroupUseCase().collect {
+			lessonsRepo.getGroup().collect {
 				groupUiState = SettingsGroupUiState(group = it)
 			}
 		}
@@ -42,7 +38,7 @@ class SettingsViewModel @Inject constructor(
 		editGroupJob?.cancel()
 		editGroupJob = viewModelScope.launch {
 			if (newGroup matches "[А-ЯЁ]{4}\\d{4}".toRegex()) {
-				editGroupUseCase(
+				lessonsRepo.editGroup(
 					StringBuilder(newGroup)
 						.insert(4, '-')
 						.insert(7, '-')
@@ -63,10 +59,10 @@ class SettingsViewModel @Inject constructor(
 
 	private var fetchAuthorJob: Job? = null
 	init { fetchAuthor() }
-	fun fetchAuthor() {
+	private fun fetchAuthor() {
 		fetchAuthorJob?.cancel()
 		fetchAuthorJob = viewModelScope.launch {
-			getAuthorUseCase().collect { author ->
+			notesRepo.getAuthor().collect { author ->
 				authorUiState = author.to(
 					onSuccess = { SettingsAuthorUiState(author = it) },
 					onFailure = { authorUiState.copy(isAuthorLoading = false, message = it.toString()) },
@@ -81,7 +77,7 @@ class SettingsViewModel @Inject constructor(
 	fun editAuthor() {
 		editAuthorJob?.cancel()
 		editAuthorJob = viewModelScope.launch {
-			editAuthorUseCase(newAuthor).collect { author ->
+			notesRepo.editAuthor(newAuthor).collect { author ->
 				authorUiState = author.to(
 					onSuccess = { SettingsAuthorUiState(author = it) },
 					onFailure = { authorUiState.copy(isAuthorLoading = false, message = it.toString()) },

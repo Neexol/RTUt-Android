@@ -1,4 +1,4 @@
-package ru.neexol.rtut.domain.lessons
+package ru.neexol.rtut.data.lessons
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch

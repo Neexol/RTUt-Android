@@ -1,4 +1,4 @@
-package ru.neexol.rtut.domain.notes
+package ru.neexol.rtut.data.notes
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn

@@ -1,4 +1,4 @@
-package ru.neexol.rtut.domain.maps
+package ru.neexol.rtut.data.maps
 
 import android.graphics.Bitmap
 import android.graphics.Canvas

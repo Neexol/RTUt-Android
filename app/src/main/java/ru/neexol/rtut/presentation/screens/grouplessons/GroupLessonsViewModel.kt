@@ -10,16 +10,12 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import ru.neexol.rtut.domain.lessons.usecases.GetGroupLessonsUseCase
-import ru.neexol.rtut.domain.lessons.usecases.GetGroupUseCase
-import ru.neexol.rtut.domain.lessons.usecases.GetTimesUseCase
+import ru.neexol.rtut.data.lessons.LessonsRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class GroupLessonsViewModel @Inject constructor(
-	private val getGroupLessonsUseCase: GetGroupLessonsUseCase,
-	private val getTimesUseCase: GetTimesUseCase,
-	private val getGroupUseCase: GetGroupUseCase
+	private val repo: LessonsRepository
 ) : ViewModel() {
 	var uiState by mutableStateOf(GroupLessonsUiState())
 		private set
@@ -29,7 +25,7 @@ class GroupLessonsViewModel @Inject constructor(
 	fun fetchGroup() {
 		fetchGroupJob?.cancel()
 		fetchGroupJob = viewModelScope.launch {
-			getGroupUseCase().collect {
+			repo.getGroup().collect {
 				if (it != group) {
 					group = it
 					fetchLessons()
@@ -42,7 +38,7 @@ class GroupLessonsViewModel @Inject constructor(
 	private fun fetchLessons() {
 		fetchLessonsJob?.cancel()
 		fetchLessonsJob = viewModelScope.launch {
-			combine(getGroupLessonsUseCase(), getTimesUseCase()) { lessons, times ->
+			combine(repo.getGroupLessons(), repo.getTimes()) { lessons, times ->
 				lessons.to(
 					onSuccess = { GroupLessonsUiState(lessons = it, times = times) },
 					onFailure = { uiState.copy(isLessonsLoading = false, message = it.toString()) },
