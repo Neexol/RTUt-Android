@@ -27,6 +27,9 @@ import java.math.BigDecimal
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun GroupLessonsScreen(vm: GroupLessonsViewModel) {
+	LaunchedEffect(Unit) {
+		vm.fetchGroup()
+	}
 	val coroutineScope = rememberCoroutineScope()
 	val weekPagerState = rememberPagerState()
 	val dayPagerState = rememberPagerState()
