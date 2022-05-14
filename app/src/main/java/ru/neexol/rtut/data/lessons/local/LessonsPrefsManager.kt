@@ -26,7 +26,7 @@ class LessonsPrefsManager @Inject constructor(
 		val TIMES = stringPreferencesKey("times")
 	}
 
-	suspend fun getGroup() = dataStore.get(GROUP) ?: "ИКБО-12-19"
+	suspend fun getGroup() = dataStore.get(GROUP)
 	suspend fun putGroup(group: String) = dataStore.put(GROUP, group)
 
 	suspend fun getChecksum() = dataStore.get(CHECKSUM)
@@ -34,7 +34,7 @@ class LessonsPrefsManager @Inject constructor(
 
 	suspend fun getLessons() = dataStore.get(LESSONS)?.let {
 		Json.decodeFromString<List<Lesson>>(it)
-	} ?: emptyList()
+	}
 	suspend fun putLessons(lessons: List<Lesson>) = dataStore.put(LESSONS, Json.encodeToString(lessons))
 
 	suspend fun getTimes() = dataStore.get(TIMES)?.let {

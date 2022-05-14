@@ -25,7 +25,8 @@ class NotesRepository @Inject constructor(
 	}.flowOn(Dispatchers.IO)
 
 	fun editAuthor(authorId: String) = resourceFlowOf {
-		remoteDataSource.checkAuthor(authorId).also {
+		authorId.also {
+			remoteDataSource.checkAuthor(it)
 			localDataSource.putAuthor(it)
 		}
 	}.flowOn(Dispatchers.IO)

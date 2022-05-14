@@ -24,8 +24,9 @@ import androidx.compose.ui.text.input.ImeAction
 
 @Composable
 fun MapsScreen(vm: MapsViewModel) {
-	val uiState by vm.uiStateFlow.collectAsState()
-	uiState.maps?.let { maps ->
+	val uiState = vm.uiState
+	val maps = uiState.maps
+	if (maps != null) {
 		var selected by remember(uiState.floor) { mutableStateOf(uiState.floor) }
 		Column {
 			Row {
@@ -34,7 +35,11 @@ fun MapsScreen(vm: MapsViewModel) {
 				}
 			}
 			Divider()
-			FindField(vm)
+			FindField(
+				value = vm.classroom,
+				onValueChange = { vm.classroom = it.trimStart().uppercase() },
+				onImeAction = { vm.fetchMaps() }
+			)
 			Divider()
 			ZoomableMap(
 				mapProvider = { maps[selected] }
@@ -45,16 +50,16 @@ fun MapsScreen(vm: MapsViewModel) {
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun FindField(vm: MapsViewModel) {
+fun FindField(value: String, onValueChange: (String) -> Unit, onImeAction: () -> Unit) {
 	val keyboardController = LocalSoftwareKeyboardController.current
 	TextField(
-		value = vm.classroomState,
-		onValueChange = { vm.classroomState = it.trimStart().uppercase() },
+		value = value,
+		onValueChange = onValueChange,
 		label = { Text("Classroom") },
 		singleLine = true,
 		keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
 		keyboardActions = KeyboardActions {
-			vm.findClassroom()
+			onImeAction()
 			keyboardController?.hide()
 		}
 	)

@@ -4,7 +4,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
 import ru.neexol.rtut.core.Utils.emitFailure
 import ru.neexol.rtut.core.Utils.emitLoading
 import ru.neexol.rtut.core.Utils.emitSuccess
@@ -49,24 +48,34 @@ class LessonsRepository @Inject constructor(
 
 	fun getGroupLessons() = flow {
 		emitLoading()
-		emitSuccess(localDataSource.getLessons())
+		localDataSource.getLessons()?.also {
+			emitSuccess(organizedGroupLessons(it))
+		}
 		val group = localDataSource.getGroup()
 		if (localDataSource.getChecksum() != remoteDataSource.getGroupChecksum(group)) {
 			localDataSource.putGroupLessons(remoteDataSource.getGroupLessons(group))
 			localDataSource.putTimes(remoteDataSource.getTimes())
-			emitSuccess(localDataSource.getLessons())
+			localDataSource.getLessons()?.also {
+				emitSuccess(organizedGroupLessons(it))
+			}
 		}
-	}.catch {
-		emitFailure(it)
-		emitSuccess(localDataSource.getLessons())
-	}.map {
-		it.map(::organizedGroupLessons)
+	}.catch { cause ->
+		emitFailure(cause)
+		localDataSource.getLessons()?.also {
+			emitSuccess(organizedGroupLessons(it))
+		}
 	}.flowOn(Dispatchers.IO)
 
 	fun getTeacherLessons(teacher: String) = resourceFlowOf {
-		remoteDataSource.getTeacherLessons(teacher)
-	}.map {
-		it.map(::organizedTeacherLessons)
+		organizedTeacherLessons(remoteDataSource.getTeacherLessons(teacher))
+	}.flowOn(Dispatchers.IO)
+
+	fun getTimes() = flow {
+		emit(localDataSource.getTimes())
+	}.flowOn(Dispatchers.IO)
+
+	fun getGroup() = flow {
+		emit(localDataSource.getGroup())
 	}.flowOn(Dispatchers.IO)
 
 	fun editGroup(group: String) = resourceFlowOf {

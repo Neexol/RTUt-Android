@@ -6,45 +6,32 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
-import ru.neexol.rtut.domain.maps.usecases.FindClassroomUseCase
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import ru.neexol.rtut.domain.maps.usecases.GetMapsUseCase
 import javax.inject.Inject
 
 @HiltViewModel
 class MapsViewModel @Inject constructor(
-	getMapsUseCase: GetMapsUseCase,
-	private val findClassroomUseCase: FindClassroomUseCase
+	private val getMapsUseCase: GetMapsUseCase
 ) : ViewModel() {
-	val uiStateFlow = combine(
-		getMapsUseCase.resultFlow,
-		findClassroomUseCase.resultFlow
-	) { getMapsResource, findClassroomResource ->
-		var state = getMapsResource.to(
-			onSuccess = { MapsUiState(maps = it) },
-			onFailure = { MapsUiState(message = "Не удалось загрузить карты") },
-			onLoading = { MapsUiState(isMapsLoading = true) }
-		)
-		findClassroomResource?.to(
-			onSuccess = { state = state.copy(floor = it.floor, classroom = it.classroom, maps = it.maps) },
-			onFailure = { state = state.copy(message = "Не удалось найти аудиторию") },
-			onLoading = { state = state.copy(isMapsLoading = true) }
-		)
-		state
-	}.stateIn(
-		viewModelScope,
-		SharingStarted.Eagerly,
-		MapsUiState()
-	)
+	var uiState by mutableStateOf(MapsUiState())
+		private set
 
-	var classroomState by mutableStateOf("")
-
-	fun findClassroom() {
-		MutableStateFlow(false).update {
-			!it
-		}
-		findClassroomUseCase.launch {
-			this.classroom = classroomState
+	var classroom by mutableStateOf("")
+	private var fetchJob: Job? = null
+	init { fetchMaps() }
+	fun fetchMaps() {
+		fetchJob?.cancel()
+		fetchJob = viewModelScope.launch {
+			getMapsUseCase(classroom).collect { maps ->
+				uiState = maps.to(
+					onSuccess = { MapsUiState(maps = it.maps, floor = it.floor, classroom = it.classroom) },
+					onFailure = { uiState.copy(isMapsLoading = false, message = it.toString()) },
+					onLoading = { uiState.copy(isMapsLoading = true) }
+				)
+			}
 		}
 	}
 }

@@ -10,11 +10,11 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.transform
+import ru.neexol.rtut.core.Resource
 import ru.neexol.rtut.core.Utils.emitFailure
 import ru.neexol.rtut.core.Utils.emitLoading
 import ru.neexol.rtut.core.Utils.emitSuccess
-import ru.neexol.rtut.core.Utils.resourceFlowOf
 import ru.neexol.rtut.data.maps.local.MapsLocalDataSource
 import ru.neexol.rtut.data.maps.remote.MapsRemoteDataSource
 import javax.inject.Inject
@@ -26,7 +26,7 @@ class MapsRepository @Inject constructor(
 	private val localDataSource: MapsLocalDataSource,
 	private val remoteDataSource: MapsRemoteDataSource
 ) {
-	data class FindMapResult(
+	data class GetMapsResult(
 		val floor: Int,
 		val classroom: String,
 		val maps: List<Bitmap>
@@ -47,16 +47,21 @@ class MapsRepository @Inject constructor(
 	}
 
 	private fun bitmap(rawMap: String, classroom: String): Pair<Boolean, Bitmap> {
-		val index = rawMap.indexOf("\"$classroom\"".uppercase())
-		val map = if (index != -1) {
-			StringBuilder(rawMap).apply {
-				setCharAt(index + classroom.length + 14, '6')
-			}.toString()
+		var found = false
+		val map = if (classroom.isNotEmpty()) {
+			val index = rawMap.indexOf("\"$classroom\"".uppercase())
+			found = index != -1
+			if (found) {
+				StringBuilder(rawMap).apply {
+					setCharAt(index + classroom.length + 14, '6')
+				}.toString()
+			} else rawMap
 		} else rawMap
-		return (index != -1) to bitmap(map)
+
+		return found to bitmap(map)
 	}
 
-	fun getMaps() = flow {
+	fun getMaps(classroom: String) = flow {
 		emitLoading()
 		val localMaps = localDataSource.getMaps()?.also {
 			emitSuccess(it)
@@ -69,43 +74,39 @@ class MapsRepository @Inject constructor(
 					async {
 						localDataSource.putMap(it.file, remoteDataSource.getMapStream(it.file))
 					}
-				}.awaitAll().let {
+				}.awaitAll().also {
 					localDataSource.putMapsInfo(remoteMapsInfo)
 					emitSuccess(it)
 				}
 			}
 		}
-	}.catch {
-		emitFailure(it)
-		localDataSource.getMaps()?.also { maps ->
-			emitSuccess(maps)
+	}.catch { cause ->
+		emitFailure(cause)
+		localDataSource.getMaps()?.also {
+			emitSuccess(it)
 		}
-	}.map { resource ->
-		resource.map {
-			coroutineScope {
-				it.map { file ->
-					async { bitmap(file.readText()) }
-				}.awaitAll()
-			}
-		}
-	}.flowOn(Dispatchers.IO)
-
-	fun findClassroom(classroom: String) = resourceFlowOf {
-		coroutineScope {
-			localDataSource.getMaps()!!.map { file ->
-				async {
-					bitmap(file.readText(), classroom)
+	}.transform { resource ->
+		when (resource) {
+			is Resource.Success -> {
+				coroutineScope {
+					resource.data.map { file ->
+						async { bitmap(file.readText(), classroom) }
+					}.awaitAll()
+				}.let { markedBitmaps ->
+					val floor = markedBitmaps.indexOfFirst {
+						it.first
+					}.takeIf {
+						classroom.isNotEmpty()
+					} ?: 0
+					if (floor != -1) {
+						emitSuccess(GetMapsResult(floor, classroom, markedBitmaps.map { it.second }))
+					} else {
+						emitFailure(Exception("Not found"))
+					}
 				}
-			}.awaitAll().let { markedBitmaps ->
-				val floor = markedBitmaps.indexOfFirst { it.first }
-				if (floor != -1) {
-					FindMapResult(
-						markedBitmaps.indexOfFirst { it.first },
-						classroom,
-						markedBitmaps.map { it.second }
-					)
-				} else throw Exception("Classroom not found")
 			}
+			is Resource.Failure -> emitFailure(resource.cause)
+			Resource.Loading -> emitLoading()
 		}
 	}.flowOn(Dispatchers.IO)
 }

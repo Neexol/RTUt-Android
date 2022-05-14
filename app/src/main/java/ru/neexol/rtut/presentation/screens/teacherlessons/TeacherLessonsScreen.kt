@@ -12,7 +12,9 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -71,19 +73,18 @@ fun TeacherLessonsScreen(vm: TeacherLessonsViewModel) {
 			)
 		}
 		TextField(
-			value = vm.teacherState,
-			onValueChange = { vm.teacherState = it.trimStart() },
+			value = vm.teacher,
+			onValueChange = { vm.teacher = it.trimStart() },
 			label = { Text("Teacher") },
 			singleLine = true,
 			keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
 			keyboardActions = KeyboardActions {
-				vm.loadLessons()
+				vm.fetchLessons()
 				keyboardController?.hide()
 			}
 		)
-		val uiState by vm.uiStateFlow.collectAsState()
-		val (lessons, isLessonsLoading, times, message) = uiState
-
+		val lessons = vm.uiState.lessons
+		val times = vm.uiState.times
 		if (lessons != null && times != null) {
 			LazyColumn {
 				itemsIndexed(lessons[weekPagerState.currentPage]) { day, dayLessons ->

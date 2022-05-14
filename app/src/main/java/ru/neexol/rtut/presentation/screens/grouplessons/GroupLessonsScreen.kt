@@ -129,10 +129,9 @@ fun GroupLessonsScreen(vm: GroupLessonsViewModel) {
 			state = lessonsPagerState,
 			count = 6
 		) { day ->
-			val uiState by vm.uiStateFlow.collectAsState()
-			val (lessons, isLessonsLoading, times, message) = uiState
-
-			if (lessons != null && times != null) {
+			val lessons = vm.uiState.lessons
+			val times = vm.uiState.times
+			if (!(lessons.isNullOrEmpty() || times.isNullOrEmpty())) {
 				LazyColumn(
 					modifier = Modifier
 						.fillMaxSize()

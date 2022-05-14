@@ -1,8 +1,5 @@
 package ru.neexol.rtut.domain.lessons.usecases
 
-import ru.neexol.rtut.core.DataFlowUseCase
-import ru.neexol.rtut.core.Resource
-import ru.neexol.rtut.data.lessons.models.Lesson
 import ru.neexol.rtut.domain.lessons.LessonsRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -10,12 +7,4 @@ import javax.inject.Singleton
 @Singleton
 class GetTeacherLessonsUseCase @Inject constructor(
 	private val repository: LessonsRepository
-) : DataFlowUseCase<Resource<List<List<List<Lesson>>>>, GetTeacherLessonsUseCase.GetTeacherLessonsParams>() {
-	class GetTeacherLessonsParams {
-		var teacher = ""
-	}
-
-	override fun performAction(init: GetTeacherLessonsParams.() -> Unit) = GetTeacherLessonsParams()
-		.apply(init)
-		.run { repository.getTeacherLessons(teacher) }
-}
+) { operator fun invoke(teacher: String) = repository.getTeacherLessons(teacher) }

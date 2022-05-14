@@ -7,8 +7,6 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.AnnotatedString
@@ -16,21 +14,20 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
-import ru.neexol.rtut.core.Resource
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SettingsScreen(vm: SettingsViewModel) {
 	val keyboardController = LocalSoftwareKeyboardController.current
-	val group by vm.groupFlow.collectAsState()
-	val author by vm.authorResourceFlow.collectAsState()
+	val group = vm.groupUiState.group
+	val author = vm.authorUiState.author
 
 	Column {
 		Text("Group:")
 		TextField(
-			value = vm.newGroupState,
-			onValueChange = { vm.newGroupState = formatGroup(it) },
-			label = { Text(group) },
+			value = vm.newGroup,
+			onValueChange = { vm.newGroup = formatGroup(it) },
+			label = { Text(group.toString()) },
 			singleLine = true,
 			keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
 			keyboardActions = KeyboardActions {
@@ -42,10 +39,9 @@ fun SettingsScreen(vm: SettingsViewModel) {
 		Divider()
 		Text("Author:")
 		TextField(
-			value = vm.newAuthorState,
-			onValueChange = { vm.newAuthorState = it },
-//			label = { author(onSuccess = { Text(it) }) },
-			label = { (author as? Resource.Success)?.data?.let { Text(it) } },
+			value = vm.newAuthor,
+			onValueChange = { vm.newAuthor = it },
+			label = { Text(author.toString()) },
 			singleLine = true,
 			keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
 			keyboardActions = KeyboardActions {

@@ -6,9 +6,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import ru.neexol.rtut.domain.lessons.usecases.GetTeacherLessonsUseCase
 import ru.neexol.rtut.domain.lessons.usecases.GetTimesUseCase
 import javax.inject.Inject
@@ -16,26 +17,25 @@ import javax.inject.Inject
 @HiltViewModel
 class TeacherLessonsViewModel @Inject constructor(
 	private val getTeacherLessonsUseCase: GetTeacherLessonsUseCase,
-	getTimesUseCase: GetTimesUseCase
+	private val getTimesUseCase: GetTimesUseCase
 ) : ViewModel() {
-	val uiStateFlow = combine(
-		getTeacherLessonsUseCase.resultFlow,
-		getTimesUseCase.resultFlow
-	) { lessonsResource, times ->
-		lessonsResource?.to(
-			onSuccess = { TeacherLessonsUiState(times = times, lessons = it) },
-			onFailure = { TeacherLessonsUiState(times = times, message = "Не удалось загрузить расписание") },
-			onLoading = { TeacherLessonsUiState(times = times, isLessonsLoading = true) }
-		) ?: TeacherLessonsUiState(times = times)
-	}.stateIn(
-		viewModelScope,
-		SharingStarted.Eagerly,
-		TeacherLessonsUiState()
-	)
+	var uiState by mutableStateOf(TeacherLessonsUiState())
+		private set
 
-	var teacherState by mutableStateOf("")
-
-	fun loadLessons() = getTeacherLessonsUseCase.launch {
-		this.teacher = teacherState
+	var teacher by mutableStateOf("")
+	private var fetchJob: Job? = null
+	fun fetchLessons() {
+		fetchJob?.cancel()
+		fetchJob = viewModelScope.launch {
+			combine(getTeacherLessonsUseCase(teacher), getTimesUseCase()) { lessons, times ->
+				lessons.to(
+					onSuccess = { TeacherLessonsUiState(lessons = it, times = times,) },
+					onFailure = { TeacherLessonsUiState(message = it.toString()) },
+					onLoading = { TeacherLessonsUiState(isLessonsLoading = true) }
+				)
+			}.collect {
+				uiState = it
+			}
+		}
 	}
 }

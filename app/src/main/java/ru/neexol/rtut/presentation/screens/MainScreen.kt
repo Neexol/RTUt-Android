@@ -97,11 +97,7 @@ fun MainScreen() {
 			}
 			NavHost(navController, Screen.Group.route) {
 				composable(Screen.Group.route) { GroupLessonsScreen(hiltViewModel()) }
-				composable(Screen.Teacher.route) {
-					Column {
-						TeacherLessonsScreen(hiltViewModel())
-					}
-				}
+				composable(Screen.Teacher.route) { TeacherLessonsScreen(hiltViewModel()) }
 				composable(Screen.Maps.route) { MapsScreen(hiltViewModel()) }
 				composable(Screen.Settings.route) { SettingsScreen(hiltViewModel()) }
 			}
