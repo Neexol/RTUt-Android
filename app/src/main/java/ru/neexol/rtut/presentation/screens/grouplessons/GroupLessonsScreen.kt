@@ -31,9 +31,9 @@ fun GroupLessonsScreen(vm: GroupLessonsViewModel) {
 		vm.fetchGroup()
 	}
 	val coroutineScope = rememberCoroutineScope()
-	val weekPagerState = rememberPagerState()
-	val dayPagerState = rememberPagerState()
-	val lessonsPagerState = rememberPagerState()
+	val weekPagerState = rememberPagerState(vm.dayWeek.second)
+	val dayPagerState = rememberPagerState(vm.dayWeek.first)
+	val lessonsPagerState = rememberPagerState(vm.dayWeek.first)
 
 	val scrollingFollowingPair by remember {
 		derivedStateOf {

@@ -34,7 +34,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun TeacherLessonsScreen(vm: TeacherLessonsViewModel) {
 	val coroutineScope = rememberCoroutineScope()
-	val weekPagerState = rememberPagerState()
+	val weekPagerState = rememberPagerState(vm.dayWeek.second)
 	val keyboardController = LocalSoftwareKeyboardController.current
 
 	Column {

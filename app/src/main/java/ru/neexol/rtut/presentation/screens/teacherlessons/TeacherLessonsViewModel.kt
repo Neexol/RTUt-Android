@@ -10,6 +10,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import ru.neexol.rtut.core.Utils
 import ru.neexol.rtut.data.lessons.LessonsRepository
 import javax.inject.Inject
 
@@ -17,6 +18,8 @@ import javax.inject.Inject
 class TeacherLessonsViewModel @Inject constructor(
 	private val repo: LessonsRepository
 ) : ViewModel() {
+	val dayWeek = Utils.getDayAndWeek()
+
 	var uiState by mutableStateOf(TeacherLessonsUiState())
 		private set
 
