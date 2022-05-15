@@ -57,28 +57,21 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycleRuntimeVersion"
     implementation "androidx.activity:activity-compose:$activityComposeVersion"
     implementation "androidx.navigation:navigation-compose:$navigationVersion"
+    implementation "androidx.datastore:datastore-preferences:$dataStoreVersion"
     debugImplementation "androidx.compose.ui:ui-tooling:$composeVersion"
 
-    // Hilt
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
     kapt "com.google.dagger:hilt-compiler:$hiltVersion"
 
-    // Retrofit2
     implementation "com.squareup.retrofit2:retrofit:$retrofit2Version"
     implementation "com.squareup.retrofit2:converter-scalars:$retrofit2Version"
     implementation "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:$retrofit2ConverterVersion"
 
-    // Serialization
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 
-    // DataStore
-    implementation "androidx.datastore:datastore-preferences:$dataStoreVersion"
-
-    // Accompanist
     implementation "com.google.accompanist:accompanist-pager:$accompanistVersion"
-//    implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion"
 
-    // AndroidSVG
     implementation "com.caverock:androidsvg-aar:$androidSVGVersion"
 }
