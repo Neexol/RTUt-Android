@@ -3,10 +3,7 @@ package ru.neexol.rtut.data.maps
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import com.caverock.androidsvg.SVG
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -46,7 +43,7 @@ class MapsRepository @Inject constructor(
 		return bitmap
 	}
 
-	private fun bitmap(rawMap: String, classroom: String): Pair<Boolean, Bitmap> {
+	private fun bitmap(rawMap: String, classroom: String): Pair<Bitmap, Bitmap?> {
 		var found = false
 		val map = if (classroom.isNotEmpty()) {
 			val index = rawMap.indexOf("\"$classroom\"".uppercase())
@@ -58,7 +55,7 @@ class MapsRepository @Inject constructor(
 			} else rawMap
 		} else rawMap
 
-		return found to bitmap(map)
+		return bitmap(map) to if (found) bitmap(rawMap) else null
 	}
 
 	fun getMaps(classroom: String) = flow {
@@ -66,17 +63,19 @@ class MapsRepository @Inject constructor(
 		val localMaps = localDataSource.getMaps()?.also {
 			emitSuccess(it)
 		}
-		val localMapsInfo = localDataSource.getMapsInfo()
-		val remoteMapsInfo = remoteDataSource.getMapsInfo()
-		if (localMaps == null || localMapsInfo?.date != remoteMapsInfo.date) {
-			coroutineScope {
-				remoteMapsInfo.maps.map {
-					async {
-						localDataSource.putMap(it.file, remoteDataSource.getMapStream(it.file))
+		if (classroom.isEmpty()) {
+			val localMapsInfo = localDataSource.getMapsInfo()
+			val remoteMapsInfo = remoteDataSource.getMapsInfo()
+			if (localMaps == null || localMapsInfo?.date != remoteMapsInfo.date) {
+				coroutineScope {
+					remoteMapsInfo.maps.map {
+						async {
+							localDataSource.putMap(it.file, remoteDataSource.getMapStream(it.file))
+						}
+					}.awaitAll().also {
+						localDataSource.putMapsInfo(remoteMapsInfo)
+						emitSuccess(it)
 					}
-				}.awaitAll().also {
-					localDataSource.putMapsInfo(remoteMapsInfo)
-					emitSuccess(it)
 				}
 			}
 		}
@@ -93,13 +92,24 @@ class MapsRepository @Inject constructor(
 						async { bitmap(file.readText(), classroom) }
 					}.awaitAll()
 				}.let { markedBitmaps ->
-					val floor = markedBitmaps.indexOfFirst {
-						it.first
-					}.takeIf {
-						classroom.isNotEmpty()
-					} ?: 0
+					val floor = if (classroom.isNotEmpty()) {
+						markedBitmaps.indexOfFirst { it.second != null }
+					} else 0
 					if (floor != -1) {
-						emitSuccess(GetMapsResult(floor, classroom, markedBitmaps.map { it.second }))
+						val highlighted = GetMapsResult(floor, classroom, markedBitmaps.map { it.first })
+						if (classroom.isNotEmpty()) {
+							val results = listOf(
+								highlighted,
+								highlighted.copy(maps = markedBitmaps.map { it.second ?: it.first })
+							)
+							emitSuccess(results[0])
+							repeat(5) {
+								delay(200)
+								emitSuccess(results[it % 2])
+							}
+						}
+						emitSuccess(highlighted)
+//						emitSuccess(GetMapsResult(floor, classroom, markedBitmaps.map { it.second }))
 					} else {
 						emitFailure(Exception("Not found"))
 					}
