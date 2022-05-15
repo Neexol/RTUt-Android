@@ -1,4 +1,4 @@
-package ru.neexol.rtut.presentation.screens.grouplessons
+package ru.neexol.rtut.presentation.screens.schedule
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,13 +20,12 @@ import androidx.compose.ui.zIndex
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun GroupLessonsScreen(vm: GroupLessonsViewModel) {
+fun ScheduleScreen(vm: ScheduleViewModel) {
 	LaunchedEffect(Unit) {
 		vm.fetchGroup()
 	}

@@ -1,4 +1,4 @@
-package ru.neexol.rtut.presentation.screens.grouplessons
+package ru.neexol.rtut.presentation.screens.schedule
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import ru.neexol.rtut.core.Utils
@@ -15,12 +14,12 @@ import ru.neexol.rtut.data.lessons.LessonsRepository
 import javax.inject.Inject
 
 @HiltViewModel
-class GroupLessonsViewModel @Inject constructor(
+class ScheduleViewModel @Inject constructor(
 	private val repo: LessonsRepository
 ) : ViewModel() {
 	val dayWeek = Utils.getDayAndWeek()
 
-	var uiState by mutableStateOf(GroupLessonsUiState())
+	var uiState by mutableStateOf(ScheduleUiState())
 		private set
 
 	private var group: String? = null
@@ -43,7 +42,7 @@ class GroupLessonsViewModel @Inject constructor(
 		fetchLessonsJob = viewModelScope.launch {
 			combine(repo.getGroupLessons(), repo.getTimes()) { lessons, times ->
 				lessons.to(
-					onSuccess = { GroupLessonsUiState(lessons = it, times = times) },
+					onSuccess = { ScheduleUiState(lessons = it, times = times) },
 					onFailure = { uiState.copy(isLessonsLoading = false, message = it.toString()) },
 					onLoading = { uiState.copy(isLessonsLoading = true) }
 				)

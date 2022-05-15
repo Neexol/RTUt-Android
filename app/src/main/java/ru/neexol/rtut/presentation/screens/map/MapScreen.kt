@@ -1,4 +1,4 @@
-package ru.neexol.rtut.presentation.screens.maps
+package ru.neexol.rtut.presentation.screens.map
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
@@ -30,7 +30,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 
 @Composable
-fun MapsScreen(vm: MapsViewModel) {
+fun MapScreen(vm: MapViewModel) {
 	vm.uiState.maps?.let { maps ->
 		var selected by rememberSaveable(vm.uiState.classroom) { mutableStateOf(vm.uiState.floor) }
 		Column {

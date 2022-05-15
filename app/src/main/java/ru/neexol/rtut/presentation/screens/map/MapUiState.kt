@@ -1,8 +1,8 @@
-package ru.neexol.rtut.presentation.screens.maps
+package ru.neexol.rtut.presentation.screens.map
 
 import android.graphics.Bitmap
 
-data class MapsUiState(
+data class MapUiState(
 	val maps: List<Bitmap>? = null,
 	val isMapsLoading: Boolean = false,
 	val floor: Int = 0,

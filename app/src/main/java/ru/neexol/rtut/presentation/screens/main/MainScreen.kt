@@ -6,10 +6,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import ru.neexol.rtut.presentation.screens.grouplessons.GroupLessonsScreen
-import ru.neexol.rtut.presentation.screens.maps.MapsScreen
+import ru.neexol.rtut.presentation.screens.map.MapScreen
+import ru.neexol.rtut.presentation.screens.schedule.ScheduleScreen
 import ru.neexol.rtut.presentation.screens.settings.SettingsScreen
-import ru.neexol.rtut.presentation.screens.teacherlessons.TeacherLessonsScreen
+import ru.neexol.rtut.presentation.screens.teacher.TeacherScreen
 
 @Composable
 fun MainScreen() {
@@ -24,9 +24,9 @@ fun MainScreen() {
 		}
 	) {
 		NavHost(navController, Screen.Schedule.route) {
-			composable(Screen.Schedule.route) { GroupLessonsScreen(hiltViewModel()) }
-			composable(Screen.Teacher.route) { TeacherLessonsScreen(hiltViewModel()) }
-			composable(Screen.Map.route) { MapsScreen(hiltViewModel()) }
+			composable(Screen.Schedule.route) { ScheduleScreen(hiltViewModel()) }
+			composable(Screen.Teacher.route)  { TeacherScreen(hiltViewModel()) }
+			composable(Screen.Map.route)      { MapScreen(hiltViewModel()) }
 			composable(Screen.Settings.route) { SettingsScreen(hiltViewModel()) }
 		}
 	}

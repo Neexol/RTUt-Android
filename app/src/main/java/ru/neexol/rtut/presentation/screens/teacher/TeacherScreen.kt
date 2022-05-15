@@ -1,4 +1,4 @@
-package ru.neexol.rtut.presentation.screens.teacherlessons
+package ru.neexol.rtut.presentation.screens.teacher
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class, ExperimentalComposeUiApi::class)
 @Composable
-fun TeacherLessonsScreen(vm: TeacherLessonsViewModel) {
+fun TeacherScreen(vm: TeacherViewModel) {
 	val coroutineScope = rememberCoroutineScope()
 	val weekPagerState = rememberPagerState(vm.dayWeek.second)
 	val keyboardController = LocalSoftwareKeyboardController.current

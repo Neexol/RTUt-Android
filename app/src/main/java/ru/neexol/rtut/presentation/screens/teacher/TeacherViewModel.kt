@@ -1,4 +1,4 @@
-package ru.neexol.rtut.presentation.screens.teacherlessons
+package ru.neexol.rtut.presentation.screens.teacher
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import ru.neexol.rtut.core.Utils
@@ -15,12 +14,12 @@ import ru.neexol.rtut.data.lessons.LessonsRepository
 import javax.inject.Inject
 
 @HiltViewModel
-class TeacherLessonsViewModel @Inject constructor(
+class TeacherViewModel @Inject constructor(
 	private val repo: LessonsRepository
 ) : ViewModel() {
 	val dayWeek = Utils.getDayAndWeek()
 
-	var uiState by mutableStateOf(TeacherLessonsUiState())
+	var uiState by mutableStateOf(TeacherUiState())
 		private set
 
 	var teacher by mutableStateOf("")
@@ -30,9 +29,9 @@ class TeacherLessonsViewModel @Inject constructor(
 		fetchJob = viewModelScope.launch {
 			combine(repo.getTeacherLessons(teacher), repo.getTimes()) { lessons, times ->
 				lessons.to(
-					onSuccess = { TeacherLessonsUiState(lessons = it, times = times,) },
-					onFailure = { TeacherLessonsUiState(message = it.toString()) },
-					onLoading = { TeacherLessonsUiState(isLessonsLoading = true) }
+					onSuccess = { TeacherUiState(lessons = it, times = times,) },
+					onFailure = { TeacherUiState(message = it.toString()) },
+					onLoading = { TeacherUiState(isLessonsLoading = true) }
 				)
 			}.collect {
 				uiState = it
