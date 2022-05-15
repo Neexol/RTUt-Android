@@ -3,14 +3,18 @@ package ru.neexol.rtut.presentation.theme
 import androidx.compose.material.darkColors
 import androidx.compose.ui.graphics.Color
 
-val Purple200 = Color(0xFFBB86FC)
-val Purple700 = Color(0xFF3700B3)
-val Teal200 = Color(0xFF03DAC5)
+val Primary = Color(0xFFB9F2FF)
+val PrimaryVariant = Color(0xFF475255)
+val Background = Color(0xFF222222)
+val Surface = Color(0xFF3D3D3D)
 
 val RTUtPalette = darkColors(
-	primary = Purple200,
-	primaryVariant = Purple700,
-	secondary = Teal200
+	primary = Primary,
+	primaryVariant = PrimaryVariant,
+	secondary = Primary,
+	secondaryVariant = PrimaryVariant,
+	background = Background,
+	surface = Surface
 
 /* Other default colors to override
     background = Color.White,

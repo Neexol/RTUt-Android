@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import dagger.hilt.android.AndroidEntryPoint
-import ru.neexol.rtut.presentation.screens.MainScreen
+import ru.neexol.rtut.presentation.screens.main.MainScreen
 import ru.neexol.rtut.presentation.theme.RTUtTheme
 
 @AndroidEntryPoint

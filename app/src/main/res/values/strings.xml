@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">RTUt</string>
+    <string name="schedule">ScheduleSchedule</string>
+    <string name="map">Map</string>
+    <string name="settings">Settings</string>
+    <string name="teacher">Teacher</string>
 </resources>
