@@ -12,22 +12,22 @@ import androidx.compose.material.Divider
 import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.runtime.*
-import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 
 @Composable
 fun MapsScreen(vm: MapsViewModel) {
-	val uiState = vm.uiState
-	val maps = uiState.maps
-	if (maps != null) {
-		var selected by remember(uiState.floor) { mutableStateOf(uiState.floor) }
+	vm.uiState.maps?.let { maps ->
+		var selected by rememberSaveable(vm.uiState.classroom) { mutableStateOf(vm.uiState.floor) }
 		Column {
 			Row {
 				repeat(maps.size) {
@@ -41,17 +41,14 @@ fun MapsScreen(vm: MapsViewModel) {
 				onImeAction = { vm.fetchMaps() }
 			)
 			Divider()
-			ZoomableMap(
-				mapProvider = { maps[selected] }
-			)
+			ZoomableMap(maps[selected], vm.uiState.classroom)
 		}
 	}
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun FindField(value: String, onValueChange: (String) -> Unit, onImeAction: () -> Unit) {
-	val keyboardController = LocalSoftwareKeyboardController.current
+	val focusManager = LocalFocusManager.current
 	TextField(
 		value = value,
 		onValueChange = onValueChange,
@@ -60,31 +57,34 @@ fun FindField(value: String, onValueChange: (String) -> Unit, onImeAction: () ->
 		keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
 		keyboardActions = KeyboardActions {
 			onImeAction()
-			keyboardController?.hide()
+			focusManager.clearFocus()
 		}
 	)
 }
 
 @Composable
-fun ZoomableMap(mapProvider: () -> Bitmap) {
-	var scale by remember { mutableStateOf(1f) }
-	var translate by remember { mutableStateOf(Offset(0f, 0f)) }
+fun ZoomableMap(map: Bitmap, classroom: String) {
+	var scale by rememberSaveable(classroom) { mutableStateOf(1f) }
+	var offsetX by rememberSaveable(classroom) { mutableStateOf(0f) }
+	var offsetY by rememberSaveable(classroom) { mutableStateOf(0f) }
+
 	Image(
 		modifier = Modifier
 			.fillMaxSize()
-			.pointerInput(Unit) {
+			.pointerInput(classroom) {
 				detectTransformGestures { _, pan, zoom, _ ->
 					scale = (scale * zoom).coerceIn(1f, 15f)
-					translate += pan
+					offsetX += pan.x
+					offsetY += pan.y
 				}
 			}
 			.graphicsLayer(
 				scaleX = scale,
 				scaleY = scale,
-				translationX = translate.x,
-				translationY = translate.y
+				translationX = offsetX,
+				translationY = offsetY
 			),
-		bitmap = mapProvider().asImageBitmap(),
+		bitmap = map.asImageBitmap(),
 		contentDescription = null
 	)
 }
