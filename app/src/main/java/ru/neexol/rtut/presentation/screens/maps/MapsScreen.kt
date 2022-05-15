@@ -15,9 +15,14 @@ import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
@@ -64,26 +69,34 @@ fun FindField(value: String, onValueChange: (String) -> Unit, onImeAction: () ->
 
 @Composable
 fun ZoomableMap(map: Bitmap, classroom: String) {
-	var scale by rememberSaveable(classroom) { mutableStateOf(1f) }
-	var offsetX by rememberSaveable(classroom) { mutableStateOf(0f) }
-	var offsetY by rememberSaveable(classroom) { mutableStateOf(0f) }
+	var offset by rememberSaveable(
+		classroom,
+		saver = Saver(
+			save = { it.value.x to it.value.y },
+			restore = { mutableStateOf(Offset(it.first, it.second)) }
+		)
+	) { mutableStateOf(Offset(0f, 0f)) }
+	var zoom by rememberSaveable(classroom) { mutableStateOf(1f) }
 
 	Image(
 		modifier = Modifier
+			.clip(RectangleShape)
 			.fillMaxSize()
 			.pointerInput(classroom) {
-				detectTransformGestures { _, pan, zoom, _ ->
-					scale = (scale * zoom).coerceIn(1f, 15f)
-					offsetX += pan.x
-					offsetY += pan.y
+				detectTransformGestures { centroid, pan, gestureZoom, _ ->
+					val oldScale = zoom
+					val newScale = (zoom * gestureZoom).coerceIn(1f, 15f)
+					offset = (offset + centroid / oldScale) - (centroid / newScale + pan / oldScale)
+					zoom = newScale
 				}
 			}
-			.graphicsLayer(
-				scaleX = scale,
-				scaleY = scale,
-				translationX = offsetX,
-				translationY = offsetY
-			),
+			.graphicsLayer {
+				translationX = -offset.x * zoom
+				translationY = -offset.y * zoom
+				scaleX = zoom
+				scaleY = zoom
+				transformOrigin = TransformOrigin(0f, 0f)
+			},
 		bitmap = map.asImageBitmap(),
 		contentDescription = null
 	)
