@@ -31,18 +31,23 @@ fun PagerTopBar(
 	title: String,
 	items: List<String>,
 	isLast: Boolean = false,
-	size: Dp = 64.dp
+	size: Dp = 64.dp,
+	horizontalPadding: Dp = 8.dp
 ) {
-	Column(Modifier.background(MaterialTheme.colors.surface)) {
+	Column(
+		modifier = Modifier
+			.background(MaterialTheme.colors.surface)
+			.padding(horizontal = horizontalPadding)
+	) {
 		Row {
 			TitleBox(size, title)
 			Box {
 				IndicatorBox(size, isLast)
-				Pager(size, state, items)
+				Pager(size, horizontalPadding, state, items)
 				VanishingBox(size)
 			}
 		}
-		if (isLast) Spacer(Modifier.height(8.dp))
+		if (isLast) Spacer(Modifier.height(12.dp))
 	}
 }
 
@@ -75,9 +80,9 @@ private fun IndicatorBox(size: Dp, isLast: Boolean) {
 
 @ExperimentalPagerApi
 @Composable
-private fun Pager(size: Dp, state: PagerState, items: List<String>) {
+private fun Pager(size: Dp, extra: Dp, state: PagerState, items: List<String>) {
 	val coroutineScope = rememberCoroutineScope()
-	val pagerPadding = LocalConfiguration.current.screenWidthDp.dp - size * 2
+	val pagerPadding = LocalConfiguration.current.screenWidthDp.dp - (size + extra) * 2
 
 	HorizontalPager(
 		modifier = Modifier.zIndex(1f),
@@ -108,7 +113,7 @@ private fun Pager(size: Dp, state: PagerState, items: List<String>) {
 private fun VanishingBox(size: Dp) {
 	val gradient = Brush.horizontalGradient(
 		0f to Color.Transparent,
-		1f to MaterialTheme.colors.surface
+		0.95f to MaterialTheme.colors.surface
 	)
 	Box(
 		modifier = Modifier

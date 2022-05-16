@@ -5,10 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,12 +19,11 @@ import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import ru.neexol.rtut.R
+import ru.neexol.rtut.presentation.components.FindTopBar
 import ru.neexol.rtut.presentation.components.PagerTopBar
 
 @ExperimentalPagerApi
@@ -50,8 +45,9 @@ fun MapScreen(vm: MapViewModel) {
 				isLast = true
 			)
 
-			FindField(
+			FindTopBar(
 				value = vm.classroom,
+				placeholder = stringResource(R.string.classroom),
 				onValueChange = { vm.classroom = it.trimStart().uppercase() },
 				onImeAction = { vm.fetchMaps() }
 			)
@@ -59,22 +55,6 @@ fun MapScreen(vm: MapViewModel) {
 			ZoomableMap(maps[mapsPager.currentPage], uiState.classroom)
 		}
 	}
-}
-
-@Composable
-fun FindField(value: String, onValueChange: (String) -> Unit, onImeAction: () -> Unit) {
-	val focusManager = LocalFocusManager.current
-	TextField(
-		value = value,
-		onValueChange = onValueChange,
-		label = { Text("Classroom") },
-		singleLine = true,
-		keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-		keyboardActions = KeyboardActions {
-			onImeAction()
-			focusManager.clearFocus()
-		}
-	)
 }
 
 @Composable

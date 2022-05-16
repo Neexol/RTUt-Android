@@ -8,4 +8,5 @@
     <string name="week_letter">w</string>
     <string name="day_letter">d</string>
     <string name="days_cuts">mo tu we th fr sa</string>
+    <string name="classroom">Classroom</string>
 </resources>
