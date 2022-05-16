@@ -1,93 +1,49 @@
 package ru.neexol.rtut.presentation.screens.teacher
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import kotlinx.coroutines.launch
+import ru.neexol.rtut.R
+import ru.neexol.rtut.presentation.components.PagerTopBar
 
-@OptIn(ExperimentalPagerApi::class, ExperimentalComposeUiApi::class)
+@ExperimentalPagerApi
 @Composable
 fun TeacherScreen(vm: TeacherViewModel) {
-	val coroutineScope = rememberCoroutineScope()
-	val weekPagerState = rememberPagerState(vm.dayWeek.second)
-	val keyboardController = LocalSoftwareKeyboardController.current
+	val uiState = vm.uiState
+
+	val weekPager = rememberPagerState(vm.dayWeek.second)
 
 	Column {
-		Box {
-			HorizontalPager(
-				modifier = Modifier
-					.height(96.dp)
-					.zIndex(1f),
-				state = weekPagerState,
-				count = 16,
-				contentPadding = PaddingValues(horizontal = 150.dp)
-			) { page ->
-				Box(
-					modifier = Modifier
-						.size(96.dp)
-						.clip(CircleShape)
-						.clickable(
-							interactionSource = remember { MutableInteractionSource() },
-							indication = null
-						) {
-							coroutineScope.launch { weekPagerState.animateScrollToPage(page) }
-						},
-				) {
-					Text(
-						modifier = Modifier.align(Alignment.Center),
-						text = (page + 1).toString(),
-						fontSize = 24.sp
-					)
-				}
-			}
-			Box(
-				modifier = Modifier
-					.background(Color.Gray, shape = CircleShape)
-					.size(64.dp)
-					.align(Alignment.Center)
-			)
-		}
-		TextField(
+		PagerTopBar(
+			state = weekPager,
+			title = stringResource(R.string.week_letter),
+			items = (1..16).map(Int::toString),
+			isLast = true
+		)
+
+		FindField(
 			value = vm.teacher,
 			onValueChange = { vm.teacher = it.trimStart() },
-			label = { Text("Teacher") },
-			singleLine = true,
-			keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-			keyboardActions = KeyboardActions {
-				vm.fetchLessons()
-				keyboardController?.hide()
-			}
+			onImeAction = { vm.fetchLessons() }
 		)
-		val lessons = vm.uiState.lessons
-		val times = vm.uiState.times
-		if (lessons != null && times != null) {
+
+		if (uiState.lessons != null && uiState.times != null) {
 			LazyColumn {
-				itemsIndexed(lessons[weekPagerState.currentPage]) { day, dayLessons ->
+				itemsIndexed(uiState.lessons[weekPager.currentPage]) { day, dayLessons ->
 					if (dayLessons.isNotEmpty()) {
 						Column(
 							modifier = Modifier
@@ -101,8 +57,8 @@ fun TeacherScreen(vm: TeacherViewModel) {
 							dayLessons.forEach {
 								Row {
 									Column {
-										Text(times[it.number].begin)
-										Text(times[it.number].end)
+										Text(uiState.times[it.number].begin)
+										Text(uiState.times[it.number].end)
 									}
 									Column {
 										Text(it.name)
@@ -120,4 +76,20 @@ fun TeacherScreen(vm: TeacherViewModel) {
 			}
 		}
 	}
+}
+
+@Composable
+fun FindField(value: String, onValueChange: (String) -> Unit, onImeAction: () -> Unit) {
+	val focusManager = LocalFocusManager.current
+	TextField(
+		value = value,
+		onValueChange = onValueChange,
+		label = { Text("Teacher") },
+		singleLine = true,
+		keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+		keyboardActions = KeyboardActions {
+			onImeAction()
+			focusManager.clearFocus()
+		}
+	)
 }

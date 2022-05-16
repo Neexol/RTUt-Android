@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="schedule">Расписание</string>
-    <string name="app_name">Ртуть</string>
+    <string name="app_name">РТУть</string>
     <string name="map">Карта</string>
     <string name="settings">Настройки</string>
     <string name="teacher">Преподаватель</string>
+    <string name="day_letter">д</string>
+    <string name="week_letter">н</string>
+    <string name="floor_letter">э</string>
+    <string name="days_cuts">пн вт ср чт пт сб</string>
 </resources>

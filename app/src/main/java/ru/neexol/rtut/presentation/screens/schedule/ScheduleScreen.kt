@@ -1,153 +1,98 @@
 package ru.neexol.rtut.presentation.screens.schedule
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import kotlinx.coroutines.launch
+import ru.neexol.rtut.R
+import ru.neexol.rtut.presentation.components.PagerTopBar
 import java.math.BigDecimal
 
-@OptIn(ExperimentalPagerApi::class)
+@ExperimentalPagerApi
 @Composable
 fun ScheduleScreen(vm: ScheduleViewModel) {
 	LaunchedEffect(Unit) {
 		vm.fetchGroup()
 	}
-	val coroutineScope = rememberCoroutineScope()
-	val weekPagerState = rememberPagerState(vm.dayWeek.second)
-	val dayPagerState = rememberPagerState(vm.dayWeek.first)
-	val lessonsPagerState = rememberPagerState(vm.dayWeek.first)
 
-	val scrollingFollowingPair by remember {
-		derivedStateOf {
-			when {
-				dayPagerState.isScrollInProgress -> dayPagerState to lessonsPagerState
-				lessonsPagerState.isScrollInProgress -> lessonsPagerState to dayPagerState
-				else -> null
-			}
-		}
-	}
+	val uiState = vm.uiState
 
-	LaunchedEffect(scrollingFollowingPair) {
-		val (scrollingState, followingState) = scrollingFollowingPair ?: return@LaunchedEffect
-		snapshotFlow { scrollingState.currentPage + scrollingState.currentPageOffset }
-			.collect { pagePart ->
-				val divideAndRemainder = BigDecimal.valueOf(pagePart.toDouble())
-					.divideAndRemainder(BigDecimal.ONE)
+	if (uiState.lessons != null) {
+		val weekPager = rememberPagerState(vm.dayWeek.second)
+		val dayPager = rememberPagerState(vm.dayWeek.first)
+		val lessonsPager = rememberPagerState(vm.dayWeek.first)
 
-				followingState.scrollToPage(
-					divideAndRemainder[0].toInt(),
-					divideAndRemainder[1].toFloat(),
-				)
-			}
-	}
-
-	Column {
-		Box {
-			HorizontalPager(
-				modifier = Modifier
-					.height(96.dp)
-					.zIndex(1f),
-				state = weekPagerState,
-				count = 16,
-				contentPadding = PaddingValues(horizontal = 150.dp)
-			) { page ->
-				Box(
-					modifier = Modifier
-						.size(96.dp)
-						.clip(CircleShape)
-						.clickable(
-							interactionSource = remember { MutableInteractionSource() },
-							indication = null
-						) {
-							coroutineScope.launch { weekPagerState.animateScrollToPage(page) }
-						},
-				) {
-					Text(
-						modifier = Modifier.align(Alignment.Center),
-						text = (page + 1).toString(),
-						fontSize = 24.sp
-					)
+		val scrollingFollowingPair by remember {
+			derivedStateOf {
+				when {
+					dayPager.isScrollInProgress -> dayPager to lessonsPager
+					lessonsPager.isScrollInProgress -> lessonsPager to dayPager
+					else -> null
 				}
 			}
-			Box(
-				modifier = Modifier
-					.background(Color.Gray, shape = CircleShape)
-					.size(64.dp)
-					.align(Alignment.Center)
-			)
 		}
-		Box {
-			HorizontalPager(
-				modifier = Modifier
-					.height(96.dp)
-					.zIndex(1f),
-				state = dayPagerState,
-				count = 6,
-				contentPadding = PaddingValues(horizontal = 150.dp)
-			) { page ->
-				Box(
-					modifier = Modifier
-						.size(96.dp)
-						.clip(CircleShape)
-						.clickable(
-							interactionSource = remember { MutableInteractionSource() },
-							indication = null
-						) {
-							coroutineScope.launch { dayPagerState.animateScrollToPage(page) }
-						},
-				) {
-					Text(
-						modifier = Modifier.align(Alignment.Center),
-						text = listOf("ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ")[page],
-						fontSize = 24.sp
+
+		LaunchedEffect(scrollingFollowingPair) {
+			val (scrollingState, followingState) = scrollingFollowingPair ?: return@LaunchedEffect
+			snapshotFlow { scrollingState.currentPage + scrollingState.currentPageOffset }
+				.collect { pagePart ->
+					val divideAndRemainder = BigDecimal.valueOf(pagePart.toDouble())
+						.divideAndRemainder(BigDecimal.ONE)
+
+					followingState.scrollToPage(
+						divideAndRemainder[0].toInt(),
+						divideAndRemainder[1].toFloat(),
 					)
 				}
-			}
-			Box(
-				modifier = Modifier
-					.background(Color.Gray, shape = CircleShape)
-					.size(64.dp)
-					.align(Alignment.Center)
-			)
 		}
-		HorizontalPager(
-			state = lessonsPagerState,
-			count = 6
-		) { day ->
-			val lessons = vm.uiState.lessons
-			val times = vm.uiState.times
-			if (!(lessons.isNullOrEmpty() || times.isNullOrEmpty())) {
-				LazyColumn(
-					modifier = Modifier
-						.fillMaxSize()
-						.padding(16.dp)
-				) {
-					itemsIndexed(lessons[weekPagerState.currentPage][day]) { index , lesson ->
-						Row {
-							Column {
-								Text(times[index].begin)
-								Text(times[index].end)
+
+		Column {
+			PagerTopBar(
+				state = weekPager,
+				title = stringResource(R.string.week_letter),
+				items = uiState.lessons.indices.map { (it + 1).toString() }
+			)
+
+			PagerTopBar(
+				state = dayPager,
+				title = stringResource(R.string.day_letter),
+				items = stringResource(R.string.days_cuts).split(' '),
+				isLast = true
+			)
+
+			HorizontalPager(
+				state = lessonsPager,
+				count = 6
+			) { day ->
+				val lessons = vm.uiState.lessons
+				val times = vm.uiState.times
+				if (!(lessons.isNullOrEmpty() || times.isNullOrEmpty())) {
+					LazyColumn(
+						modifier = Modifier
+							.fillMaxSize()
+							.padding(16.dp)
+					) {
+						itemsIndexed(lessons[weekPager.currentPage][day]) { index , lesson ->
+							Row {
+								Column {
+									Text(times[index].begin)
+									Text(times[index].end)
+								}
+								Text(lesson?.let { "${it.name} ${it.teacher}" } ?: "")
 							}
-							Text(lesson?.let { "${it.name} ${it.teacher}" } ?: "")
+							Divider()
 						}
-						Divider()
 					}
 				}
 			}

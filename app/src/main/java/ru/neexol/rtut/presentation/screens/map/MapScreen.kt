@@ -4,12 +4,9 @@ import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Divider
-import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
@@ -27,26 +24,39 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.PagerState
+import ru.neexol.rtut.R
+import ru.neexol.rtut.presentation.components.PagerTopBar
 
+@ExperimentalPagerApi
 @Composable
 fun MapScreen(vm: MapViewModel) {
-	vm.uiState.maps?.let { maps ->
-		var selected by rememberSaveable(vm.uiState.classroom) { mutableStateOf(vm.uiState.floor) }
+	val uiState = vm.uiState
+
+	uiState.maps?.let { maps ->
+		val mapsPager = rememberSaveable(
+			uiState.classroom,
+			saver = PagerState.Saver
+		) { PagerState(vm.uiState.floor) }
+
 		Column {
-			Row {
-				repeat(maps.size) {
-					RadioButton(selected = it == selected, onClick = { selected = it })
-				}
-			}
-			Divider()
+			PagerTopBar(
+				state = mapsPager,
+				title = stringResource(R.string.floor_letter),
+				items = maps.indices.map(Int::toString),
+				isLast = true
+			)
+
 			FindField(
 				value = vm.classroom,
 				onValueChange = { vm.classroom = it.trimStart().uppercase() },
 				onImeAction = { vm.fetchMaps() }
 			)
-			Divider()
-			ZoomableMap(maps[selected], vm.uiState.classroom)
+
+			ZoomableMap(maps[mapsPager.currentPage], uiState.classroom)
 		}
 	}
 }

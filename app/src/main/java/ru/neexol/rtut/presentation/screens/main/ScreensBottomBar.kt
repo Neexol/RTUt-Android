@@ -6,7 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ContentAlpha
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -15,8 +14,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -27,16 +24,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 
 @Composable
 fun ScreensBottomBar(navController: NavController, screens: List<Screen>) {
-	val gradient = Brush.verticalGradient(
-		0f to Color.Transparent,
-		1f to Color.Black.copy(alpha = ContentAlpha.medium)
-	)
-
 	Row(
 		modifier = Modifier
 			.height(66.dp)
 			.fillMaxWidth()
-			.background(gradient)
+			.background(MaterialTheme.colors.surface)
 	) {
 		val navBackStackEntry by navController.currentBackStackEntryAsState()
 		val currentDestination = navBackStackEntry?.destination
@@ -59,7 +51,7 @@ fun ScreensBottomBar(navController: NavController, screens: List<Screen>) {
 }
 
 @Composable
-fun RowScope.ScreenItem(
+private fun RowScope.ScreenItem(
 	screen: Screen,
 	isEdge: Boolean,
 	selected: Boolean,
