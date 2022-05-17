@@ -27,7 +27,9 @@ class LessonsRepository @Inject constructor(
 					val dayLessons = weekLessons.filter { day == it.day }
 					dayLessons.maxOfOrNull { it.number }?.let { maxNumber ->
 						MutableList<Lesson?>(maxNumber + 1) { null }.apply {
-							dayLessons.forEach { set(it.number, it) }
+							dayLessons.forEach {
+								get(it.number) ?: set(it.number, it)
+							}
 						}
 					} ?: emptyList()
 				}

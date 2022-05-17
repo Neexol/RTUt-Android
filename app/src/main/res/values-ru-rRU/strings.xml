@@ -8,6 +8,17 @@
     <string name="day_letter">д</string>
     <string name="week_letter">н</string>
     <string name="floor_letter">э</string>
-    <string name="days_cuts">пн вт ср чт пт сб</string>
     <string name="classroom">Аудитория</string>
+    <string name="monday">Понедельник</string>
+    <string name="tuesday">Вторник</string>
+    <string name="wednesday">Среда</string>
+    <string name="thursday">Четверг</string>
+    <string name="friday">Пятница</string>
+    <string name="saturday">Суббота</string>
+    <string name="monday_cut">пн</string>
+    <string name="tuesday_cut">вт</string>
+    <string name="wednesday_cut">ср</string>
+    <string name="thursday_cut">чт</string>
+    <string name="friday_cut">пт</string>
+    <string name="saturday_cut">сб</string>
 </resources>

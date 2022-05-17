@@ -7,6 +7,35 @@
     <string name="floor_letter">f</string>
     <string name="week_letter">w</string>
     <string name="day_letter">d</string>
-    <string name="days_cuts">mo tu we th fr sa</string>
     <string name="classroom">Classroom</string>
+
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string-array name="days">
+        <item>@string/monday</item>
+        <item>@string/tuesday</item>
+        <item>@string/wednesday</item>
+        <item>@string/thursday</item>
+        <item>@string/friday</item>
+        <item>@string/saturday</item>
+    </string-array>
+
+    <string name="monday_cut">mo</string>
+    <string name="tuesday_cut">tu</string>
+    <string name="wednesday_cut">we</string>
+    <string name="thursday_cut">th</string>
+    <string name="friday_cut">fr</string>
+    <string name="saturday_cut">sa</string>
+    <string-array name="days_cut">
+        <item>@string/monday_cut</item>
+        <item>@string/tuesday_cut</item>
+        <item>@string/wednesday_cut</item>
+        <item>@string/thursday_cut</item>
+        <item>@string/friday_cut</item>
+        <item>@string/saturday_cut</item>
+    </string-array>
 </resources>

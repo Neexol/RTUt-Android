@@ -38,7 +38,7 @@ class LessonsPrefsManager @Inject constructor(
 	suspend fun putLessons(lessons: List<Lesson>) = dataStore.put(LESSONS, Json.encodeToString(lessons))
 
 	suspend fun getTimes() = dataStore.get(TIMES)?.let {
-		Json.decodeFromString<List<LessonTime>>(it)
+		Json.decodeFromString<List<LessonTime>>(it.replace('-',':'))
 	} ?: DEFAULT_TIMES
 	suspend fun putTimes(times: List<LessonTime>) = dataStore.put(TIMES, Json.encodeToString(times))
 }
