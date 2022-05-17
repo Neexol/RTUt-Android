@@ -12,9 +12,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -23,6 +22,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import kotlinx.coroutines.launch
+import ru.neexol.rtut.presentation.theme.bar
 
 @ExperimentalPagerApi
 @Composable
@@ -36,15 +36,14 @@ fun PagerTopBar(
 ) {
 	Column(
 		modifier = Modifier
-			.background(MaterialTheme.colors.surface)
+			.background(MaterialTheme.colors.bar)
 			.padding(horizontal = horizontalPadding)
 	) {
 		Row {
 			TitleBox(size, title)
 			Box {
 				IndicatorBox(size, isLast)
-				Pager(size, horizontalPadding, state, items)
-				VanishingBox(size)
+				Pager(size, size + horizontalPadding, state, items)
 			}
 		}
 		if (isLast) Spacer(Modifier.height(12.dp))
@@ -82,13 +81,24 @@ private fun IndicatorBox(size: Dp, isLast: Boolean) {
 @Composable
 private fun Pager(size: Dp, extra: Dp, state: PagerState, items: List<String>) {
 	val coroutineScope = rememberCoroutineScope()
-	val pagerPadding = LocalConfiguration.current.screenWidthDp.dp - (size + extra) * 2
+	val endPadding = 20.dp
+	val contentEndPadding = LocalConfiguration.current.screenWidthDp.dp - extra * 2 - endPadding
 
 	HorizontalPager(
-		modifier = Modifier.zIndex(1f),
+		modifier = Modifier
+			.zIndex(1f)
+			.padding(end = endPadding)
+			.graphicsLayer { alpha = 0.99f }
+			.drawWithContent {
+				drawContent()
+				drawRect(
+					brush = Brush.horizontalGradient(listOf(Color.Black, Color.Transparent)),
+					blendMode = BlendMode.DstIn
+				)
+			},
 		count = items.size,
 		state = state,
-		contentPadding = PaddingValues(end = pagerPadding)
+		contentPadding = PaddingValues(end = contentEndPadding)
 	) { page ->
 		Box(
 			Modifier
@@ -107,19 +117,4 @@ private fun Pager(size: Dp, extra: Dp, state: PagerState, items: List<String>) {
 			)
 		}
 	}
-}
-
-@Composable
-private fun VanishingBox(size: Dp) {
-	val gradient = Brush.horizontalGradient(
-		0f to Color.Transparent,
-		0.95f to MaterialTheme.colors.surface
-	)
-	Box(
-		modifier = Modifier
-			.zIndex(2f)
-			.background(gradient)
-			.height(size)
-			.fillMaxWidth()
-	)
 }

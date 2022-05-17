@@ -53,7 +53,11 @@ private fun RowScope.Payload(lesson: Lesson?) {
 		name + if (type.isNotBlank()) ", ${type.uppercase()}" else ""
 	}.toContent()
 
-	Column(Modifier.weight(1f).padding(horizontal = 10.dp)) {
+	Column(
+		modifier = Modifier
+			.weight(1f)
+			.padding(horizontal = 10.dp)
+	) {
 		Text(
 			text = lessonInfo,
 			color = MaterialTheme.colors.onSurface
