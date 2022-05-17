@@ -30,35 +30,43 @@ import ru.neexol.rtut.presentation.components.PagerTopBar
 @Composable
 fun MapScreen(vm: MapViewModel) {
 	val uiState = vm.uiState
-
-	uiState.maps?.let { maps ->
+	if (!uiState.maps.isNullOrEmpty()) {
 		val mapsPager = rememberSaveable(
 			uiState.classroom,
 			saver = PagerState.Saver
 		) { PagerState(vm.uiState.floor) }
 
 		Column {
-			PagerTopBar(
-				state = mapsPager,
-				title = stringResource(R.string.floor_letter),
-				items = maps.indices.map(Int::toString),
-				isLast = true
-			)
-
-			FindTopBar(
-				value = vm.classroom,
-				placeholder = stringResource(R.string.classroom),
-				onValueChange = { vm.classroom = it.trimStart().uppercase() },
-				onImeAction = { vm.fetchMaps() }
-			)
-
-			ZoomableMap(maps[mapsPager.currentPage], uiState.classroom)
+			FloorPagerBar(mapsPager, uiState.maps.indices.map(Int::toString))
+			FindClassroomBar(vm)
+			ZoomableMap(uiState.maps[mapsPager.currentPage], uiState.classroom)
 		}
 	}
 }
 
+@ExperimentalPagerApi
 @Composable
-fun ZoomableMap(map: Bitmap, classroom: String) {
+private fun FloorPagerBar(state: PagerState, items: List<String>) {
+	PagerTopBar(
+		state = state,
+		title = stringResource(R.string.floor_letter),
+		items = items,
+		isLast = true
+	)
+}
+
+@Composable
+private fun FindClassroomBar(vm: MapViewModel) {
+	FindTopBar(
+		value = vm.classroom,
+		placeholder = stringResource(R.string.classroom),
+		onValueChange = { vm.classroom = it.trimStart().uppercase() },
+		onImeAction = { vm.fetchMaps() }
+	)
+}
+
+@Composable
+private fun ZoomableMap(map: Bitmap, classroom: String) {
 	var offset by rememberSaveable(
 		classroom,
 		saver = Saver(

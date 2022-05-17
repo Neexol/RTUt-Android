@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -68,7 +67,7 @@ private fun RowScope.ScreenItem(
 			.padding(16.dp)
 			.background(
 				MaterialTheme.colors.primaryVariant,
-				RoundedCornerShape(10.dp)
+				MaterialTheme.shapes.small
 			)
 	} else if (isEdge) {
 		boxModifier.padding(horizontal = 24.dp)

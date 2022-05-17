@@ -2,7 +2,6 @@ package ru.neexol.rtut.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -46,7 +45,7 @@ fun FindTopBar(
 		decorationBox = { innerTextField ->
 			Row(
 				modifier = Modifier
-					.background(MaterialTheme.colors.background, RoundedCornerShape(10.dp))
+					.background(MaterialTheme.colors.background, MaterialTheme.shapes.medium)
 					.padding(vertical = 10.dp, horizontal = 14.dp),
 				verticalAlignment = Alignment.CenterVertically
 			) {

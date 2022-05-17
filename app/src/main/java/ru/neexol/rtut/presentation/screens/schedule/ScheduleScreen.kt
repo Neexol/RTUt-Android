@@ -13,8 +13,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import ru.neexol.rtut.R
+import ru.neexol.rtut.data.lessons.models.Lesson
+import ru.neexol.rtut.data.lessons.models.LessonTime
 import ru.neexol.rtut.presentation.components.LessonItem
 import ru.neexol.rtut.presentation.components.PagerTopBar
 import java.math.BigDecimal
@@ -22,69 +25,96 @@ import java.math.BigDecimal
 @ExperimentalPagerApi
 @Composable
 fun ScheduleScreen(vm: ScheduleViewModel) {
-	LaunchedEffect(Unit) {
-		vm.fetchGroup()
-	}
+	LaunchedEffect(Unit) { vm.fetchGroup() }
 
 	val uiState = vm.uiState
 	if (!uiState.lessons.isNullOrEmpty()) {
-		val weekPager = rememberPagerState(vm.dayWeek.second)
-		val dayPager = rememberPagerState(vm.dayWeek.first)
-		val lessonsPager = rememberPagerState(vm.dayWeek.first)
+		val weekPagerState = rememberPagerState(vm.dayWeek.second)
+		val dayPagerState = rememberPagerState(vm.dayWeek.first)
+		val lessonsPagerState = rememberPagerState(vm.dayWeek.first)
 
-		val scrollingFollowingPair by remember {
-			derivedStateOf {
-				when {
-					dayPager.isScrollInProgress -> dayPager to lessonsPager
-					lessonsPager.isScrollInProgress -> lessonsPager to dayPager
-					else -> null
-				}
-			}
+		val scrollingPair by remember {
+			derivedStateOf { scrollingPair(dayPagerState, lessonsPagerState) }
 		}
-
-		LaunchedEffect(scrollingFollowingPair) {
-			val (scrollingState, followingState) = scrollingFollowingPair ?: return@LaunchedEffect
-			snapshotFlow { scrollingState.currentPage + scrollingState.currentPageOffset }
-				.collect { pagePart ->
-					val divideAndRemainder = BigDecimal.valueOf(pagePart.toDouble())
-						.divideAndRemainder(BigDecimal.ONE)
-
-					followingState.scrollToPage(
-						divideAndRemainder[0].toInt(),
-						divideAndRemainder[1].toFloat(),
-					)
-				}
-		}
+		LaunchedEffect(scrollingPair) { syncScroll(scrollingPair) }
 
 		Column {
-			PagerTopBar(
-				state = weekPager,
-				title = stringResource(R.string.week_letter),
-				items = uiState.lessons.indices.map { (it + 1).toString() }
-			)
+			WeekPagerBar(weekPagerState, (1..uiState.lessons.size).map(Int::toString))
+			DayPagerBar(dayPagerState)
+			if (!uiState.times.isNullOrEmpty()) {
+				LessonsPager(
+					lessonsPagerState,
+					uiState.lessons,
+					uiState.times,
+					weekPagerState.currentPage
+				)
+			}
+		}
+	}
+}
 
-			PagerTopBar(
-				state = dayPager,
-				title = stringResource(R.string.day_letter),
-				items = stringArrayResource(R.array.days_cut).toList(),
-				isLast = true
-			)
+@ExperimentalPagerApi
+private fun scrollingPair(state1: PagerState, state2: PagerState) = when {
+	state1.isScrollInProgress -> state1 to state2
+	state2.isScrollInProgress -> state2 to state1
+	else -> null
+}
 
-			HorizontalPager(
-				state = lessonsPager,
-				count = 6
-			) { day ->
-				if (!uiState.times.isNullOrEmpty()) {
-					LazyColumn(
-						modifier = Modifier.fillMaxSize(),
-						contentPadding = PaddingValues(vertical = 14.dp, horizontal = 20.dp),
-						verticalArrangement = Arrangement.spacedBy(14.dp),
-					) {
-						itemsIndexed(uiState.lessons[weekPager.currentPage][day]) { number, lesson ->
-							LessonItem(lesson, uiState.times[number])
-						}
-					}
-				}
+@ExperimentalPagerApi
+private suspend fun syncScroll(pair: Pair<PagerState, PagerState>?) {
+	val (scrollingState, followingState) = pair ?: return
+	snapshotFlow { scrollingState.currentPage + scrollingState.currentPageOffset }
+		.collect { pagePart ->
+			val divideAndRemainder = BigDecimal.valueOf(pagePart.toDouble())
+				.divideAndRemainder(BigDecimal.ONE)
+
+			followingState.scrollToPage(
+				divideAndRemainder[0].toInt(),
+				divideAndRemainder[1].toFloat(),
+			)
+		}
+}
+
+@ExperimentalPagerApi
+@Composable
+private fun WeekPagerBar(state: PagerState, items: List<String>) {
+	PagerTopBar(
+		state = state,
+		title = stringResource(R.string.week_letter),
+		items = items
+	)
+}
+
+@ExperimentalPagerApi
+@Composable
+private fun DayPagerBar(state: PagerState) {
+	PagerTopBar(
+		state = state,
+		title = stringResource(R.string.day_letter),
+		items = stringArrayResource(R.array.days_cut).toList(),
+		isLast = true
+	)
+}
+
+@ExperimentalPagerApi
+@Composable
+private fun LessonsPager(
+	state: PagerState,
+	lessons: List<List<List<Lesson?>>>,
+	times: List<LessonTime>,
+	week: Int
+) {
+	HorizontalPager(
+		state = state,
+		count = 6
+	) { day ->
+		LazyColumn(
+			modifier = Modifier.fillMaxSize(),
+			contentPadding = PaddingValues(vertical = 14.dp, horizontal = 20.dp),
+			verticalArrangement = Arrangement.spacedBy(14.dp),
+		) {
+			itemsIndexed(lessons[week][day]) { number, lesson ->
+				LessonItem(lesson, times[number])
 			}
 		}
 	}
