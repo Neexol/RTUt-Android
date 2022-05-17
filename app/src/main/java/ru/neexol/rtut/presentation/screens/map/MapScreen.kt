@@ -3,14 +3,18 @@ package ru.neexol.rtut.presentation.screens.map
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTransformGestures
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.FloatingActionButtonDefaults
+import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
@@ -19,7 +23,9 @@ import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import ru.neexol.rtut.R
@@ -39,7 +45,7 @@ fun MapScreen(vm: MapViewModel) {
 		Column {
 			FloorPagerBar(mapsPager, uiState.maps.indices.map(Int::toString))
 			FindClassroomBar(vm)
-			ZoomableMap(uiState.maps[mapsPager.currentPage], uiState.classroom)
+			MapBrowser(uiState.maps[mapsPager.currentPage], uiState.classroom)
 		}
 	}
 }
@@ -66,36 +72,57 @@ private fun FindClassroomBar(vm: MapViewModel) {
 }
 
 @Composable
-private fun ZoomableMap(map: Bitmap, classroom: String) {
+private fun MapBrowser(map: Bitmap, classroom: String) {
 	var offset by rememberSaveable(
 		classroom,
 		saver = Saver(
 			save = { it.value.x to it.value.y },
 			restore = { mutableStateOf(Offset(it.first, it.second)) }
 		)
-	) { mutableStateOf(Offset(0f, 0f)) }
+	) { mutableStateOf(Offset.Zero) }
 	var zoom by rememberSaveable(classroom) { mutableStateOf(1f) }
 
-	Image(
-		modifier = Modifier
-			.clip(RectangleShape)
-			.fillMaxSize()
-			.pointerInput(classroom) {
-				detectTransformGestures { centroid, pan, gestureZoom, _ ->
-					val oldScale = zoom
-					val newScale = (zoom * gestureZoom).coerceIn(1f, 15f)
-					offset = (offset + centroid / oldScale) - (centroid / newScale + pan / oldScale)
-					zoom = newScale
+	Box {
+		Image(
+			modifier = Modifier
+				.clip(RectangleShape)
+				.fillMaxSize()
+				.pointerInput(classroom) {
+					detectTransformGestures { centroid, pan, gestureZoom, _ ->
+						val oldScale = zoom
+						val newScale = (zoom * gestureZoom).coerceIn(1f, 15f)
+						offset =
+							(offset + centroid / oldScale) - (centroid / newScale + pan / oldScale)
+						zoom = newScale
+					}
 				}
-			}
-			.graphicsLayer {
-				translationX = -offset.x * zoom
-				translationY = -offset.y * zoom
-				scaleX = zoom
-				scaleY = zoom
-				transformOrigin = TransformOrigin(0f, 0f)
-			},
-		bitmap = map.asImageBitmap(),
-		contentDescription = null
-	)
+				.graphicsLayer {
+					translationX = -offset.x * zoom
+					translationY = -offset.y * zoom
+					scaleX = zoom
+					scaleY = zoom
+					transformOrigin = TransformOrigin(0f, 0f)
+				},
+			bitmap = map.asImageBitmap(),
+			contentDescription = null
+		)
+		FitButton {
+			offset = Offset.Zero
+			zoom = 1f
+		}
+	}
+}
+
+@Composable
+private fun BoxScope.FitButton(onClick: () -> Unit) {
+	FloatingActionButton(
+		modifier = Modifier
+			.align(Alignment.BottomEnd)
+			.padding(20.dp),
+		shape = RoundedCornerShape(16.dp),
+		elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
+		onClick = onClick
+	) {
+		Icon(painter = painterResource(R.drawable.ic_fit_map_24), contentDescription = null)
+	}
 }
