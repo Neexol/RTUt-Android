@@ -10,4 +10,6 @@ data class Lesson(
 	val day: Int,
 	val number: Int,
 	val weeks: List<Int>
-)
+) {
+	val lessonWithType = name + (if (type.isNotBlank()) ", ${type.uppercase()}" else "")
+}

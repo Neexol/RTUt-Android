@@ -6,11 +6,13 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
@@ -22,9 +24,10 @@ import ru.neexol.rtut.presentation.components.LessonItem
 import ru.neexol.rtut.presentation.components.PagerTopBar
 import java.math.BigDecimal
 
+@ExperimentalMaterialApi
 @ExperimentalPagerApi
 @Composable
-fun ScheduleScreen(vm: ScheduleViewModel) {
+fun ScheduleScreen(vm: ScheduleViewModel = hiltViewModel(), onLessonClick: (Lesson, String) -> Unit) {
 	LaunchedEffect(Unit) { vm.fetchGroup() }
 
 	val uiState = vm.uiState
@@ -46,7 +49,8 @@ fun ScheduleScreen(vm: ScheduleViewModel) {
 					lessonsPagerState,
 					uiState.lessons,
 					uiState.times,
-					weekPagerState.currentPage
+					weekPagerState.currentPage,
+					onLessonClick
 				)
 			}
 		}
@@ -96,13 +100,15 @@ private fun DayPagerBar(state: PagerState) {
 	)
 }
 
+@ExperimentalMaterialApi
 @ExperimentalPagerApi
 @Composable
 private fun LessonsPager(
 	state: PagerState,
 	lessons: List<List<List<Lesson?>>>,
 	times: List<LessonTime>,
-	week: Int
+	week: Int,
+	onLessonClick: (Lesson, String) -> Unit
 ) {
 	HorizontalPager(
 		state = state,
@@ -114,7 +120,7 @@ private fun LessonsPager(
 			verticalArrangement = Arrangement.spacedBy(14.dp),
 		) {
 			itemsIndexed(lessons[week][day]) { number, lesson ->
-				LessonItem(lesson, times[number])
+				LessonItem(lesson, times[number]) { onLessonClick(lesson!!, (week + 1).toString()) }
 			}
 		}
 	}

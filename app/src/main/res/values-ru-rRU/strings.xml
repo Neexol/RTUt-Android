@@ -21,4 +21,7 @@
     <string name="thursday_cut">чт</string>
     <string name="friday_cut">пт</string>
     <string name="saturday_cut">сб</string>
+    <string name="private_notes">Личные</string>
+    <string name="public_notes">Общие</string>
+    <string name="no_notes">Нет заметок</string>
 </resources>

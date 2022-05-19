@@ -3,6 +3,7 @@ package ru.neexol.rtut.presentation.screens.teacher
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -10,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
@@ -20,9 +22,10 @@ import ru.neexol.rtut.presentation.components.FindTopBar
 import ru.neexol.rtut.presentation.components.LessonItem
 import ru.neexol.rtut.presentation.components.PagerTopBar
 
+@ExperimentalMaterialApi
 @ExperimentalPagerApi
 @Composable
-fun TeacherScreen(vm: TeacherViewModel) {
+fun TeacherScreen(vm: TeacherViewModel = hiltViewModel()) {
 	val uiState = vm.uiState
 	val weekPagerState = rememberPagerState(vm.dayWeek.second)
 
@@ -56,6 +59,7 @@ private fun FindTeacherBar(vm: TeacherViewModel) {
 	)
 }
 
+@ExperimentalMaterialApi
 @Composable
 private fun LessonsList(lessons: List<List<List<Lesson>>>, times: List<LessonTime>, week: Int) {
 	val daysLabels = stringArrayResource(R.array.days).toList()

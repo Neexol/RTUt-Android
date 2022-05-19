@@ -26,6 +26,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import ru.neexol.rtut.R
@@ -34,7 +35,7 @@ import ru.neexol.rtut.presentation.components.PagerTopBar
 
 @ExperimentalPagerApi
 @Composable
-fun MapScreen(vm: MapViewModel) {
+fun MapScreen(vm: MapViewModel = hiltViewModel()) {
 	val uiState = vm.uiState
 	if (!uiState.maps.isNullOrEmpty()) {
 		val mapsPager = rememberSaveable(

@@ -1,7 +1,7 @@
 package ru.neexol.rtut.core
 
 object Constants {
-	const val BASE_URL     = "http://192.168.31.177/"
+	const val BASE_URL     = "https://rtut-mirea.herokuapp.com/"
 	const val LESSONS_PATH = "/api/schedule"
 	const val NOTES_PATH   = "/api/notes"
 	const val MAPS_PATH    = "/static/maps"

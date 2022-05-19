@@ -38,4 +38,7 @@
         <item>@string/friday_cut</item>
         <item>@string/saturday_cut</item>
     </string-array>
+    <string name="private_notes">Private</string>
+    <string name="public_notes">Public</string>
+    <string name="no_notes">No notes</string>
 </resources>

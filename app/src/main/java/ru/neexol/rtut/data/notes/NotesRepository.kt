@@ -42,10 +42,9 @@ class NotesRepository @Inject constructor(
 		text: String,
 		lessonId: String,
 		weeks: String,
-		authorId: String,
 		type: NoteType
 	) = resourceFlowOf {
-		remoteDataSource.putNote(noteId, PutNote(text, lessonId, weeks, authorId, type))
+		remoteDataSource.putNote(noteId, PutNote(text, lessonId, weeks, getOrCreateAuthor(), type))
 	}.flowOn(Dispatchers.IO)
 
 	fun deleteNote(noteId: String) = resourceFlowOf {

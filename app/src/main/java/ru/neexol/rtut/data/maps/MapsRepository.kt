@@ -50,7 +50,7 @@ class MapsRepository @Inject constructor(
 			found = index != -1
 			if (found) {
 				StringBuilder(rawMap).apply {
-					setCharAt(index + classroom.length + 14, '6')
+					setCharAt(index + classroom.length + 14, '0')
 				}.toString()
 			} else rawMap
 		} else rawMap

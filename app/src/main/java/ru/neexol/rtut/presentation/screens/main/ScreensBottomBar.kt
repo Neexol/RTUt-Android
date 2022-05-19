@@ -23,7 +23,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import ru.neexol.rtut.presentation.theme.bar
 
 @Composable
-fun ScreensBottomBar(navController: NavController, screens: List<Screen>) {
+fun ScreensBottomBar(navController: NavController) {
+	val screens = listOf(Screen.Schedule, Screen.Teacher, Screen.Map, Screen.Settings)
 	Row(
 		modifier = Modifier
 			.height(66.dp)
@@ -32,10 +33,10 @@ fun ScreensBottomBar(navController: NavController, screens: List<Screen>) {
 	) {
 		val navBackStackEntry by navController.currentBackStackEntryAsState()
 		val currentDestination = navBackStackEntry?.destination
-		screens.forEachIndexed { index, screen ->
+		screens.forEach { screen ->
 			ScreenItem(
 				screen = screen,
-				isEdge = index == 0 || index == screens.lastIndex,
+				isEdge = screen == Screen.Schedule || screen == Screen.Settings,
 				selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
 			) {
 				navController.navigate(screen.route) {

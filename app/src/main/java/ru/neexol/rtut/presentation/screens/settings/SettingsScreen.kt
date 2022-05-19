@@ -7,18 +7,18 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.hilt.navigation.compose.hiltViewModel
 
-@OptIn(ExperimentalComposeUiApi::class)
+
 @Composable
-fun SettingsScreen(vm: SettingsViewModel) {
-	val keyboardController = LocalSoftwareKeyboardController.current
+fun SettingsScreen(vm: SettingsViewModel = hiltViewModel()) {
+	val focusManager = LocalFocusManager.current
 	val group = vm.groupUiState.group
 	val author = vm.authorUiState.author
 
@@ -32,7 +32,7 @@ fun SettingsScreen(vm: SettingsViewModel) {
 			keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
 			keyboardActions = KeyboardActions {
 				vm.editGroup()
-				keyboardController?.hide()
+				focusManager.clearFocus()
 			},
 			visualTransformation = groupTransformation
 		)
@@ -46,7 +46,7 @@ fun SettingsScreen(vm: SettingsViewModel) {
 			keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
 			keyboardActions = KeyboardActions {
 				vm.editAuthor()
-				keyboardController?.hide()
+				focusManager.clearFocus()
 			}
 		)
 	}

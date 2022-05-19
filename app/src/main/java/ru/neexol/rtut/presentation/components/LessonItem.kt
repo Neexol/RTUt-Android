@@ -1,6 +1,7 @@
 package ru.neexol.rtut.presentation.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -17,9 +18,16 @@ import ru.neexol.rtut.data.lessons.models.Lesson
 import ru.neexol.rtut.data.lessons.models.LessonTime
 
 @Composable
-fun LessonItem(lesson: Lesson?, time: LessonTime) {
+fun LessonItem(lesson: Lesson?, time: LessonTime, onClick: (() -> Unit)? = null) {
+	val surfaceModifier = if (lesson == null) {
+		Modifier.alpha(ContentAlpha.disabled)
+	} else {
+		onClick?.let {
+			Modifier.clickable { it() }
+		} ?: Modifier
+	}
 	Surface(
-		modifier = if (lesson == null) Modifier.alpha(ContentAlpha.disabled) else Modifier,
+		modifier = surfaceModifier,
 		shape = MaterialTheme.shapes.medium
 	) {
 		Row(Modifier.padding(16.dp)) {
@@ -49,17 +57,13 @@ private fun Time(time: LessonTime) {
 
 @Composable
 private fun RowScope.Payload(lesson: Lesson?) {
-	val lessonInfo = lesson?.run {
-		name + if (type.isNotBlank()) ", ${type.uppercase()}" else ""
-	}.toContent()
-
 	Column(
 		modifier = Modifier
 			.weight(1f)
 			.padding(horizontal = 10.dp)
 	) {
 		Text(
-			text = lessonInfo,
+			text = lesson?.lessonWithType.toContent(),
 			color = MaterialTheme.colors.onSurface
 		)
 		Text(

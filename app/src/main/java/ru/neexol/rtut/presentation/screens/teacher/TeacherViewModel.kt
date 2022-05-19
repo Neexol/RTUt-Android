@@ -29,7 +29,7 @@ class TeacherViewModel @Inject constructor(
 		fetchJob = viewModelScope.launch {
 			combine(repo.getTeacherLessons(teacher), repo.getTimes()) { lessons, times ->
 				lessons.to(
-					onSuccess = { TeacherUiState(lessons = it, times = times,) },
+					onSuccess = { TeacherUiState(lessons = it, times = times) },
 					onFailure = { TeacherUiState(message = it.toString()) },
 					onLoading = { TeacherUiState(isLessonsLoading = true) }
 				)
