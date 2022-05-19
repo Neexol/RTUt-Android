@@ -16,6 +16,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.launch
 import ru.neexol.rtut.R
 import ru.neexol.rtut.data.lessons.models.Lesson
 import ru.neexol.rtut.data.lessons.models.LessonTime
@@ -31,6 +32,7 @@ fun ScheduleScreen(vm: ScheduleViewModel = hiltViewModel(), onLessonClick: (Less
 
 	val uiState = vm.uiState
 	if (!uiState.lessons.isNullOrEmpty()) {
+		val coroutineScope = rememberCoroutineScope()
 		val weekPagerState = rememberPagerState(vm.dayWeek.second)
 		val dayPagerState = rememberPagerState(vm.dayWeek.first)
 		val lessonsPagerState = rememberPagerState(vm.dayWeek.first)
@@ -41,8 +43,16 @@ fun ScheduleScreen(vm: ScheduleViewModel = hiltViewModel(), onLessonClick: (Less
 		LaunchedEffect(scrollingPair) { syncScroll(scrollingPair) }
 
 		Column {
-			WeekPagerBar(weekPagerState, (1..uiState.lessons.size).map(Int::toString))
-			DayPagerBar(dayPagerState)
+			WeekPagerBar(weekPagerState, (1..uiState.lessons.size).map(Int::toString)) {
+				coroutineScope.launch {
+					weekPagerState.animateScrollToPage(vm.dayWeek.second)
+				}
+			}
+			DayPagerBar(dayPagerState) {
+				coroutineScope.launch {
+					dayPagerState.animateScrollToPage(vm.dayWeek.first)
+				}
+			}
 			if (!uiState.times.isNullOrEmpty()) {
 				LessonsPager(
 					lessonsPagerState,
@@ -84,21 +94,23 @@ private suspend fun syncScroll(pair: Pair<PagerState, PagerState>?) {
 
 @ExperimentalPagerApi
 @Composable
-private fun WeekPagerBar(state: PagerState, items: List<String>) {
+private fun WeekPagerBar(state: PagerState, items: List<String>, onTitleClick: () -> Unit) {
 	PagerTopBar(
 		state = state,
 		title = stringResource(R.string.week_letter),
-		items = items
+		items = items,
+		onTitleClick = onTitleClick
 	)
 }
 
 @ExperimentalPagerApi
 @Composable
-private fun DayPagerBar(state: PagerState) {
+private fun DayPagerBar(state: PagerState, onTitleClick: () -> Unit) {
 	PagerTopBar(
 		state = state,
 		title = stringResource(R.string.day_letter),
 		items = stringArrayResource(R.array.days_cut).toList(),
+		onTitleClick = onTitleClick,
 		isLast = true
 	)
 }

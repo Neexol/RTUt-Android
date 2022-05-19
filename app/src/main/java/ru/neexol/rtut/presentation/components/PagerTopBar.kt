@@ -30,6 +30,7 @@ fun PagerTopBar(
 	state: PagerState,
 	title: String,
 	items: List<String>,
+	onTitleClick: () -> Unit = {},
 	isLast: Boolean = false,
 	size: Dp = 64.dp,
 	horizontalPadding: Dp = 8.dp
@@ -40,7 +41,7 @@ fun PagerTopBar(
 			.padding(horizontal = horizontalPadding)
 	) {
 		Row {
-			TitleBox(size, title)
+			TitleBox(size, title, onTitleClick)
 			Box {
 				IndicatorBox(size, isLast)
 				Pager(size, size + horizontalPadding, state, items)
@@ -51,8 +52,16 @@ fun PagerTopBar(
 }
 
 @Composable
-private fun TitleBox(size: Dp, title: String) {
-	Box(modifier = Modifier.size(size)) {
+private fun TitleBox(size: Dp, title: String, onTitleClick: () -> Unit) {
+	Box(
+		modifier = Modifier
+			.size(size)
+			.clickable(
+				interactionSource = remember { MutableInteractionSource() },
+				indication = null,
+				onClick = onTitleClick
+			)
+	) {
 		Text(
 			text = title,
 			color = MaterialTheme.colors.primary,

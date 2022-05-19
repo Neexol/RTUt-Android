@@ -8,6 +8,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
@@ -17,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.launch
 import ru.neexol.rtut.R
 import ru.neexol.rtut.data.lessons.models.Lesson
 import ru.neexol.rtut.data.lessons.models.LessonTime
@@ -28,11 +30,16 @@ import ru.neexol.rtut.presentation.components.PagerTopBar
 @ExperimentalPagerApi
 @Composable
 fun TeacherScreen(vm: TeacherViewModel = hiltViewModel()) {
-	val uiState = vm.uiState
+	val coroutineScope = rememberCoroutineScope()
 	val weekPagerState = rememberPagerState(vm.dayWeek.second)
 
+	val uiState = vm.uiState
 	Column {
-		WeekPagerBar(weekPagerState)
+		WeekPagerBar(weekPagerState) {
+			coroutineScope.launch {
+				weekPagerState.animateScrollToPage(vm.dayWeek.second)
+			}
+		}
 		FindTeacherBar(vm)
 		if (!uiState.lessons.isNullOrEmpty() && !uiState.times.isNullOrEmpty()) {
 			LessonsList(uiState.lessons, uiState.times, weekPagerState.currentPage)
@@ -46,11 +53,12 @@ fun TeacherScreen(vm: TeacherViewModel = hiltViewModel()) {
 
 @ExperimentalPagerApi
 @Composable
-private fun WeekPagerBar(state: PagerState) {
+private fun WeekPagerBar(state: PagerState, onTitleClick: () -> Unit) {
 	PagerTopBar(
 		state = state,
 		title = stringResource(R.string.week_letter),
 		items = (1..16).map(Int::toString),
+		onTitleClick = onTitleClick,
 		isLast = true
 	)
 }
