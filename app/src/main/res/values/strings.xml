@@ -41,4 +41,9 @@
     <string name="private_notes">Private</string>
     <string name="public_notes">Public</string>
     <string name="no_notes">No notes</string>
+    <string name="for_all_weeks">For all weeks</string>
+    <string name="public_note">Public</string>
+    <string name="save">Save</string>
+    <string name="note_text">Note text</string>
+    <string name="note">Note</string>
 </resources>

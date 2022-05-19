@@ -1,6 +1,7 @@
 package ru.neexol.rtut.presentation.screens.main
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -35,6 +36,7 @@ fun MainScreen() {
 	}
 
 	ModalBottomSheetLayout(
+		modifier = Modifier.systemBarsPadding(),
 		sheetState = sheetState,
 		sheetContent = { NotesScreen(notesVM) },
 		scrimColor = Color.Black.copy(alpha = 0.3f)

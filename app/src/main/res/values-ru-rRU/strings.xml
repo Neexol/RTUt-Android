@@ -24,4 +24,9 @@
     <string name="private_notes">Личные</string>
     <string name="public_notes">Общие</string>
     <string name="no_notes">Нет заметок</string>
+    <string name="for_all_weeks">На все недели</string>
+    <string name="public_note">Общая</string>
+    <string name="save">Сохранить</string>
+    <string name="note_text">Текст заметки</string>
+    <string name="note">Заметка</string>
 </resources>

@@ -24,7 +24,7 @@ class NotesViewModel @Inject constructor(
 		newLesson ?: return
 		lesson = newLesson
 		week = newWeek
-		uiState = NotesUiState()
+		clearState()
 		fetchAuthor()
 		fetchNotes()
 	}
@@ -46,16 +46,6 @@ class NotesViewModel @Inject constructor(
 		}
 	}
 
-	private var createNoteJob: Job? = null
-	fun createNote(type: NoteType) {
-		createNoteJob?.cancel()
-		createNoteJob = viewModelScope.launch {
-			repo.putNote(null, "Simple text", lesson!!.id, week, type).collect {
-				println(it)
-			}
-		}
-	}
-
 	var author by mutableStateOf("")
 	private var fetchAuthorJob: Job? = null
 	private fun fetchAuthor() {
@@ -69,5 +59,37 @@ class NotesViewModel @Inject constructor(
 				)
 			}
 		}
+	}
+
+	var noteText by mutableStateOf("")
+
+	var typeToggled by mutableStateOf(false)
+	fun toggleType() { typeToggled = !typeToggled }
+
+	var weekToggled by mutableStateOf(false)
+	fun toggleWeek() { weekToggled = !weekToggled }
+
+	private var createNoteJob: Job? = null
+	fun createNote() {
+		createNoteJob?.cancel()
+		createNoteJob = viewModelScope.launch {
+			repo.putNote(
+				null,
+				noteText,
+				lesson!!.id,
+				if (weekToggled) lesson!!.weeks.joinToString(" ") else week,
+				if (typeToggled) NoteType.PUBLIC else NoteType.PRIVATE
+			).collect {
+				fetchNotes()
+			}
+		}
+	}
+
+	fun clearState() {
+		println("Clear")
+		uiState = NotesUiState()
+		noteText = ""
+		typeToggled = false
+		weekToggled = false
 	}
 }
