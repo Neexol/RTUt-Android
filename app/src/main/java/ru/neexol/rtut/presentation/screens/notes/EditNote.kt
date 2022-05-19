@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,19 +18,23 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import ru.neexol.rtut.R
+import ru.neexol.rtut.data.notes.models.Note
 import ru.neexol.rtut.presentation.theme.bar
 
 @Composable
-fun EditNote(vm: NotesViewModel, navController: NavController) {
+fun EditNote(vm: NotesViewModel, navController: NavController, note: Note?) {
+	LaunchedEffect(note) {
+		vm.setNote(note)
+	}
 	Column(Modifier.background(MaterialTheme.colors.primaryVariant)) {
-		TopBar(navController)
+		TopBar(vm, navController, note)
 		NoteText(vm)
 		BottomBar(vm, navController)
 	}
 }
 
 @Composable
-private fun TopBar(navController: NavController) {
+private fun TopBar(vm: NotesViewModel, navController: NavController, note: Note?) {
 	Row(
 		modifier = Modifier
 			.padding(horizontal = 10.dp)
@@ -49,11 +54,18 @@ private fun TopBar(navController: NavController) {
 			text = stringResource(R.string.note),
 			style = MaterialTheme.typography.h6
 		)
-		IconButton(onClick = { /*TODO*/ }) {
-			Icon(
-				painter = painterResource(R.drawable.ic_delete_24),
-				contentDescription = null
-			)
+		if (note != null) {
+			IconButton(
+				onClick = {
+					vm.deleteNote()
+					navController.popBackStack()
+				}
+			) {
+				Icon(
+					painter = painterResource(R.drawable.ic_delete_24),
+					contentDescription = null
+				)
+			}
 		}
 	}
 }
@@ -106,7 +118,7 @@ private fun BottomBar(vm: NotesViewModel, navController: NavController) {
 			modifier = Modifier.padding(end = 16.dp),
 			enabled = vm.noteText.isNotEmpty(),
 			onClick = {
-				vm.createNote()
+				vm.putNote()
 				navController.popBackStack()
 			}
 		) {

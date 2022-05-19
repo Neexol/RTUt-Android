@@ -10,6 +10,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import ru.neexol.rtut.data.lessons.models.Lesson
 import ru.neexol.rtut.data.notes.NotesRepository
+import ru.neexol.rtut.data.notes.models.Note
 import ru.neexol.rtut.data.notes.models.NoteType
 import javax.inject.Inject
 
@@ -61,6 +62,17 @@ class NotesViewModel @Inject constructor(
 		}
 	}
 
+	fun setNote(note: Note?) {
+		println("setNote")
+		note ?: return
+		noteId = note.id
+		noteText = note.text
+		typeToggled = note.type == NoteType.PUBLIC
+		weekToggled = note.weeks.contains(' ')
+	}
+
+	private var noteId: String? = null
+
 	var noteText by mutableStateOf("")
 
 	var typeToggled by mutableStateOf(false)
@@ -69,12 +81,12 @@ class NotesViewModel @Inject constructor(
 	var weekToggled by mutableStateOf(false)
 	fun toggleWeek() { weekToggled = !weekToggled }
 
-	private var createNoteJob: Job? = null
-	fun createNote() {
-		createNoteJob?.cancel()
-		createNoteJob = viewModelScope.launch {
+	private var putNoteJob: Job? = null
+	fun putNote() {
+		putNoteJob?.cancel()
+		putNoteJob = viewModelScope.launch {
 			repo.putNote(
-				null,
+				noteId,
 				noteText,
 				lesson!!.id,
 				if (weekToggled) lesson!!.weeks.joinToString(" ") else week,
@@ -85,9 +97,21 @@ class NotesViewModel @Inject constructor(
 		}
 	}
 
+	private var deleteNoteJob: Job? = null
+	fun deleteNote() {
+		deleteNoteJob?.cancel()
+		deleteNoteJob = viewModelScope.launch {
+			repo.deleteNote(noteId!!).collect {
+				clearState()
+				fetchNotes()
+			}
+		}
+	}
+
 	fun clearState() {
 		println("Clear")
 		uiState = NotesUiState()
+		noteId = null
 		noteText = ""
 		typeToggled = false
 		weekToggled = false
