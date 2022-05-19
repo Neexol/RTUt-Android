@@ -3,10 +3,12 @@ package ru.neexol.rtut.presentation.screens.teacher
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -34,6 +36,10 @@ fun TeacherScreen(vm: TeacherViewModel = hiltViewModel()) {
 		FindTeacherBar(vm)
 		if (!uiState.lessons.isNullOrEmpty() && !uiState.times.isNullOrEmpty()) {
 			LessonsList(uiState.lessons, uiState.times, weekPagerState.currentPage)
+		} else if (uiState.isLessonsLoading) {
+			Box(Modifier.fillMaxSize()) {
+				CircularProgressIndicator(Modifier.align(Alignment.Center))
+			}
 		}
 	}
 }

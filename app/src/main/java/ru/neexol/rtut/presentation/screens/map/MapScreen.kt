@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.FloatingActionButtonDefaults
 import androidx.compose.material.Icon
@@ -47,6 +48,10 @@ fun MapScreen(vm: MapViewModel = hiltViewModel()) {
 			FloorPagerBar(mapsPager, uiState.maps.indices.map(Int::toString))
 			FindClassroomBar(vm)
 			MapBrowser(uiState.maps[mapsPager.currentPage], uiState.classroom)
+		}
+	} else if (uiState.isMapsLoading) {
+		Box(Modifier.fillMaxSize()) {
+			CircularProgressIndicator(Modifier.align(Alignment.Center))
 		}
 	}
 }

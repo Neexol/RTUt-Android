@@ -1,13 +1,12 @@
 package ru.neexol.rtut.presentation.screens.schedule
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -53,6 +52,10 @@ fun ScheduleScreen(vm: ScheduleViewModel = hiltViewModel(), onLessonClick: (Less
 					onLessonClick
 				)
 			}
+		}
+	} else if (uiState.isLessonsLoading) {
+		Box(Modifier.fillMaxSize()) {
+			CircularProgressIndicator(Modifier.align(Alignment.Center))
 		}
 	}
 }

@@ -1,6 +1,5 @@
 package ru.neexol.rtut.presentation.screens.main
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.*
@@ -61,9 +60,5 @@ fun MainScreen() {
 		}
 	}
 
-	BackHandler(sheetState.isVisible) {
-		coroutineScope.launch {
-			sheetState.hide()
-		}
-	}
+
 }
