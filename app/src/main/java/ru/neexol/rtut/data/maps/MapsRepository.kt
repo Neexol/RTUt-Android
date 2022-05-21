@@ -29,6 +29,14 @@ class MapsRepository @Inject constructor(
 		val maps: List<Bitmap>
 	)
 
+	private fun String.withHyphen(): String {
+		return if (isNotBlank() && get(0).isLetter() && !contains('-')) {
+			indexOfFirst { it.isDigit() }.takeIf { it != -1 }?.let {
+				"${take(it)}-${drop(it)}"
+			} ?: this
+		} else this
+	}
+
 	private fun bitmap(map: String): Bitmap {
 		val svg = SVG.getFromString(map).apply {
 			documentHeight = documentViewBox.height() * 4
@@ -89,7 +97,8 @@ class MapsRepository @Inject constructor(
 			is Resource.Success -> {
 				coroutineScope {
 					resource.data.map { file ->
-						async { bitmap(file.readText(), classroom) }
+						println(classroom.withHyphen())
+						async { bitmap(file.readText(), classroom.withHyphen()) }
 					}.awaitAll()
 				}.let { markedBitmaps ->
 					val floor = if (classroom.isNotEmpty()) {
@@ -109,7 +118,6 @@ class MapsRepository @Inject constructor(
 							}
 						}
 						emitSuccess(highlighted)
-//						emitSuccess(GetMapsResult(floor, classroom, markedBitmaps.map { it.second }))
 					} else {
 						emitFailure(Exception("Not found"))
 					}

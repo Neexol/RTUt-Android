@@ -72,7 +72,7 @@ private fun FindClassroomBar(vm: MapViewModel) {
 	FindTopBar(
 		value = vm.classroom,
 		placeholder = stringResource(R.string.classroom),
-		onValueChange = { vm.classroom = it.trimStart().uppercase() },
+		onValueChange = { vm.classroom = it.trimStart().uppercase().replace(' ', '-') },
 		onImeAction = { vm.fetchMaps() }
 	)
 }
