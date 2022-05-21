@@ -63,7 +63,6 @@ class NotesViewModel @Inject constructor(
 	}
 
 	fun setNote(note: Note?) {
-		println("setNote")
 		note ?: return
 		noteId = note.id
 		noteText = note.text
@@ -109,11 +108,8 @@ class NotesViewModel @Inject constructor(
 	}
 
 	fun clearState() {
-		println("Clear")
 		uiState = NotesUiState()
 		noteId = null
 		noteText = ""
-		isPublicType = false
-		isAllWeeks = false
 	}
 }

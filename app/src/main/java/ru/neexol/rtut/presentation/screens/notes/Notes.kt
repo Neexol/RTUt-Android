@@ -9,10 +9,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,21 +22,18 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.neexol.rtut.R
 import ru.neexol.rtut.data.notes.models.Note
-import ru.neexol.rtut.data.notes.models.NoteType
 
 @Composable
 fun Notes(vm: NotesViewModel, navController: NavController) {
 	val uiState = vm.uiState
-	var selectedType by rememberSaveable { mutableStateOf(NoteType.PRIVATE) }
-
 	Box {
 		Column(Modifier.padding(horizontal = 20.dp)) {
-			LessonBar(vm.lesson, selectedType) {
-				selectedType = it
+			LessonBar(vm.lesson, vm.isPublicType) {
+				vm.isPublicType = it
 			}
 			uiState.notes?.let { notes ->
 				NotesList(
-					if (selectedType == NoteType.PRIVATE) notes.first else notes.second,
+					if (vm.isPublicType) notes.second else notes.first,
 					vm.author,
 					navController
 				)
@@ -54,7 +47,7 @@ fun Notes(vm: NotesViewModel, navController: NavController) {
 			shape = RoundedCornerShape(16.dp),
 			elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
 			onClick = {
-				vm.isPublicType = selectedType == NoteType.PUBLIC
+//				vm.isPublicType = selectedType == NoteType.PUBLIC
 				navController.navigate("edit")
 			}
 		) {

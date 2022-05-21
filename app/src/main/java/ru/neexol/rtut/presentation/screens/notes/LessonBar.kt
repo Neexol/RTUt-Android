@@ -19,14 +19,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.neexol.rtut.R
 import ru.neexol.rtut.data.lessons.models.Lesson
-import ru.neexol.rtut.data.notes.models.NoteType
 import ru.neexol.rtut.presentation.theme.bar
 
 @Composable
 fun LessonBar(
 	lesson: Lesson?,
-	selectedType: NoteType,
-	onSelectType: (NoteType) -> Unit
+	isPublicType: Boolean,
+	onToggleType: (Boolean) -> Unit
 ) {
 	Row(
 		modifier = Modifier
@@ -61,29 +60,23 @@ fun LessonBar(
 					interactionSource = remember { MutableInteractionSource() },
 					indication = null
 				) {
-					onSelectType(NoteType.PRIVATE.takeIf { it != selectedType } ?: NoteType.PUBLIC)
+					onToggleType(!isPublicType)
 				},
 			verticalAlignment = Alignment.CenterVertically,
 			horizontalArrangement = Arrangement.SpaceBetween
 		) {
-			NoteType.values().forEach {
-				NoteTypeTab(it, selectedType == it)
-			}
+			NoteTypeTab(R.string.private_notes, R.drawable.ic_private_24, !isPublicType)
+			NoteTypeTab(R.string.public_notes, R.drawable.ic_public_24, isPublicType)
 		}
 	}
 }
 
 @Composable
 private fun NoteTypeTab(
-	noteType: NoteType,
+	titleId: Int,
+	iconId: Int,
 	selected: Boolean
 ) {
-	val (titleId, iconId) = if (noteType == NoteType.PRIVATE) {
-		R.string.private_notes to R.drawable.ic_private_24
-	} else {
-		R.string.public_notes to R.drawable.ic_public_24
-	}
-
 	val backgroundModifier = if (selected) Modifier.background(
 		MaterialTheme.colors.primaryVariant,
 		MaterialTheme.shapes.small
