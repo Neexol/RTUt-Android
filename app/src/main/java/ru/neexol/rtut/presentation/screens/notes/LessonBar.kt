@@ -2,7 +2,7 @@ package ru.neexol.rtut.presentation.screens.notes
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -34,7 +34,7 @@ fun LessonBar(
 		modifier = Modifier
 			.padding(vertical = 10.dp)
 			.padding(top = 10.dp)
-			.height(56.dp),
+			.height(58.dp),
 		verticalAlignment = Alignment.CenterVertically
 	) {
 		Box(
@@ -53,13 +53,12 @@ fun LessonBar(
 			style = MaterialTheme.typography.body2,
 			color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium)
 		)
-
 		Row(
 			modifier = Modifier
 				.width(155.dp)
 				.fillMaxHeight()
 				.background(MaterialTheme.colors.bar, MaterialTheme.shapes.medium)
-				.padding(10.dp)
+				.padding(horizontal = 10.dp)
 				.clickable(
 					interactionSource = remember { MutableInteractionSource() },
 					indication = null
@@ -68,7 +67,8 @@ fun LessonBar(
 						?: NoteTypeTabData.Public
 					onSelectType(type)
 				},
-			verticalAlignment = Alignment.CenterVertically
+			verticalAlignment = Alignment.CenterVertically,
+			horizontalArrangement = Arrangement.SpaceBetween
 		) {
 			listOf(NoteTypeTabData.Private, NoteTypeTabData.Public).forEach {
 				NoteTypeTab(it, selectedType == it)
@@ -87,34 +87,30 @@ sealed class NoteTypeTabData(
 }
 
 @Composable
-private fun RowScope.NoteTypeTab(
+private fun NoteTypeTab(
 	noteType: NoteTypeTabData,
 	selected: Boolean
 ) {
-	val rowModifier = if (selected) {
-		Modifier
-			.fillMaxHeight()
-			.wrapContentWidth()
-			.background(MaterialTheme.colors.primaryVariant, MaterialTheme.shapes.small)
-			.padding(horizontal = 5.dp)
-			.weight(1f)
-	} else {
-		Modifier.padding(horizontal = 5.dp)
-	}
+	val backgroundModifier = if (selected) Modifier.background(
+		MaterialTheme.colors.primaryVariant,
+		MaterialTheme.shapes.small
+	) else Modifier
 	Row(
-		modifier = rowModifier,
-		verticalAlignment = Alignment.CenterVertically,
-		horizontalArrangement = Arrangement.aligned(Alignment.End)
+		modifier = backgroundModifier
+			.animateContentSize()
+			.padding(5.dp),
+		verticalAlignment = Alignment.CenterVertically
 	) {
 		Icon(
 			painter = painterResource(noteType.icon),
-			contentDescription = null,
+			contentDescription = stringResource(noteType.title),
 			tint = if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.onBackground
 		)
-		AnimatedVisibility(selected) {
+		if (selected) {
 			Text(
-				modifier = Modifier.padding(start = 4.dp),
+				modifier = Modifier.padding(start = 5.dp),
 				text = stringResource(noteType.title),
+				maxLines = 1,
 				style = MaterialTheme.typography.caption,
 				color = MaterialTheme.colors.primary
 			)

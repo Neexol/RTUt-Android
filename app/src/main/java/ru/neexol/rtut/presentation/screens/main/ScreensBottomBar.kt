@@ -27,16 +27,18 @@ fun ScreensBottomBar(navController: NavController) {
 	val screens = listOf(Screen.Schedule, Screen.Teacher, Screen.Map, Screen.Settings)
 	Row(
 		modifier = Modifier
-			.height(66.dp)
+			.height(76.dp)
 			.fillMaxWidth()
 			.background(MaterialTheme.colors.bar)
+			.padding(horizontal = 20.dp),
+		verticalAlignment = Alignment.CenterVertically,
+		horizontalArrangement = Arrangement.SpaceBetween
 	) {
 		val navBackStackEntry by navController.currentBackStackEntryAsState()
 		val currentDestination = navBackStackEntry?.destination
 		screens.forEach { screen ->
 			ScreenItem(
 				screen = screen,
-				isEdge = screen == Screen.Schedule || screen == Screen.Settings,
 				selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
 			) {
 				navController.navigate(screen.route) {
@@ -52,52 +54,38 @@ fun ScreensBottomBar(navController: NavController) {
 }
 
 @Composable
-private fun RowScope.ScreenItem(
+private fun ScreenItem(
 	screen: Screen,
-	isEdge: Boolean,
 	selected: Boolean,
 	onClick: () -> Unit
 ) {
-	var boxModifier = Modifier
-		.clickable(
-			interactionSource = remember { MutableInteractionSource() },
-			indication = null
-		) { onClick() }
-		.fillMaxHeight()
-	boxModifier = if (selected) {
-		boxModifier
-			.padding(16.dp)
-			.background(
-				MaterialTheme.colors.primaryVariant,
-				MaterialTheme.shapes.small
+	val backgroundModifier = if (selected) Modifier.background(
+		MaterialTheme.colors.primaryVariant,
+		MaterialTheme.shapes.small
+	) else Modifier
+	Row(
+		modifier = backgroundModifier
+			.animateContentSize()
+			.clickable(
+				interactionSource = remember { MutableInteractionSource() },
+				indication = null,
+				onClick = onClick
+			).padding(10.dp),
+		verticalAlignment = Alignment.CenterVertically
+	) {
+		Icon(
+			painter = painterResource(screen.icon),
+			contentDescription = stringResource(screen.title),
+			tint = if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.onBackground
+		)
+		if (selected) {
+			Text(
+				modifier = Modifier.padding(start = 5.dp),
+				text = stringResource(screen.title),
+				maxLines = 1,
+				style = MaterialTheme.typography.caption,
+				color = MaterialTheme.colors.primary
 			)
-	} else if (isEdge) {
-		boxModifier.padding(horizontal = 24.dp)
-	} else boxModifier.weight(weight = 1f)
-
-	Box(boxModifier) {
-		Row(
-			modifier = Modifier
-				.padding(5.dp)
-				.height(24.dp)
-				.align(Alignment.Center)
-				.animateContentSize()
-		) {
-			Icon(
-				painter = painterResource(screen.icon),
-				contentDescription = null,
-				tint = if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.onBackground
-			)
-			if (selected) {
-				Text(
-					modifier = Modifier
-						.padding(start = 5.dp)
-						.align(Alignment.CenterVertically),
-					text = stringResource(screen.title),
-					style = MaterialTheme.typography.caption,
-					color = MaterialTheme.colors.primary
-				)
-			}
 		}
 	}
 }
