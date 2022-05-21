@@ -27,7 +27,7 @@ fun ScreensBottomBar(navController: NavController) {
 	val screens = listOf(Screen.Schedule, Screen.Teacher, Screen.Map, Screen.Settings)
 	Row(
 		modifier = Modifier
-			.height(76.dp)
+			.height(66.dp)
 			.fillMaxWidth()
 			.background(MaterialTheme.colors.bar)
 			.padding(horizontal = 20.dp),
