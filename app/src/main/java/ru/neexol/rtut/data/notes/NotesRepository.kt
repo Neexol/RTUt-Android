@@ -34,7 +34,9 @@ class NotesRepository @Inject constructor(
 
 
 	fun getNotes(lessonId: String, week: String) = resourceFlowOf {
-		remoteDataSource.getNotes(lessonId, week, getOrCreateAuthor())
+		remoteDataSource.getNotes(lessonId, week, getOrCreateAuthor()).partition {
+			it.type == NoteType.PRIVATE
+		}
 	}.flowOn(Dispatchers.IO)
 
 	fun putNote(

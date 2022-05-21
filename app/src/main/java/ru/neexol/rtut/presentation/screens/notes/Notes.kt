@@ -11,7 +11,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -32,14 +31,7 @@ import ru.neexol.rtut.data.notes.models.NoteType
 @Composable
 fun Notes(vm: NotesViewModel, navController: NavController) {
 	val uiState = vm.uiState
-	var selectedType by rememberSaveable(
-		saver = Saver(
-			save = { it.value.enumType },
-			restore = { mutableStateOf(
-				if (it == NoteType.PRIVATE) NoteTypeTabData.Private else NoteTypeTabData.Public
-			) }
-		)
-	) { mutableStateOf<NoteTypeTabData>(NoteTypeTabData.Private) }
+	var selectedType by rememberSaveable { mutableStateOf(NoteType.PRIVATE) }
 
 	Box {
 		Column(Modifier.padding(horizontal = 20.dp)) {
@@ -48,7 +40,7 @@ fun Notes(vm: NotesViewModel, navController: NavController) {
 			}
 			uiState.notes?.let { notes ->
 				NotesList(
-					notes.filter { it.type == selectedType.enumType },
+					if (selectedType == NoteType.PRIVATE) notes.first else notes.second,
 					vm.author,
 					navController
 				)
@@ -62,7 +54,7 @@ fun Notes(vm: NotesViewModel, navController: NavController) {
 			shape = RoundedCornerShape(16.dp),
 			elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
 			onClick = {
-				vm.typeToggled = selectedType == NoteTypeTabData.Public
+				vm.isPublicType = selectedType == NoteType.PUBLIC
 				navController.navigate("edit")
 			}
 		) {

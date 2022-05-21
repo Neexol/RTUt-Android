@@ -67,19 +67,19 @@ class NotesViewModel @Inject constructor(
 		note ?: return
 		noteId = note.id
 		noteText = note.text
-		typeToggled = note.type == NoteType.PUBLIC
-		weekToggled = note.weeks.contains(' ')
+		isPublicType = note.type == NoteType.PUBLIC
+		isAllWeeks = note.weeks.contains(' ')
 	}
 
 	private var noteId: String? = null
 
 	var noteText by mutableStateOf("")
 
-	var typeToggled by mutableStateOf(false)
-	fun toggleType() { typeToggled = !typeToggled }
+	var isPublicType by mutableStateOf(false)
+	fun toggleType() { isPublicType = !isPublicType }
 
-	var weekToggled by mutableStateOf(false)
-	fun toggleWeek() { weekToggled = !weekToggled }
+	var isAllWeeks by mutableStateOf(false)
+	fun toggleWeek() { isAllWeeks = !isAllWeeks }
 
 	private var putNoteJob: Job? = null
 	fun putNote() {
@@ -89,8 +89,8 @@ class NotesViewModel @Inject constructor(
 				noteId,
 				noteText,
 				lesson!!.id,
-				if (weekToggled) lesson!!.weeks.joinToString(" ") else week,
-				if (typeToggled) NoteType.PUBLIC else NoteType.PRIVATE
+				if (isAllWeeks) lesson!!.weeks.joinToString(" ") else week,
+				if (isPublicType) NoteType.PUBLIC else NoteType.PRIVATE
 			).collect {
 				fetchNotes()
 			}
@@ -113,7 +113,7 @@ class NotesViewModel @Inject constructor(
 		uiState = NotesUiState()
 		noteId = null
 		noteText = ""
-		typeToggled = false
-		weekToggled = false
+		isPublicType = false
+		isAllWeeks = false
 	}
 }

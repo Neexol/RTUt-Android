@@ -103,14 +103,14 @@ private fun BottomBar(vm: NotesViewModel, navController: NavController) {
 		ToggleButton(
 			painterResource(R.drawable.ic_public_24),
 			stringResource(R.string.public_note),
-			vm.typeToggled,
+			vm.isPublicType,
 			vm::toggleType
 		)
 		Spacer(Modifier.size(10.dp))
 		ToggleButton(
 			painterResource(R.drawable.ic_all_weeks_note_24),
 			stringResource(R.string.for_all_weeks),
-			vm.weekToggled,
+			vm.isAllWeeks,
 			vm::toggleWeek
 		)
 		Spacer(Modifier.weight(1f))

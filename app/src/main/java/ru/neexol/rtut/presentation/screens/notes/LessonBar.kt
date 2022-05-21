@@ -1,7 +1,5 @@
 package ru.neexol.rtut.presentation.screens.notes
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,8 +25,8 @@ import ru.neexol.rtut.presentation.theme.bar
 @Composable
 fun LessonBar(
 	lesson: Lesson?,
-	selectedType: NoteTypeTabData,
-	onSelectType: (NoteTypeTabData) -> Unit
+	selectedType: NoteType,
+	onSelectType: (NoteType) -> Unit
 ) {
 	Row(
 		modifier = Modifier
@@ -63,34 +61,29 @@ fun LessonBar(
 					interactionSource = remember { MutableInteractionSource() },
 					indication = null
 				) {
-					val type = NoteTypeTabData.Private.takeIf { selectedType != it }
-						?: NoteTypeTabData.Public
-					onSelectType(type)
+					onSelectType(NoteType.PRIVATE.takeIf { it != selectedType } ?: NoteType.PUBLIC)
 				},
 			verticalAlignment = Alignment.CenterVertically,
 			horizontalArrangement = Arrangement.SpaceBetween
 		) {
-			listOf(NoteTypeTabData.Private, NoteTypeTabData.Public).forEach {
+			NoteType.values().forEach {
 				NoteTypeTab(it, selectedType == it)
 			}
 		}
 	}
 }
 
-sealed class NoteTypeTabData(
-	val enumType: NoteType,
-	@StringRes val title: Int,
-	@DrawableRes val icon: Int
-) {
-	object Private : NoteTypeTabData(NoteType.PRIVATE, R.string.private_notes, R.drawable.ic_private_24)
-	object Public : NoteTypeTabData(NoteType.PUBLIC, R.string.public_notes, R.drawable.ic_public_24)
-}
-
 @Composable
 private fun NoteTypeTab(
-	noteType: NoteTypeTabData,
+	noteType: NoteType,
 	selected: Boolean
 ) {
+	val (titleId, iconId) = if (noteType == NoteType.PRIVATE) {
+		R.string.private_notes to R.drawable.ic_private_24
+	} else {
+		R.string.public_notes to R.drawable.ic_public_24
+	}
+
 	val backgroundModifier = if (selected) Modifier.background(
 		MaterialTheme.colors.primaryVariant,
 		MaterialTheme.shapes.small
@@ -102,14 +95,14 @@ private fun NoteTypeTab(
 		verticalAlignment = Alignment.CenterVertically
 	) {
 		Icon(
-			painter = painterResource(noteType.icon),
-			contentDescription = stringResource(noteType.title),
+			painter = painterResource(iconId),
+			contentDescription = stringResource(titleId),
 			tint = if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.onBackground
 		)
 		if (selected) {
 			Text(
 				modifier = Modifier.padding(start = 5.dp),
-				text = stringResource(noteType.title),
+				text = stringResource(titleId),
 				maxLines = 1,
 				style = MaterialTheme.typography.caption,
 				color = MaterialTheme.colors.primary
