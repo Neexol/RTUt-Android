@@ -19,7 +19,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import ru.neexol.rtut.R
 import ru.neexol.rtut.data.lessons.models.Lesson
-import ru.neexol.rtut.presentation.theme.bar
+import ru.neexol.rtut.presentation.theme.backgroundVariant
 
 @Composable
 fun LessonBar(
@@ -54,7 +54,7 @@ fun LessonBar(
 			modifier = Modifier
 				.width(155.dp)
 				.fillMaxHeight()
-				.background(MaterialTheme.colors.bar, MaterialTheme.shapes.medium)
+				.background(MaterialTheme.colors.backgroundVariant, MaterialTheme.shapes.medium)
 				.padding(horizontal = 10.dp)
 				.clickable(
 					interactionSource = remember { MutableInteractionSource() },

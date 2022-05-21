@@ -22,7 +22,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import kotlinx.coroutines.launch
-import ru.neexol.rtut.presentation.theme.bar
+import ru.neexol.rtut.presentation.theme.backgroundVariant
 
 @ExperimentalPagerApi
 @Composable
@@ -37,7 +37,7 @@ fun PagerTopBar(
 ) {
 	Column(
 		modifier = Modifier
-			.background(MaterialTheme.colors.bar)
+			.background(MaterialTheme.colors.backgroundVariant)
 			.padding(horizontal = horizontalPadding)
 	) {
 		Row {

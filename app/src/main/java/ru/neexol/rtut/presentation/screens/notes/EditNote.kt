@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import ru.neexol.rtut.R
 import ru.neexol.rtut.data.notes.models.Note
-import ru.neexol.rtut.presentation.theme.bar
+import ru.neexol.rtut.presentation.theme.backgroundVariant
 
 @Composable
 fun EditNote(vm: NotesViewModel, navController: NavController, note: Note?) {
@@ -95,7 +95,7 @@ private fun ColumnScope.NoteText(vm: NotesViewModel) {
 private fun BottomBar(vm: NotesViewModel, navController: NavController) {
 	Row(
 		modifier = Modifier
-			.background(MaterialTheme.colors.bar)
+			.background(MaterialTheme.colors.backgroundVariant)
 			.padding(vertical = 10.dp),
 		verticalAlignment = Alignment.CenterVertically
 	) {

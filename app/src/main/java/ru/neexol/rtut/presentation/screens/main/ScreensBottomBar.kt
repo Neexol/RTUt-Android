@@ -20,7 +20,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
-import ru.neexol.rtut.presentation.theme.bar
+import ru.neexol.rtut.presentation.theme.backgroundVariant
 
 @Composable
 fun ScreensBottomBar(navController: NavController) {
@@ -29,7 +29,7 @@ fun ScreensBottomBar(navController: NavController) {
 		modifier = Modifier
 			.height(66.dp)
 			.fillMaxWidth()
-			.background(MaterialTheme.colors.bar)
+			.background(MaterialTheme.colors.backgroundVariant)
 			.padding(horizontal = 20.dp),
 		verticalAlignment = Alignment.CenterVertically,
 		horizontalArrangement = Arrangement.SpaceBetween

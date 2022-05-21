@@ -1,12 +1,16 @@
 package ru.neexol.rtut.presentation.screens.main
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -20,6 +24,7 @@ import ru.neexol.rtut.presentation.screens.notes.NotesViewModel
 import ru.neexol.rtut.presentation.screens.schedule.ScheduleScreen
 import ru.neexol.rtut.presentation.screens.settings.SettingsScreen
 import ru.neexol.rtut.presentation.screens.teacher.TeacherScreen
+import ru.neexol.rtut.presentation.theme.backgroundVariant
 
 @ExperimentalAnimationApi
 @ExperimentalMaterialApi
@@ -30,11 +35,11 @@ fun MainScreen() {
 
 	val notesVM = viewModel<NotesViewModel>()
 	val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
-	val isHidden by remember {
+	val isSheetHidden by remember {
 		derivedStateOf { !sheetState.isVisible }
 	}
-	LaunchedEffect(isHidden) {
-		if (isHidden) {
+	LaunchedEffect(isSheetHidden) {
+		if (isSheetHidden) {
 			notesVM.clearState()
 		}
 	}
@@ -44,23 +49,54 @@ fun MainScreen() {
 		coroutineScope.launch { sheetState.show() }
 	}
 
-	ModalBottomSheetLayout(
-		modifier = Modifier.systemBarsPadding(),
-		sheetState = sheetState,
-		sheetContent = { NotesScreen(notesVM, isHidden) },
-		scrimColor = Color.Black.copy(alpha = 0.3f)
-	) {
-		Scaffold(
-			bottomBar = { ScreensBottomBar(mainNavController) }
-		) { innerPadding ->
-			NavHost(mainNavController, Screen.Schedule.route, Modifier.padding(innerPadding)) {
-				composable(Screen.Schedule.route) { ScheduleScreen { l, w -> showNotes(l, w) } }
-				composable(Screen.Teacher.route) { TeacherScreen() }
-				composable(Screen.Map.route) { MapScreen() }
-				composable(Screen.Settings.route) { SettingsScreen() }
+	Column(Modifier.navigationBarsPadding()) {
+		StatusBar(!isSheetHidden)
+		ModalBottomSheetLayout(
+			sheetState = sheetState,
+			sheetContent = { NotesScreen(notesVM, isSheetHidden) },
+			scrimColor = Color.Black.copy(alpha = 0.3f)
+		) {
+			Scaffold(
+				bottomBar = { ScreensBottomBar(mainNavController) }
+			) { innerPadding ->
+				NavHost(mainNavController, Screen.Schedule.route, Modifier.padding(innerPadding)) {
+					composable(Screen.Schedule.route) { ScheduleScreen { l, w -> showNotes(l, w) } }
+					composable(Screen.Teacher.route) { TeacherScreen() }
+					composable(Screen.Map.route) { MapScreen() }
+					composable(Screen.Settings.route) { SettingsScreen() }
+				}
 			}
 		}
 	}
+}
 
-
+@Composable
+fun StatusBar(isScrim: Boolean) {
+	Box {
+		Box(
+			modifier = Modifier
+				.fillMaxWidth()
+				.background(MaterialTheme.colors.backgroundVariant)
+		) {
+			Box(
+				modifier = Modifier
+					.offset(x = 64.dp + 8.dp)
+					.background(MaterialTheme.colors.primaryVariant)
+					.padding(WindowInsets.statusBars.asPaddingValues())
+					.width(64.dp)
+			)
+		}
+		AnimatedVisibility(
+			visible = isScrim,
+			enter = fadeIn(),
+			exit = fadeOut()
+		) {
+			Box(
+				modifier = Modifier
+					.fillMaxWidth()
+					.background(Color.Black.copy(alpha = 0.3f))
+					.padding(WindowInsets.statusBars.asPaddingValues())
+			)
+		}
+	}
 }

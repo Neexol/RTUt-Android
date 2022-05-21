@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import ru.neexol.rtut.presentation.theme.bar
+import ru.neexol.rtut.presentation.theme.backgroundVariant
 
 @ExperimentalAnimationApi
 @Composable
@@ -38,7 +38,7 @@ fun FindTopBar(
 		modifier = Modifier
 			.fillMaxWidth()
 			.height(56.dp)
-			.background(MaterialTheme.colors.bar)
+			.background(MaterialTheme.colors.backgroundVariant)
 			.padding(start = 20.dp, end = 20.dp, bottom = 12.dp),
 		value = value,
 		onValueChange = onValueChange,

@@ -10,12 +10,9 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.FloatingActionButtonDefaults
 import androidx.compose.material.Icon
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
+import kotlinx.coroutines.launch
 import ru.neexol.rtut.R
 import ru.neexol.rtut.presentation.components.FindTopBar
 import ru.neexol.rtut.presentation.components.PagerTopBar
@@ -39,6 +37,8 @@ import ru.neexol.rtut.presentation.components.PagerTopBar
 @ExperimentalPagerApi
 @Composable
 fun MapScreen(vm: MapViewModel = hiltViewModel()) {
+	val coroutineScope = rememberCoroutineScope()
+
 	val uiState = vm.uiState
 	if (!uiState.maps.isNullOrEmpty()) {
 		val mapsPager = rememberSaveable(
@@ -47,7 +47,11 @@ fun MapScreen(vm: MapViewModel = hiltViewModel()) {
 		) { PagerState(vm.uiState.floor) }
 
 		Column {
-			FloorPagerBar(mapsPager, uiState.maps.indices.map(Int::toString))
+			FloorPagerBar(mapsPager, uiState.maps.indices.map(Int::toString)) {
+				coroutineScope.launch {
+					mapsPager.animateScrollToPage(uiState.floor)
+				}
+			}
 			FindClassroomBar(vm)
 			MapBrowser(uiState.maps[mapsPager.currentPage], uiState.classroom)
 		}
@@ -60,11 +64,12 @@ fun MapScreen(vm: MapViewModel = hiltViewModel()) {
 
 @ExperimentalPagerApi
 @Composable
-private fun FloorPagerBar(state: PagerState, items: List<String>) {
+private fun FloorPagerBar(state: PagerState, items: List<String>, onFloorClick: () -> Unit) {
 	PagerTopBar(
 		state = state,
 		title = stringResource(R.string.floor_letter),
 		items = items,
+		onTitleClick = onFloorClick,
 		isLast = true
 	)
 }

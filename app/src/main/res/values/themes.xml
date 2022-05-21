@@ -2,6 +2,8 @@
 <resources>
     <style name="Theme.RTUt" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:windowTranslucentStatus">true</item>
+<!--        <item name="android:background">@color/background_variant</item>-->
+<!--        <item name="android:background">#FF475255</item>-->
 <!--        <item name="android:statusBarColor">#FF303030</item>-->
 <!--        <item name="android:statusBarColor">@color/purple_700</item>-->
     </style>
