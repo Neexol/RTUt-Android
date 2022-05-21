@@ -1,5 +1,6 @@
 package ru.neexol.rtut.presentation.screens.teacher
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -26,6 +27,7 @@ import ru.neexol.rtut.presentation.components.FindTopBar
 import ru.neexol.rtut.presentation.components.LessonItem
 import ru.neexol.rtut.presentation.components.PagerTopBar
 
+@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 @Composable
@@ -63,13 +65,15 @@ private fun WeekPagerBar(state: PagerState, onTitleClick: () -> Unit) {
 	)
 }
 
+@ExperimentalAnimationApi
 @Composable
 private fun FindTeacherBar(vm: TeacherViewModel) {
 	FindTopBar(
 		value = vm.teacher,
 		placeholder = stringResource(R.string.teacher),
 		onValueChange = { vm.teacher = it.trimStart() },
-		onImeAction = { vm.fetchLessons() }
+		onImeAction = { vm.fetchLessons() },
+		onClearAction = { vm.fetchLessons() }
 	)
 }
 

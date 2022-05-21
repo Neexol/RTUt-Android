@@ -1,6 +1,7 @@
 package ru.neexol.rtut.presentation.screens.map
 
 import android.graphics.Bitmap
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.*
@@ -34,6 +35,7 @@ import ru.neexol.rtut.R
 import ru.neexol.rtut.presentation.components.FindTopBar
 import ru.neexol.rtut.presentation.components.PagerTopBar
 
+@ExperimentalAnimationApi
 @ExperimentalPagerApi
 @Composable
 fun MapScreen(vm: MapViewModel = hiltViewModel()) {
@@ -67,13 +69,15 @@ private fun FloorPagerBar(state: PagerState, items: List<String>) {
 	)
 }
 
+@ExperimentalAnimationApi
 @Composable
 private fun FindClassroomBar(vm: MapViewModel) {
 	FindTopBar(
 		value = vm.classroom,
 		placeholder = stringResource(R.string.classroom),
 		onValueChange = { vm.classroom = it.trimStart().uppercase().replace(' ', '-') },
-		onImeAction = { vm.fetchMaps() }
+		onImeAction = { vm.fetchMaps() },
+		onClearAction = { vm.fetchMaps() }
 	)
 }
 

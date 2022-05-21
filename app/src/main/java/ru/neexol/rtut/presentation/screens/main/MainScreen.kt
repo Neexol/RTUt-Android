@@ -1,5 +1,6 @@
 package ru.neexol.rtut.presentation.screens.main
 
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material.*
@@ -20,6 +21,7 @@ import ru.neexol.rtut.presentation.screens.schedule.ScheduleScreen
 import ru.neexol.rtut.presentation.screens.settings.SettingsScreen
 import ru.neexol.rtut.presentation.screens.teacher.TeacherScreen
 
+@ExperimentalAnimationApi
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 @Composable

@@ -26,16 +26,20 @@ class TeacherViewModel @Inject constructor(
 	private var fetchJob: Job? = null
 	fun fetchLessons() {
 		fetchJob?.cancel()
-		fetchJob = viewModelScope.launch {
-			combine(repo.getTeacherLessons(teacher), repo.getTimes()) { lessons, times ->
-				lessons.to(
-					onSuccess = { TeacherUiState(lessons = it, times = times) },
-					onFailure = { TeacherUiState(message = it.toString()) },
-					onLoading = { TeacherUiState(isLessonsLoading = true) }
-				)
-			}.collect {
-				uiState = it
+		if (teacher.isNotEmpty()) {
+			fetchJob = viewModelScope.launch {
+				combine(repo.getTeacherLessons(teacher), repo.getTimes()) { lessons, times ->
+					lessons.to(
+						onSuccess = { TeacherUiState(lessons = it, times = times) },
+						onFailure = { TeacherUiState(message = it.toString()) },
+						onLoading = { TeacherUiState(isLessonsLoading = true) }
+					)
+				}.collect {
+					uiState = it
+				}
 			}
+		} else {
+			uiState = TeacherUiState()
 		}
 	}
 }
