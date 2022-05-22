@@ -24,41 +24,39 @@ fun ScheduleScreen(vm: ScheduleViewModel = hiltViewModel(), onLessonClick: (Less
 	LaunchedEffect(Unit) { vm.fetchGroup() }
 
 	val uiState = vm.uiState
-	if (!uiState.lessons.isNullOrEmpty()) {
-		val coroutineScope = rememberCoroutineScope()
-		val weekPagerState = rememberPagerState(vm.dayWeek.second)
-		val dayPagerState = rememberPagerState(vm.dayWeek.first)
-		val lessonsPagerState = rememberPagerState(vm.dayWeek.first)
+	val coroutineScope = rememberCoroutineScope()
+	val weekPagerState = rememberPagerState(vm.dayWeek.second.coerceAtMost(15))
+	val dayPagerState = rememberPagerState(vm.dayWeek.first)
+	val lessonsPagerState = rememberPagerState(vm.dayWeek.first)
 
-		val scrollingPair by remember {
-			derivedStateOf { scrollingPair(dayPagerState, lessonsPagerState) }
-		}
-		LaunchedEffect(scrollingPair) { syncScroll(scrollingPair) }
+	val scrollingPair by remember {
+		derivedStateOf { scrollingPair(dayPagerState, lessonsPagerState) }
+	}
+	LaunchedEffect(scrollingPair) { syncScroll(scrollingPair) }
 
-		Column {
-			WeekPagerBar(weekPagerState, (1..uiState.lessons.size).map(Int::toString)) {
-				coroutineScope.launch {
-					weekPagerState.animateScrollToPage(vm.dayWeek.second)
-				}
-			}
-			DayPagerBar(dayPagerState) {
-				coroutineScope.launch {
-					dayPagerState.animateScrollToPage(vm.dayWeek.first)
-				}
-			}
-			if (!uiState.times.isNullOrEmpty()) {
-				LessonsPager(
-					lessonsPagerState,
-					uiState.lessons,
-					uiState.times,
-					weekPagerState.currentPage,
-					onLessonClick
-				)
+	Column {
+		WeekPagerBar(weekPagerState, (1..(uiState.lessons?.size ?: 16)).map(Int::toString)) {
+			coroutineScope.launch {
+				weekPagerState.animateScrollToPage(vm.dayWeek.second)
 			}
 		}
-	} else if (uiState.isLessonsLoading) {
-		Box(Modifier.fillMaxSize()) {
-			CircularProgressIndicator(Modifier.align(Alignment.Center))
+		DayPagerBar(dayPagerState) {
+			coroutineScope.launch {
+				dayPagerState.animateScrollToPage(vm.dayWeek.first)
+			}
+		}
+		if (!uiState.lessons.isNullOrEmpty() && !uiState.times.isNullOrEmpty()) {
+			LessonsPager(
+				lessonsPagerState,
+				uiState.lessons,
+				uiState.times,
+				weekPagerState.currentPage,
+				onLessonClick
+			)
+		} else if (uiState.isLessonsLoading) {
+			Box(Modifier.fillMaxSize()) {
+				CircularProgressIndicator(Modifier.align(Alignment.Center))
+			}
 		}
 	}
 }

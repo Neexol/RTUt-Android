@@ -22,7 +22,7 @@ import ru.neexol.rtut.presentation.screens.teacher.TeacherViewModel
 @Composable
 fun TeacherScreen(vm: TeacherViewModel = hiltViewModel()) {
 	val coroutineScope = rememberCoroutineScope()
-	val weekPagerState = rememberPagerState(vm.dayWeek.second)
+	val weekPagerState = rememberPagerState(vm.dayWeek.second.coerceAtMost(15))
 
 	val uiState = vm.uiState
 	Column {
