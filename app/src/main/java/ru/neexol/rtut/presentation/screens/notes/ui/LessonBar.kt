@@ -1,4 +1,4 @@
-package ru.neexol.rtut.presentation.screens.notes
+package ru.neexol.rtut.presentation.screens.notes.ui
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -22,7 +22,7 @@ import ru.neexol.rtut.data.lessons.models.Lesson
 import ru.neexol.rtut.presentation.theme.backgroundVariant
 
 @Composable
-fun LessonBar(
+internal fun LessonBar(
 	lesson: Lesson?,
 	isPublicType: Boolean,
 	onToggleType: (Boolean) -> Unit

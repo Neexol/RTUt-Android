@@ -1,4 +1,4 @@
-package ru.neexol.rtut.presentation.screens.main
+package ru.neexol.rtut.presentation.screens.main.ui
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -20,10 +20,11 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
+import ru.neexol.rtut.presentation.screens.main.Screen
 import ru.neexol.rtut.presentation.theme.backgroundVariant
 
 @Composable
-fun ScreensBottomBar(navController: NavController) {
+internal fun ScreensBottomBar(navController: NavController) {
 	val screens = listOf(Screen.Schedule, Screen.Teacher, Screen.Map, Screen.Settings)
 	Row(
 		modifier = Modifier

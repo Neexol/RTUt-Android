@@ -1,4 +1,4 @@
-package ru.neexol.rtut.presentation.screens.notes
+package ru.neexol.rtut.presentation.screens.notes.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,10 +19,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import ru.neexol.rtut.R
 import ru.neexol.rtut.data.notes.models.Note
+import ru.neexol.rtut.presentation.screens.notes.NotesViewModel
 import ru.neexol.rtut.presentation.theme.backgroundVariant
 
 @Composable
-fun EditNote(vm: NotesViewModel, navController: NavController, note: Note?) {
+internal fun EditNote(vm: NotesViewModel, navController: NavController, note: Note?) {
 	LaunchedEffect(note) {
 		vm.setNote(note)
 	}

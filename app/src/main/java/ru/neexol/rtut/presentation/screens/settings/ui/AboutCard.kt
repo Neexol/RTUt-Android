@@ -1,4 +1,4 @@
-package ru.neexol.rtut.presentation.screens.settings
+package ru.neexol.rtut.presentation.screens.settings.ui
 
 import android.content.Intent
 import androidx.compose.foundation.layout.*
@@ -25,7 +25,7 @@ val telegramIntent = Intent(Intent.ACTION_VIEW, Constants.TELEGRAM_URL.toUri())
 val githubIntent = Intent(Intent.ACTION_VIEW, Constants.GITHUB_URL.toUri())
 
 @Composable
-fun AboutCard() {
+internal fun AboutCard() {
 	val context = LocalContext.current
 
 	Surface(

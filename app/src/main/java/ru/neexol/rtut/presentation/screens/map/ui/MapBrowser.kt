@@ -1,18 +1,22 @@
-package ru.neexol.rtut.presentation.screens.map
+package ru.neexol.rtut.presentation.screens.map.ui
 
 import android.graphics.Bitmap
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTransformGestures
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.FloatingActionButtonDefaults
 import androidx.compose.material.Icon
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,71 +27,11 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.PagerState
-import kotlinx.coroutines.launch
 import ru.neexol.rtut.R
-import ru.neexol.rtut.presentation.components.FindTopBar
-import ru.neexol.rtut.presentation.components.PagerTopBar
-
-@ExperimentalAnimationApi
-@ExperimentalPagerApi
-@Composable
-fun MapScreen(vm: MapViewModel = hiltViewModel()) {
-	val coroutineScope = rememberCoroutineScope()
-
-	val uiState = vm.uiState
-	if (!uiState.maps.isNullOrEmpty()) {
-		val mapsPager = rememberSaveable(
-			uiState.classroom,
-			saver = PagerState.Saver
-		) { PagerState(vm.uiState.floor) }
-
-		Column {
-			FloorPagerBar(mapsPager, uiState.maps.indices.map(Int::toString)) {
-				coroutineScope.launch {
-					mapsPager.animateScrollToPage(uiState.floor)
-				}
-			}
-			FindClassroomBar(vm)
-			MapBrowser(uiState.maps[mapsPager.currentPage], uiState.classroom)
-		}
-	} else if (uiState.isMapsLoading) {
-		Box(Modifier.fillMaxSize()) {
-			CircularProgressIndicator(Modifier.align(Alignment.Center))
-		}
-	}
-}
-
-@ExperimentalPagerApi
-@Composable
-private fun FloorPagerBar(state: PagerState, items: List<String>, onFloorClick: () -> Unit) {
-	PagerTopBar(
-		state = state,
-		title = stringResource(R.string.floor_letter),
-		items = items,
-		onTitleClick = onFloorClick,
-		isLast = true
-	)
-}
-
-@ExperimentalAnimationApi
-@Composable
-private fun FindClassroomBar(vm: MapViewModel) {
-	FindTopBar(
-		value = vm.classroom,
-		placeholder = stringResource(R.string.classroom),
-		onValueChange = { vm.classroom = it.trimStart().uppercase().replace(' ', '-') },
-		onImeAction = { vm.fetchMaps() },
-		onClearAction = { vm.fetchMaps() }
-	)
-}
 
 @Composable
-private fun MapBrowser(map: Bitmap, classroom: String) {
+internal fun MapBrowser(map: Bitmap, classroom: String) {
 	var offset by rememberSaveable(
 		classroom,
 		saver = Saver(

@@ -1,4 +1,4 @@
-package ru.neexol.rtut.presentation.screens.settings
+package ru.neexol.rtut.presentation.screens.settings.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,7 +15,7 @@ import ru.neexol.rtut.R
 import ru.neexol.rtut.presentation.theme.backgroundVariant
 
 @Composable
-fun LogoBar() {
+internal fun LogoBar() {
 	Box(
 		modifier = Modifier
 			.fillMaxWidth()

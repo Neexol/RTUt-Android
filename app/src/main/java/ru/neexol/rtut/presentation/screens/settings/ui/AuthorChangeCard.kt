@@ -1,4 +1,4 @@
-package ru.neexol.rtut.presentation.screens.settings
+package ru.neexol.rtut.presentation.screens.settings.ui
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import ru.neexol.rtut.R
 
 @Composable
-fun AuthorChangeCard(currentAuthor: String, onNewAuthor: (String?) -> Unit) {
+internal fun AuthorChangeCard(currentAuthor: String, onNewAuthor: (String?) -> Unit) {
 	val clipboardManager = LocalClipboardManager.current
 
 	Surface(

@@ -1,4 +1,4 @@
-package ru.neexol.rtut.presentation.screens.notes
+package ru.neexol.rtut.presentation.screens.notes.ui
 
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.runtime.Composable
@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import ru.neexol.rtut.presentation.screens.notes.NotesViewModel
 
 @Composable
 fun NotesScreen(vm: NotesViewModel, isHidden: Boolean) {

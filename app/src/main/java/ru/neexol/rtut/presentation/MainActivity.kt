@@ -8,7 +8,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.core.view.WindowCompat
 import com.google.accompanist.pager.ExperimentalPagerApi
 import dagger.hilt.android.AndroidEntryPoint
-import ru.neexol.rtut.presentation.screens.main.MainScreen
+import ru.neexol.rtut.presentation.screens.main.ui.MainScreen
 import ru.neexol.rtut.presentation.theme.RTUtTheme
 
 @ExperimentalAnimationApi

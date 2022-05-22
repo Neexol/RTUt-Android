@@ -1,4 +1,4 @@
-package ru.neexol.rtut.presentation.screens.settings
+package ru.neexol.rtut.presentation.screens.settings.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import ru.neexol.rtut.R
 
 @Composable
-fun GroupChangeCard(
+internal fun GroupChangeCard(
 	currentGroup: String,
 	onNewGroup: (String) -> Unit
 ) {
