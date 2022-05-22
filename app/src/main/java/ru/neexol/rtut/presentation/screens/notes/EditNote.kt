@@ -154,7 +154,7 @@ private fun ToggleButton(icon: Painter, text: String, toggled: Boolean, onToggle
 	) {
 		Icon(
 			painter = icon,
-			contentDescription = null,
+			contentDescription = text,
 			tint = color
 		)
 		Text(

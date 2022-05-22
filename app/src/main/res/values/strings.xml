@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">RTUt</string>
     <string name="schedule">ScheduleSchedule</string>
     <string name="map">Map</string>
@@ -46,4 +46,10 @@
     <string name="save">Save</string>
     <string name="note_text">Note text</string>
     <string name="note">Note</string>
+    <string name="group">Group</string>
+    <string name="unique_identifier">Unique identifier</string>
+    <string name="unique_identifier_desc">Required to transfer notes from one device to another. The identifier to restore is retrieved from the clipboard.</string>
+    <string name="copy">Copy</string>
+    <string name="restore">Restore</string>
+    <string name="about_app" tools:ignore="TypographyDashes">The application is designed as a thesis. Alexeev N.E., IKBO-12-18, RTU MIREA, 2022.</string>
 </resources>

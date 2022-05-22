@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import ru.neexol.rtut.data.lessons.LessonsRepository
 import ru.neexol.rtut.data.notes.NotesRepository
@@ -32,9 +31,9 @@ class SettingsViewModel @Inject constructor(
 		}
 	}
 
-	var newGroup by mutableStateOf("")
+//	var newGroup by mutableStateOf("")
 	private var editGroupJob: Job? = null
-	fun editGroup() {
+	fun editGroup(newGroup: String) {
 		editGroupJob?.cancel()
 		editGroupJob = viewModelScope.launch {
 			if (newGroup matches "[А-ЯЁ]{4}\\d{4}".toRegex()) {
@@ -45,7 +44,10 @@ class SettingsViewModel @Inject constructor(
 						.toString()
 				).collect { group ->
 					groupUiState = group.to(
-						onSuccess = { SettingsGroupUiState(group = it) },
+						onSuccess = {
+//							newGroup = ""
+							SettingsGroupUiState(group = it)
+						},
 						onFailure = { groupUiState.copy(isGroupLoading = false, message = it.toString()) },
 						onLoading = { groupUiState.copy(isGroupLoading = true) }
 					)
@@ -72,18 +74,21 @@ class SettingsViewModel @Inject constructor(
 		}
 	}
 
-	var newAuthor by mutableStateOf("")
 	private var editAuthorJob: Job? = null
-	fun editAuthor() {
+	fun editAuthor(newAuthor: String?) {
 		editAuthorJob?.cancel()
-		editAuthorJob = viewModelScope.launch {
-			notesRepo.editAuthor(newAuthor).collect { author ->
-				authorUiState = author.to(
-					onSuccess = { SettingsAuthorUiState(author = it) },
-					onFailure = { authorUiState.copy(isAuthorLoading = false, message = it.toString()) },
-					onLoading = { authorUiState.copy(isAuthorLoading = true) }
-				)
+		if (newAuthor != null) {
+			editAuthorJob = viewModelScope.launch {
+				notesRepo.editAuthor(newAuthor).collect { author ->
+					authorUiState = author.to(
+						onSuccess = { SettingsAuthorUiState(author = it) },
+						onFailure = { authorUiState.copy(isAuthorLoading = false, message = it.toString()) },
+						onLoading = { authorUiState.copy(isAuthorLoading = true) }
+					)
+				}
 			}
+		} else {
+			authorUiState = authorUiState.copy(message = "Ваш буфер обмена пуст")
 		}
 	}
 }
