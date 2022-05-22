@@ -29,12 +29,20 @@ class MapsRepository @Inject constructor(
 		val maps: List<Bitmap>
 	)
 
-	private fun String.withHyphen(): String {
-		return if (isNotBlank() && get(0).isLetter() && !contains('-')) {
-			indexOfFirst { it.isDigit() }.takeIf { it != -1 }?.let {
-				"${take(it)}-${drop(it)}"
-			} ?: this
-		} else this
+	private fun String.formatClassroom(): String {
+		if (isEmpty()) return this
+
+		var result = uppercase().replace("-", "")
+		if (length > 1 && first().lowercaseChar() == 'и' && get(1).lowercaseChar() != 'в') {
+			result = result.drop(1)
+		}
+		(last().lowercaseChar().code - 1071).also {
+			if (it in 1..6) {
+				result = result.dropLast(1) + it
+			}
+		}
+
+		return result
 	}
 
 	private fun bitmap(map: String): Bitmap {
@@ -54,7 +62,7 @@ class MapsRepository @Inject constructor(
 	private fun bitmap(rawMap: String, classroom: String): Pair<Bitmap, Bitmap?> {
 		var found = false
 		val map = if (classroom.isNotEmpty()) {
-			val index = rawMap.indexOf("\"$classroom\"".uppercase())
+			val index = rawMap.indexOf("\"$classroom\"")
 			found = index != -1
 			if (found) {
 				StringBuilder(rawMap).apply {
@@ -97,8 +105,7 @@ class MapsRepository @Inject constructor(
 			is Resource.Success -> {
 				coroutineScope {
 					resource.data.map { file ->
-						println(classroom.withHyphen())
-						async { bitmap(file.readText(), classroom.withHyphen()) }
+						async { bitmap(file.readText(), classroom.formatClassroom()) }
 					}.awaitAll()
 				}.let { markedBitmaps ->
 					val floor = if (classroom.isNotEmpty()) {
