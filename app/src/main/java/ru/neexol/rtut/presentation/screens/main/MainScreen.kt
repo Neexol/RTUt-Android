@@ -1,5 +1,6 @@
 package ru.neexol.rtut.presentation.screens.main
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
@@ -31,42 +32,14 @@ import ru.neexol.rtut.presentation.theme.backgroundVariant
 @ExperimentalPagerApi
 @Composable
 fun MainScreen() {
-	val mainNavController = rememberNavController()
-
-	val notesVM = viewModel<NotesViewModel>()
 	val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 	val isSheetHidden by remember {
 		derivedStateOf { !sheetState.isVisible }
 	}
-	LaunchedEffect(isSheetHidden) {
-		if (isSheetHidden) {
-			notesVM.clearState()
-		}
-	}
-	val coroutineScope = rememberCoroutineScope()
-	val showNotes: (Lesson, String) -> Unit = { l, w ->
-		notesVM.setLesson(l, w)
-		coroutineScope.launch { sheetState.show() }
-	}
 
 	Column(Modifier.navigationBarsPadding()) {
 		StatusBar(!isSheetHidden)
-		ModalBottomSheetLayout(
-			sheetState = sheetState,
-			sheetContent = { NotesScreen(notesVM, isSheetHidden) },
-			scrimColor = Color.Black.copy(alpha = 0.3f)
-		) {
-			Scaffold(
-				bottomBar = { ScreensBottomBar(mainNavController) }
-			) { innerPadding ->
-				NavHost(mainNavController, Screen.Schedule.route, Modifier.padding(innerPadding)) {
-					composable(Screen.Schedule.route) { ScheduleScreen { l, w -> showNotes(l, w) } }
-					composable(Screen.Teacher.route) { TeacherScreen() }
-					composable(Screen.Map.route) { MapScreen() }
-					composable(Screen.Settings.route) { SettingsScreen() }
-				}
-			}
-		}
+		Screens(sheetState, isSheetHidden)
 	}
 }
 
@@ -97,6 +70,49 @@ fun StatusBar(isScrim: Boolean) {
 					.background(Color.Black.copy(alpha = 0.3f))
 					.padding(WindowInsets.statusBars.asPaddingValues())
 			)
+		}
+	}
+}
+
+@ExperimentalAnimationApi
+@ExperimentalMaterialApi
+@ExperimentalPagerApi
+@Composable
+fun Screens(sheetState: ModalBottomSheetState, isSheetHidden: Boolean) {
+	val mainNavController = rememberNavController()
+
+	val notesVM = viewModel<NotesViewModel>()
+	LaunchedEffect(isSheetHidden) {
+		if (isSheetHidden) {
+			notesVM.clearState()
+		}
+	}
+	val coroutineScope = rememberCoroutineScope()
+	val showNotes: (Lesson, String) -> Unit = { l, w ->
+		notesVM.setLesson(l, w)
+		coroutineScope.launch { sheetState.show() }
+	}
+
+	ModalBottomSheetLayout(
+		sheetState = sheetState,
+		sheetContent = { NotesScreen(notesVM, isSheetHidden) },
+		scrimColor = Color.Black.copy(alpha = 0.3f)
+	) {
+		Scaffold(
+			bottomBar = { ScreensBottomBar(mainNavController) }
+		) { innerPadding ->
+			NavHost(mainNavController, Screen.Schedule.route, Modifier.padding(innerPadding)) {
+				composable(Screen.Schedule.route) { ScheduleScreen { l, w -> showNotes(l, w) } }
+				composable(Screen.Teacher.route) { TeacherScreen() }
+				composable(Screen.Map.route) { MapScreen() }
+				composable(Screen.Settings.route) { SettingsScreen() }
+			}
+		}
+	}
+
+	BackHandler(!isSheetHidden) {
+		coroutineScope.launch {
+			sheetState.hide()
 		}
 	}
 }
