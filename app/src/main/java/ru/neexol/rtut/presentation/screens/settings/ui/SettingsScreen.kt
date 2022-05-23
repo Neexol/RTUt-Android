@@ -1,0 +1,34 @@
+package ru.neexol.rtut.presentation.screens.settings.ui
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import ru.neexol.rtut.presentation.screens.settings.SettingsViewModel
+
+@Composable
+fun SettingsScreen(vm: SettingsViewModel) {
+	Column {
+		LogoBar()
+		Column(
+			modifier = Modifier
+				.padding(20.dp)
+				.verticalScroll(rememberScrollState()),
+			verticalArrangement = Arrangement.spacedBy(14.dp)
+		) {
+			GroupChangeCard(
+				currentGroup = vm.groupUiState.group ?: "",
+				onNewGroup = { vm.editGroup(it) }
+			)
+			AuthorChangeCard(
+				currentAuthor = vm.authorUiState.author ?: "",
+				onNewAuthor = { vm.editAuthor(it) }
+			)
+			AboutCard()
+		}
+	}
+}

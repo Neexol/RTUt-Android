@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="schedule">Расписание</string>
+    <string name="app_name">РТУть</string>
+    <string name="map">Карта</string>
+    <string name="settings">Настройки</string>
+    <string name="teacher">Преподаватель</string>
+    <string name="day_letter">д</string>
+    <string name="week_letter">н</string>
+    <string name="floor_letter">э</string>
+    <string name="classroom">Аудитория</string>
+    <string name="monday">Понедельник</string>
+    <string name="tuesday">Вторник</string>
+    <string name="wednesday">Среда</string>
+    <string name="thursday">Четверг</string>
+    <string name="friday">Пятница</string>
+    <string name="saturday">Суббота</string>
+    <string name="monday_cut">пн</string>
+    <string name="tuesday_cut">вт</string>
+    <string name="wednesday_cut">ср</string>
+    <string name="thursday_cut">чт</string>
+    <string name="friday_cut">пт</string>
+    <string name="saturday_cut">сб</string>
+    <string name="private_notes">Личные</string>
+    <string name="public_notes">Общие</string>
+    <string name="no_notes">Нет заметок</string>
+    <string name="for_all_weeks">На все недели</string>
+    <string name="public_note">Общая</string>
+    <string name="save">Сохранить</string>
+    <string name="note_text">Текст заметки</string>
+    <string name="note">Заметка</string>
+    <string name="group">Группа</string>
+    <string name="unique_identifier">Уникальный идентификатор</string>
+    <string name="unique_identifier_desc">Необходим для переноса заметок с одного устройства на другое. Идентификатор для восстановления извлекается из буфера обмена.</string>
+    <string name="copy">Копировать</string>
+    <string name="restore">Восстановить</string>
+    <string name="about_app" tools:ignore="TypographyDashes">Приложение написано в качестве ВКР, Алексеев Н.Е., ИКБО-12-18, РТУ МИРЭА, 2022.</string>
+    <string name="enter_group">Введите группу:</string>
+</resources>

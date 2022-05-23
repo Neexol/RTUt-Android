@@ -2,16 +2,22 @@ package ru.neexol.rtut.core
 
 sealed class Resource<out T> {
 	data class Success<T>(val data: T) : Resource<T>()
-	data class Error(val cause: Throwable) : Resource<Nothing>()
+	data class Failure(val cause: Throwable) : Resource<Nothing>()
 	object Loading : Resource<Nothing>()
 
-	inline operator fun invoke(
-		onLoading: () -> Unit = {},
-		onError: (Throwable) -> Unit = {},
-		onSuccess: (T) -> Unit = {},
+	inline fun <R> map(transform: (T) -> R) = when (this) {
+		is Success -> Success(transform(data))
+		is Failure -> Failure(cause)
+		Loading    -> Loading
+	}
+
+	inline fun <reified R> to(
+		onSuccess: (T) -> R,
+		onFailure: (Throwable) -> R,
+		onLoading: () -> R,
 	) = when(this) {
 		is Success -> onSuccess(data)
-		is Error -> onError(cause)
-		Loading -> onLoading()
+		is Failure -> onFailure(cause)
+		Loading    -> onLoading()
 	}
 }

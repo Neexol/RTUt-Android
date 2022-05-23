@@ -10,4 +10,9 @@ data class Lesson(
 	val day: Int,
 	val number: Int,
 	val weeks: List<Int>
-)
+) {
+	private fun formatName() = name.trim().lowercase().let {
+		if (it == "военная" || it == "подготовка") "Военная подготовка" else name
+	}
+	val lessonWithType = formatName() + (if (type.isNotBlank()) ", ${type.uppercase()}" else "")
+}

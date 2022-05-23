@@ -9,7 +9,7 @@ import javax.inject.Singleton
 class LessonsLocalDataSource @Inject constructor(
 	private val manager: LessonsPrefsManager
 ) {
-	suspend fun getGroup() = manager.getGroup()
+	suspend fun getGroup() = manager.getGroup() ?: ""
 	suspend fun putGroup(group: String) = manager.putGroup(group)
 
 	suspend fun getChecksum() = manager.getChecksum()

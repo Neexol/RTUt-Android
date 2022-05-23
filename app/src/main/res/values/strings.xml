@@ -1,3 +1,57 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">RTUt</string>
+    <string name="schedule">ScheduleSchedule</string>
+    <string name="map">Map</string>
+    <string name="settings">Settings</string>
+    <string name="teacher">Teacher</string>
+    <string name="floor_letter">f</string>
+    <string name="week_letter">w</string>
+    <string name="day_letter">d</string>
+    <string name="classroom">Classroom</string>
+
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string-array name="days">
+        <item>@string/monday</item>
+        <item>@string/tuesday</item>
+        <item>@string/wednesday</item>
+        <item>@string/thursday</item>
+        <item>@string/friday</item>
+        <item>@string/saturday</item>
+    </string-array>
+
+    <string name="monday_cut">mo</string>
+    <string name="tuesday_cut">tu</string>
+    <string name="wednesday_cut">we</string>
+    <string name="thursday_cut">th</string>
+    <string name="friday_cut">fr</string>
+    <string name="saturday_cut">sa</string>
+    <string-array name="days_cut">
+        <item>@string/monday_cut</item>
+        <item>@string/tuesday_cut</item>
+        <item>@string/wednesday_cut</item>
+        <item>@string/thursday_cut</item>
+        <item>@string/friday_cut</item>
+        <item>@string/saturday_cut</item>
+    </string-array>
+    <string name="private_notes">Private</string>
+    <string name="public_notes">Public</string>
+    <string name="no_notes">No notes</string>
+    <string name="for_all_weeks">For all weeks</string>
+    <string name="public_note">Public</string>
+    <string name="save">Save</string>
+    <string name="note_text">Note text</string>
+    <string name="note">Note</string>
+    <string name="group">Group</string>
+    <string name="unique_identifier">Unique identifier</string>
+    <string name="unique_identifier_desc">Required to transfer notes from one device to another. The identifier to restore is retrieved from the clipboard.</string>
+    <string name="copy">Copy</string>
+    <string name="restore">Restore</string>
+    <string name="about_app" tools:ignore="TypographyDashes">The application is designed as a thesis. Alexeev N.E., IKBO-12-18, RTU MIREA, 2022.</string>
+    <string name="enter_group">Enter group:</string>
+    <string name="group_pattern" translatable="false">XXXX-00-00</string>
 </resources>
