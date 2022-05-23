@@ -13,6 +13,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import ru.neexol.rtut.data.lessons.models.Lesson
 import ru.neexol.rtut.data.lessons.models.LessonTime
@@ -77,10 +79,14 @@ private fun RowScope.Payload(lesson: Lesson?) {
 
 @Composable
 private fun Classroom(text: String?) {
+	val clipboardManager = LocalClipboardManager.current
 	Text(
 		modifier = Modifier
 			.background(MaterialTheme.colors.primary, MaterialTheme.shapes.small)
-			.padding(vertical = 5.dp, horizontal = 8.dp),
+			.padding(vertical = 5.dp, horizontal = 8.dp)
+			.clickable {
+				clipboardManager.setText(AnnotatedString(text?.uppercase().toContent()))
+			},
 		text = text?.uppercase().toContent(),
 		style = MaterialTheme.typography.caption,
 		color = MaterialTheme.colors.onPrimary
