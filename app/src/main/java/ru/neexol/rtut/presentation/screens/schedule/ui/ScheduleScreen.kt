@@ -45,17 +45,20 @@ fun ScheduleScreen(vm: ScheduleViewModel = hiltViewModel(), onLessonClick: (Less
 				dayPagerState.animateScrollToPage(vm.dayWeek.first)
 			}
 		}
-		if (!uiState.lessons.isNullOrEmpty() && !uiState.times.isNullOrEmpty()) {
-			LessonsPager(
-				lessonsPagerState,
-				uiState.lessons,
-				uiState.times,
-				weekPagerState.currentPage,
-				onLessonClick
-			)
-		} else if (uiState.isLessonsLoading) {
-			Box(Modifier.fillMaxSize()) {
-				CircularProgressIndicator(Modifier.align(Alignment.Center))
+		when {
+			uiState.isLessonsLoading -> {
+				Box(Modifier.fillMaxSize()) {
+					CircularProgressIndicator(Modifier.align(Alignment.Center))
+				}
+			}
+			uiState.lessons != null -> {
+				LessonsPager(
+					lessonsPagerState,
+					uiState.lessons,
+					uiState.times!!,
+					weekPagerState.currentPage,
+					onLessonClick
+				)
 			}
 		}
 	}

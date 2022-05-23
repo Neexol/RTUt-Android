@@ -31,7 +31,6 @@ class SettingsViewModel @Inject constructor(
 		}
 	}
 
-//	var newGroup by mutableStateOf("")
 	private var editGroupJob: Job? = null
 	fun editGroup(newGroup: String) {
 		editGroupJob?.cancel()
@@ -45,7 +44,6 @@ class SettingsViewModel @Inject constructor(
 				).collect { group ->
 					groupUiState = group.to(
 						onSuccess = {
-//							newGroup = ""
 							SettingsGroupUiState(group = it)
 						},
 						onFailure = { groupUiState.copy(isGroupLoading = false, message = it.toString()) },
