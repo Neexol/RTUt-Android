@@ -52,4 +52,6 @@
     <string name="copy">Copy</string>
     <string name="restore">Restore</string>
     <string name="about_app" tools:ignore="TypographyDashes">The application is designed as a thesis. Alexeev N.E., IKBO-12-18, RTU MIREA, 2022.</string>
+    <string name="enter_group">Enter group:</string>
+    <string name="group_pattern" translatable="false">XXXX-00-00</string>
 </resources>

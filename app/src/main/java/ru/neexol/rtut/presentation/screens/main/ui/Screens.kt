@@ -24,6 +24,7 @@ import ru.neexol.rtut.presentation.screens.map.ui.MapScreen
 import ru.neexol.rtut.presentation.screens.notes.NotesViewModel
 import ru.neexol.rtut.presentation.screens.notes.ui.NotesScreen
 import ru.neexol.rtut.presentation.screens.schedule.ui.ScheduleScreen
+import ru.neexol.rtut.presentation.screens.settings.SettingsViewModel
 import ru.neexol.rtut.presentation.screens.settings.ui.SettingsScreen
 import ru.neexol.rtut.presentation.screens.teacher.ui.TeacherScreen
 
@@ -31,7 +32,11 @@ import ru.neexol.rtut.presentation.screens.teacher.ui.TeacherScreen
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 @Composable
-internal fun Screens(sheetState: ModalBottomSheetState, isSheetHidden: Boolean) {
+internal fun Screens(
+	sheetState: ModalBottomSheetState,
+	isSheetHidden: Boolean,
+	settingsVM: SettingsViewModel
+) {
 	val mainNavController = rememberNavController()
 
 	val notesVM = viewModel<NotesViewModel>()
@@ -58,7 +63,7 @@ internal fun Screens(sheetState: ModalBottomSheetState, isSheetHidden: Boolean) 
 				composable(Screen.Schedule.route) { ScheduleScreen { l, w -> showNotes(l, w) } }
 				composable(Screen.Teacher.route) { TeacherScreen() }
 				composable(Screen.Map.route) { MapScreen() }
-				composable(Screen.Settings.route) { SettingsScreen() }
+				composable(Screen.Settings.route) { SettingsScreen(settingsVM) }
 			}
 		}
 	}
