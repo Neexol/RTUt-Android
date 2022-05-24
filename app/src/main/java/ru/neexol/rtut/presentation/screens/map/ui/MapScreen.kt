@@ -23,24 +23,28 @@ fun MapScreen(vm: MapViewModel = hiltViewModel()) {
 	val coroutineScope = rememberCoroutineScope()
 
 	val uiState = vm.uiState
-	if (!uiState.maps.isNullOrEmpty()) {
-		val mapsPager = rememberSaveable(
-			uiState.classroom,
-			saver = PagerState.Saver
-		) { PagerState(vm.uiState.floor) }
+	val floorsPager = rememberSaveable(
+		uiState.classroom,
+		saver = PagerState.Saver
+	) { PagerState(vm.uiState.floor) }
 
-		Column {
-			FloorPagerBar(mapsPager, uiState.maps.indices.map(Int::toString)) {
-				coroutineScope.launch {
-					mapsPager.animateScrollToPage(uiState.floor)
+	Column {
+		val floors = (0..(uiState.maps?.lastIndex ?: 4)).map(Int::toString)
+		FloorPagerBar(floorsPager, floors) {
+			coroutineScope.launch {
+				floorsPager.animateScrollToPage(uiState.floor)
+			}
+		}
+		FindClassroomBar(vm)
+		when {
+			uiState.maps != null -> {
+				MapBrowser(uiState, floorsPager.currentPage, vm::clearMessage)
+			}
+			uiState.isMapsLoading -> {
+				Box(Modifier.fillMaxSize()) {
+					CircularProgressIndicator(Modifier.align(Alignment.Center))
 				}
 			}
-			FindClassroomBar(vm)
-			MapBrowser(uiState.maps[mapsPager.currentPage], uiState.classroom)
-		}
-	} else if (uiState.isMapsLoading) {
-		Box(Modifier.fillMaxSize()) {
-			CircularProgressIndicator(Modifier.align(Alignment.Center))
 		}
 	}
 }

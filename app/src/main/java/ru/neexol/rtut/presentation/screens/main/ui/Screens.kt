@@ -18,13 +18,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.launch
-import ru.neexol.rtut.data.lessons.models.Lesson
 import ru.neexol.rtut.presentation.screens.main.Screen
 import ru.neexol.rtut.presentation.screens.map.ui.MapScreen
 import ru.neexol.rtut.presentation.screens.notes.NotesViewModel
 import ru.neexol.rtut.presentation.screens.notes.ui.NotesScreen
 import ru.neexol.rtut.presentation.screens.schedule.ui.ScheduleScreen
-import ru.neexol.rtut.presentation.screens.settings.SettingsViewModel
 import ru.neexol.rtut.presentation.screens.settings.ui.SettingsScreen
 import ru.neexol.rtut.presentation.screens.teacher.ui.TeacherScreen
 
@@ -34,21 +32,16 @@ import ru.neexol.rtut.presentation.screens.teacher.ui.TeacherScreen
 @Composable
 internal fun Screens(
 	sheetState: ModalBottomSheetState,
-	isSheetHidden: Boolean,
-	settingsVM: SettingsViewModel
+	isSheetHidden: Boolean
 ) {
 	val mainNavController = rememberNavController()
+	val coroutineScope = rememberCoroutineScope()
 
 	val notesVM = viewModel<NotesViewModel>()
 	LaunchedEffect(isSheetHidden) {
 		if (isSheetHidden) {
 			notesVM.clearState()
 		}
-	}
-	val coroutineScope = rememberCoroutineScope()
-	val showNotes: (Lesson, String) -> Unit = { l, w ->
-		notesVM.setLesson(l, w)
-		coroutineScope.launch { sheetState.show() }
 	}
 
 	ModalBottomSheetLayout(
@@ -60,10 +53,17 @@ internal fun Screens(
 			bottomBar = { ScreensBottomBar(mainNavController) }
 		) { innerPadding ->
 			NavHost(mainNavController, Screen.Schedule.route, Modifier.padding(innerPadding)) {
-				composable(Screen.Schedule.route) { ScheduleScreen { l, w -> showNotes(l, w) } }
+				composable(Screen.Schedule.route) {
+					ScheduleScreen(
+						onLessonClick = { l, w ->
+							notesVM.setLesson(l, w)
+							coroutineScope.launch { sheetState.show() }
+						}
+					)
+				}
 				composable(Screen.Teacher.route) { TeacherScreen() }
 				composable(Screen.Map.route) { MapScreen() }
-				composable(Screen.Settings.route) { SettingsScreen(settingsVM) }
+				composable(Screen.Settings.route) { SettingsScreen() }
 			}
 		}
 	}

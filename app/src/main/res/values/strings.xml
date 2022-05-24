@@ -54,4 +54,19 @@
     <string name="about_app" tools:ignore="TypographyDashes">The application is designed as a thesis. Alexeev N.E., IKBO-12-18, RTU MIREA, 2022.</string>
     <string name="enter_group">Enter group:</string>
     <string name="group_pattern" translatable="false">XXXX-00-00</string>
+    <string name="fail_connection">Failed to load data</string>
+    <string name="fail_search">The search was empty</string>
+    <string name="no_lessons_today">No lessons today</string>
+    <string name="search_holder_label">The search results will be here</string>
+    <string name="military_training">Military training</string>
+    <string name="classroom_not_found">Classroom not found</string>
+    <string name="group_not_found">Group not found</string>
+    <string name="group_changed">Group changed</string>
+    <string name="identifier_not_found">Identifier not found</string>
+    <string name="identifier_changed">Identifier changed</string>
+    <string name="connection_error">Connection error</string>
+    <string name="clipboard_empty">Clipboard empty</string>
+    <string name="classroom_copied">Classroom copied</string>
+    <string name="incorrect_group">Invalid group format</string>
+    <string name="conflict_note_error">Can\'t create more than one note of this type</string>
 </resources>

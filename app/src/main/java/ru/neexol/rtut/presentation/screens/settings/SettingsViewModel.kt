@@ -1,5 +1,6 @@
 package ru.neexol.rtut.presentation.screens.settings
 
+import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,12 +9,15 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import ru.neexol.rtut.R
 import ru.neexol.rtut.data.lessons.LessonsRepository
 import ru.neexol.rtut.data.notes.NotesRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
+	private val app: Application,
 	private val lessonsRepo: LessonsRepository,
 	private val notesRepo: NotesRepository
 ) : ViewModel() {
@@ -31,7 +35,6 @@ class SettingsViewModel @Inject constructor(
 		}
 	}
 
-//	var newGroup by mutableStateOf("")
 	private var editGroupJob: Job? = null
 	fun editGroup(newGroup: String) {
 		editGroupJob?.cancel()
@@ -45,15 +48,32 @@ class SettingsViewModel @Inject constructor(
 				).collect { group ->
 					groupUiState = group.to(
 						onSuccess = {
-//							newGroup = ""
-							SettingsGroupUiState(group = it)
+							SettingsGroupUiState(
+								group = it,
+								message = app.getString(R.string.group_changed)
+							)
 						},
-						onFailure = { groupUiState.copy(isGroupLoading = false, message = it.toString()) },
+						onFailure = {
+							val msg = app.applicationContext.getString(
+								if (it is HttpException && it.code() == 404) {
+									R.string.group_not_found
+								} else {
+									R.string.connection_error
+								}
+							)
+							groupUiState.copy(isGroupLoading = false, message = msg)
+						},
 						onLoading = { groupUiState.copy(isGroupLoading = true) }
 					)
 				}
+			} else {
+				groupUiState = groupUiState.copy(message = app.getString(R.string.incorrect_group))
 			}
 		}
+	}
+
+	fun clearGroupMessage() {
+		groupUiState = groupUiState.copy(message = null)
 	}
 
 	var authorUiState by mutableStateOf(SettingsAuthorUiState())
@@ -67,7 +87,12 @@ class SettingsViewModel @Inject constructor(
 			notesRepo.getAuthor().collect { author ->
 				authorUiState = author.to(
 					onSuccess = { SettingsAuthorUiState(author = it) },
-					onFailure = { authorUiState.copy(isAuthorLoading = false, message = it.toString()) },
+					onFailure = {
+						authorUiState.copy(
+							isAuthorLoading = false,
+							message = app.getString(R.string.connection_error)
+						)
+					},
 					onLoading = { authorUiState.copy(isAuthorLoading = true) }
 				)
 			}
@@ -81,14 +106,32 @@ class SettingsViewModel @Inject constructor(
 			editAuthorJob = viewModelScope.launch {
 				notesRepo.editAuthor(newAuthor).collect { author ->
 					authorUiState = author.to(
-						onSuccess = { SettingsAuthorUiState(author = it) },
-						onFailure = { authorUiState.copy(isAuthorLoading = false, message = it.toString()) },
+						onSuccess = {
+							SettingsAuthorUiState(
+								author = it,
+								message = app.getString(R.string.identifier_changed)
+							)
+						},
+						onFailure = {
+							val msg = app.getString(
+								if (it is HttpException && it.code() == 404) {
+									R.string.identifier_not_found
+								} else {
+									R.string.connection_error
+								}
+							)
+							authorUiState.copy(isAuthorLoading = false, message = msg)
+						},
 						onLoading = { authorUiState.copy(isAuthorLoading = true) }
 					)
 				}
 			}
 		} else {
-			authorUiState = authorUiState.copy(message = "Ваш буфер обмена пуст")
+			authorUiState = authorUiState.copy(message = app.getString(R.string.clipboard_empty))
 		}
+	}
+
+	fun clearAuthorMessage() {
+		authorUiState = authorUiState.copy(message = null)
 	}
 }

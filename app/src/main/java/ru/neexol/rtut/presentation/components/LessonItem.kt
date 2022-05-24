@@ -13,16 +13,23 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import ru.neexol.rtut.data.lessons.models.Lesson
 import ru.neexol.rtut.data.lessons.models.LessonTime
 
 @Composable
-fun LessonItem(lesson: Lesson?, time: LessonTime, onClick: (() -> Unit)? = null) {
+fun LessonItem(
+	lesson: Lesson?,
+	time: LessonTime,
+	onClassroomCopy: () -> Unit,
+	onLessonClick: (() -> Unit)? = null
+) {
 	val surfaceModifier = if (lesson == null) {
 		Modifier.alpha(ContentAlpha.disabled)
 	} else {
-		onClick?.let {
+		onLessonClick?.let {
 			Modifier.clickable { it() }
 		} ?: Modifier
 	}
@@ -33,7 +40,7 @@ fun LessonItem(lesson: Lesson?, time: LessonTime, onClick: (() -> Unit)? = null)
 		Row(Modifier.padding(16.dp)) {
 			Time(time)
 			Payload(lesson)
-			Classroom(lesson?.classroom)
+			Classroom(lesson?.classroom, onClassroomCopy)
 		}
 	}
 }
@@ -76,11 +83,16 @@ private fun RowScope.Payload(lesson: Lesson?) {
 }
 
 @Composable
-private fun Classroom(text: String?) {
+private fun Classroom(text: String?, onClassroomCopy: () -> Unit,) {
+	val clipboardManager = LocalClipboardManager.current
 	Text(
 		modifier = Modifier
 			.background(MaterialTheme.colors.primary, MaterialTheme.shapes.small)
-			.padding(vertical = 5.dp, horizontal = 8.dp),
+			.padding(vertical = 5.dp, horizontal = 8.dp)
+			.clickable {
+				clipboardManager.setText(AnnotatedString(text?.uppercase().toContent()))
+				onClassroomCopy()
+			},
 		text = text?.uppercase().toContent(),
 		style = MaterialTheme.typography.caption,
 		color = MaterialTheme.colors.onPrimary
