@@ -1,9 +1,5 @@
 package ru.neexol.rtut.presentation.screens.main.ui
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
@@ -20,7 +16,7 @@ import ru.neexol.rtut.R
 import ru.neexol.rtut.presentation.components.GroupTextField
 
 @Composable
-fun InitialScreen(onNewGroup: ((String) -> Unit)?) {
+fun InitialGroupChoose(onNewGroup: ((String) -> Unit)) {
 	Surface {
 		Box(
 			modifier = Modifier
@@ -29,9 +25,7 @@ fun InitialScreen(onNewGroup: ((String) -> Unit)?) {
 			contentAlignment = Alignment.Center
 		) {
 			Column(
-				modifier = Modifier
-					.fillMaxWidth()
-					.animateContentSize(),
+				modifier = Modifier.fillMaxWidth(),
 				horizontalAlignment = Alignment.CenterHorizontally
 			) {
 				Icon(
@@ -40,18 +34,9 @@ fun InitialScreen(onNewGroup: ((String) -> Unit)?) {
 					painter = painterResource(R.drawable.ic_launcher_foreground),
 					contentDescription = null
 				)
-				AnimatedVisibility(
-					visible = onNewGroup != null,
-					enter = fadeIn(tween(1000))
-				) {
-					Column(
-						horizontalAlignment = Alignment.CenterHorizontally,
-						verticalArrangement = Arrangement.spacedBy(16.dp)
-					) {
-						Text(stringResource(R.string.enter_group))
-						GroupTextField(stringResource(R.string.group_pattern), onNewGroup!!)
-					}
-				}
+				Text(stringResource(R.string.enter_group))
+				Spacer(Modifier.size(16.dp))
+				GroupTextField(stringResource(R.string.group_pattern), onNewGroup)
 			}
 		}
 	}
