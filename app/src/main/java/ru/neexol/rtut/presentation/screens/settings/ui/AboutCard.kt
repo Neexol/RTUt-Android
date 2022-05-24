@@ -19,7 +19,7 @@ import ru.neexol.rtut.R
 import ru.neexol.rtut.core.Constants
 
 val mailIntent = Intent(Intent.ACTION_SENDTO, "mailto:".toUri()).apply {
-	putExtra(Intent.EXTRA_EMAIL, Constants.MAIL_ADDRESS)
+	putExtra(Intent.EXTRA_EMAIL, arrayOf(Constants.MAIL_ADDRESS))
 }
 val telegramIntent = Intent(Intent.ACTION_VIEW, Constants.TELEGRAM_URL.toUri())
 val githubIntent = Intent(Intent.ACTION_VIEW, Constants.GITHUB_URL.toUri())

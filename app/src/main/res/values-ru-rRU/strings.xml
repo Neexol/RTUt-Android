@@ -41,4 +41,13 @@
     <string name="no_lessons_today">Сегодня нет занятий</string>
     <string name="search_holder_label">Здесь будут результаты поиска</string>
     <string name="military_training">Военная подготовка</string>
+    <string name="classroom_not_found">Аудитория не найдена</string>
+    <string name="group_not_found">Группа не найдена</string>
+    <string name="group_changed">Группа успешно изменена</string>
+    <string name="identifier_not_found">Идентификатор не найден</string>
+    <string name="identifier_changed">Идентификатор успешно изменен</string>
+    <string name="connection_error">Ошибка соединения</string>
+    <string name="clipboard_empty">Буфер обмена пуст</string>
+    <string name="classroom_copied">Аудитория скопирована</string>
+    <string name="incorrect_group">Неверный формат группы</string>
 </resources>

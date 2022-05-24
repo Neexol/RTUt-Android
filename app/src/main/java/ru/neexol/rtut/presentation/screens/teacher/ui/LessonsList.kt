@@ -21,7 +21,8 @@ import ru.neexol.rtut.presentation.screens.teacher.TeacherUiState
 @Composable
 internal fun LessonsList(
 	uiState: TeacherUiState,
-	week: Int
+	week: Int,
+	onClassroomCopy: () -> Unit
 ) {
 	when {
 		uiState.isLessonsLoading -> {
@@ -60,7 +61,11 @@ internal fun LessonsList(
 							)
 						}
 						items(dayLessons) { lesson ->
-							LessonItem(lesson, uiState.times!![lesson.number])
+							LessonItem(
+								lesson = lesson,
+								time = uiState.times!![lesson.number],
+								onClassroomCopy = onClassroomCopy
+							)
 						}
 					}
 				}

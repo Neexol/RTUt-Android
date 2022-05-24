@@ -28,7 +28,7 @@ fun MainScreen() {
 		Crossfade(vm.groupUiState.group) { group ->
 			when (group?.isEmpty()) {
 				null -> {}
-				true -> InitialGroupChoose(vm::editGroup)
+				true -> InitialGroupChoose(vm)
 				else -> {
 					val sheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 					val isSheetHidden by remember {
@@ -37,7 +37,7 @@ fun MainScreen() {
 
 					Column(Modifier.navigationBarsPadding()) {
 						StatusBar(!isSheetHidden)
-						Screens(sheetState, isSheetHidden, vm)
+						Screens(sheetState, isSheetHidden)
 					}
 				}
 			}

@@ -26,7 +26,8 @@ internal fun LessonsPager(
 	lessons: List<List<List<Lesson?>>>,
 	times: List<LessonTime>,
 	week: Int,
-	onLessonClick: (Lesson, String) -> Unit
+	onLessonClick: (Lesson, String) -> Unit,
+	onClassroomCopy: () -> Unit
 ) {
 	HorizontalPager(
 		state = state,
@@ -54,7 +55,14 @@ internal fun LessonsPager(
 					verticalArrangement = Arrangement.spacedBy(14.dp),
 				) {
 					itemsIndexed(dayLessons) { number, lesson ->
-						LessonItem(lesson, times[number]) { onLessonClick(lesson!!, (week + 1).toString()) }
+						LessonItem(
+							lesson = lesson,
+							time = times[number],
+							onClassroomCopy = onClassroomCopy,
+							onLessonClick = {
+								onLessonClick(lesson!!, (week + 1).toString())
+							}
+						)
 					}
 				}
 			}

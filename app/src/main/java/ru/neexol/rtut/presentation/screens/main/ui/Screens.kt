@@ -23,7 +23,6 @@ import ru.neexol.rtut.presentation.screens.map.ui.MapScreen
 import ru.neexol.rtut.presentation.screens.notes.NotesViewModel
 import ru.neexol.rtut.presentation.screens.notes.ui.NotesScreen
 import ru.neexol.rtut.presentation.screens.schedule.ui.ScheduleScreen
-import ru.neexol.rtut.presentation.screens.settings.SettingsViewModel
 import ru.neexol.rtut.presentation.screens.settings.ui.SettingsScreen
 import ru.neexol.rtut.presentation.screens.teacher.ui.TeacherScreen
 
@@ -33,8 +32,7 @@ import ru.neexol.rtut.presentation.screens.teacher.ui.TeacherScreen
 @Composable
 internal fun Screens(
 	sheetState: ModalBottomSheetState,
-	isSheetHidden: Boolean,
-	settingsVM: SettingsViewModel
+	isSheetHidden: Boolean
 ) {
 	val mainNavController = rememberNavController()
 	val coroutineScope = rememberCoroutineScope()
@@ -65,7 +63,7 @@ internal fun Screens(
 				}
 				composable(Screen.Teacher.route) { TeacherScreen() }
 				composable(Screen.Map.route) { MapScreen() }
-				composable(Screen.Settings.route) { SettingsScreen(settingsVM) }
+				composable(Screen.Settings.route) { SettingsScreen() }
 			}
 		}
 	}

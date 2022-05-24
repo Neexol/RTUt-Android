@@ -91,6 +91,7 @@ class NotesViewModel @Inject constructor(
 				if (isAllWeeks) lesson!!.weeks.joinToString(" ") else week,
 				if (isPublicType) NoteType.PUBLIC else NoteType.PRIVATE
 			).collect {
+				clearState()
 				fetchNotes()
 			}
 		}

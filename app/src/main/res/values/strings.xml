@@ -59,4 +59,13 @@
     <string name="no_lessons_today">No lessons today</string>
     <string name="search_holder_label">The search results will be here</string>
     <string name="military_training">Military training</string>
+    <string name="classroom_not_found">Classroom not found</string>
+    <string name="group_not_found">Group not found</string>
+    <string name="group_changed">Group changed</string>
+    <string name="identifier_not_found">Identifier not found</string>
+    <string name="identifier_changed">Identifier changed</string>
+    <string name="connection_error">Connection error</string>
+    <string name="clipboard_empty">Clipboard empty</string>
+    <string name="classroom_copied">Classroom copied</string>
+    <string name="incorrect_group">Invalid group format</string>
 </resources>
