@@ -25,75 +25,77 @@ import ru.neexol.rtut.data.notes.models.Note
 
 @Composable
 internal fun NotesList(notes: List<Note>, author: String, navController: NavController) {
-	if (notes.isEmpty()) {
-		val color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium)
-		Box(
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(vertical = 10.dp)
-				.border(BorderStroke(1.dp, color), RoundedCornerShape(5.dp)),
-		) {
-			Text(
-				modifier = Modifier.padding(14.dp),
-				text = stringResource(R.string.no_notes),
-				color = color
-			)
-		}
-	} else {
-		LazyColumn(
-			modifier = Modifier.clip(RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp)),
-			contentPadding = PaddingValues(vertical = 10.dp),
-			verticalArrangement = Arrangement.spacedBy(10.dp)
-		) {
-			items(notes) { note ->
-				val canEdit = author == note.authorId
-				val surfaceModifier = if (canEdit) {
-					Modifier.clickable {
-						navController.navigate("edit?note=" + Json.encodeToString(note))
-					}
-				} else Modifier
+	Box(Modifier.padding(horizontal = 20.dp)) {
+		if (notes.isEmpty()) {
+			val color = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium)
+			Box(
+				modifier = Modifier
+					.fillMaxWidth()
+					.padding(vertical = 10.dp)
+					.border(BorderStroke(1.dp, color), RoundedCornerShape(5.dp)),
+			) {
+				Text(
+					modifier = Modifier.padding(14.dp),
+					text = stringResource(R.string.no_notes),
+					color = color
+				)
+			}
+		} else {
+			LazyColumn(
+				modifier = Modifier.clip(RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp)),
+				contentPadding = PaddingValues(vertical = 10.dp),
+				verticalArrangement = Arrangement.spacedBy(10.dp)
+			) {
+				items(notes) { note ->
+					val canEdit = author == note.authorId
+					val surfaceModifier = if (canEdit) {
+						Modifier.clickable {
+							navController.navigate("edit?note=" + Json.encodeToString(note))
+						}
+					} else Modifier
 
-				Surface(
-					modifier = surfaceModifier.fillMaxWidth(),
-					color = MaterialTheme.colors.primaryVariant,
-					shape = RoundedCornerShape(5.dp),
-				) {
-					val borderColor = MaterialTheme.colors.primary
-					Row(
-						modifier = Modifier.drawWithContent {
-							drawContent()
-							drawRect(
-								color = borderColor,
-								size = Size(4.dp.toPx(), size.height)
-							)
-						},
-						verticalAlignment = Alignment.CenterVertically
+					Surface(
+						modifier = surfaceModifier.fillMaxWidth(),
+						color = MaterialTheme.colors.primaryVariant,
+						shape = RoundedCornerShape(5.dp),
 					) {
-						Text(
-							modifier = Modifier
-								.padding(14.dp)
-								.weight(1f),
-							text = note.text,
-							color = MaterialTheme.colors.onSurface
-						)
-						Column(Modifier.padding(10.dp)) {
-							val isAllWeeks = note.weeks.contains(' ')
-							if (isAllWeeks) {
-								Icon(
-									painter = painterResource(R.drawable.ic_all_weeks_note_24),
-									contentDescription = null,
-									tint = MaterialTheme.colors.primary
+						val borderColor = MaterialTheme.colors.primary
+						Row(
+							modifier = Modifier.drawWithContent {
+								drawContent()
+								drawRect(
+									color = borderColor,
+									size = Size(4.dp.toPx(), size.height)
 								)
-							}
-							if (canEdit) {
+							},
+							verticalAlignment = Alignment.CenterVertically
+						) {
+							Text(
+								modifier = Modifier
+									.padding(14.dp)
+									.weight(1f),
+								text = note.text,
+								color = MaterialTheme.colors.onSurface
+							)
+							Column(Modifier.padding(10.dp)) {
+								val isAllWeeks = note.weeks.contains(' ')
 								if (isAllWeeks) {
-									Spacer(Modifier.size(10.dp))
+									Icon(
+										painter = painterResource(R.drawable.ic_all_weeks_note_24),
+										contentDescription = null,
+										tint = MaterialTheme.colors.primary
+									)
 								}
-								Icon(
-									painter = painterResource(R.drawable.ic_can_edit_note_24),
-									contentDescription = null,
-									tint = MaterialTheme.colors.primary
-								)
+								if (canEdit) {
+									if (isAllWeeks) {
+										Spacer(Modifier.size(10.dp))
+									}
+									Icon(
+										painter = painterResource(R.drawable.ic_can_edit_note_24),
+										contentDescription = null,
+										tint = MaterialTheme.colors.primary
+									)
+								}
 							}
 						}
 					}

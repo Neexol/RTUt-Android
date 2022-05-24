@@ -68,4 +68,5 @@
     <string name="clipboard_empty">Clipboard empty</string>
     <string name="classroom_copied">Classroom copied</string>
     <string name="incorrect_group">Invalid group format</string>
+    <string name="conflict_note_error">Can\'t create more than one note of this type</string>
 </resources>

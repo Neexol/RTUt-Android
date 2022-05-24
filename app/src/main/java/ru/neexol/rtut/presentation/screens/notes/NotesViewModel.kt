@@ -1,5 +1,6 @@
 package ru.neexol.rtut.presentation.screens.notes
 
+import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,6 +9,9 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import ru.neexol.rtut.R
+import ru.neexol.rtut.core.Resource
 import ru.neexol.rtut.data.lessons.models.Lesson
 import ru.neexol.rtut.data.notes.NotesRepository
 import ru.neexol.rtut.data.notes.models.Note
@@ -16,6 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NotesViewModel @Inject constructor(
+	private val app: Application,
 	private val repo: NotesRepository
 ) : ViewModel() {
 	var lesson: Lesson? = null
@@ -40,7 +45,12 @@ class NotesViewModel @Inject constructor(
 			repo.getNotes(lesson!!.id, week).collect { notes ->
 				uiState = notes.to(
 					onSuccess = { NotesUiState(notes = it) },
-					onFailure = { uiState.copy(isNotesLoading = false, message = it.toString()) },
+					onFailure = {
+						uiState.copy(
+							isNotesLoading = false,
+							message = app.getString(R.string.connection_error)
+						)
+					},
 					onLoading = { uiState.copy(isNotesLoading = true) },
 				)
 			}
@@ -63,6 +73,8 @@ class NotesViewModel @Inject constructor(
 	}
 
 	fun setNote(note: Note?) {
+		noteId = null
+		noteText = ""
 		note ?: return
 		noteId = note.id
 		noteText = note.text
@@ -90,9 +102,20 @@ class NotesViewModel @Inject constructor(
 				lesson!!.id,
 				if (isAllWeeks) lesson!!.weeks.joinToString(" ") else week,
 				if (isPublicType) NoteType.PUBLIC else NoteType.PRIVATE
-			).collect {
-				clearState()
+			).collect { resource ->
+//				clearState()
 				fetchNotes()
+				if (resource is Resource.Failure) {
+					uiState = uiState.copy(
+						message = app.getString(
+							if (resource.cause is HttpException && resource.cause.code() == 409) {
+								R.string.conflict_note_error
+							} else {
+								R.string.connection_error
+							}
+						)
+					)
+				}
 			}
 		}
 	}
@@ -101,9 +124,20 @@ class NotesViewModel @Inject constructor(
 	fun deleteNote() {
 		deleteNoteJob?.cancel()
 		deleteNoteJob = viewModelScope.launch {
-			repo.deleteNote(noteId!!).collect {
-				clearState()
+			repo.deleteNote(noteId!!).collect { resource ->
+//				clearState()
 				fetchNotes()
+				if (resource is Resource.Failure) {
+					uiState = uiState.copy(
+						message = app.getString(
+							if (resource.cause is HttpException && resource.cause.code() == 409) {
+								R.string.conflict_note_error
+							} else {
+								R.string.connection_error
+							}
+						)
+					)
+				}
 			}
 		}
 	}
@@ -112,5 +146,9 @@ class NotesViewModel @Inject constructor(
 		uiState = NotesUiState()
 		noteId = null
 		noteText = ""
+	}
+
+	fun clearMessage() {
+		uiState = uiState.copy(message = null)
 	}
 }

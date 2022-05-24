@@ -50,4 +50,5 @@
     <string name="clipboard_empty">Буфер обмена пуст</string>
     <string name="classroom_copied">Аудитория скопирована</string>
     <string name="incorrect_group">Неверный формат группы</string>
+    <string name="conflict_note_error">Невозможно создать больше одной заметки такого типа</string>
 </resources>

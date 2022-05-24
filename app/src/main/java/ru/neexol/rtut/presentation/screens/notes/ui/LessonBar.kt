@@ -29,8 +29,9 @@ internal fun LessonBar(
 ) {
 	Row(
 		modifier = Modifier
-			.padding(vertical = 10.dp)
-			.padding(top = 10.dp)
+			.padding(horizontal = 20.dp)
+			.padding(top = 20.dp)
+			.padding(bottom = 10.dp)
 			.height(58.dp),
 		verticalAlignment = Alignment.CenterVertically
 	) {
