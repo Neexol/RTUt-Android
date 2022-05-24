@@ -13,13 +13,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.launch
 import ru.neexol.rtut.R
 import ru.neexol.rtut.data.lessons.models.Lesson
+import ru.neexol.rtut.presentation.components.scrollingPair
+import ru.neexol.rtut.presentation.components.syncScroll
 import ru.neexol.rtut.presentation.screens.schedule.ScheduleViewModel
-import java.math.BigDecimal
 
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
@@ -93,24 +93,3 @@ fun ScheduleScreen(vm: ScheduleViewModel = hiltViewModel(), onLessonClick: (Less
 	}
 }
 
-@ExperimentalPagerApi
-private fun scrollingPair(state1: PagerState, state2: PagerState) = when {
-	state1.isScrollInProgress -> state1 to state2
-	state2.isScrollInProgress -> state2 to state1
-	else -> null
-}
-
-@ExperimentalPagerApi
-private suspend fun syncScroll(pair: Pair<PagerState, PagerState>?) {
-	val (scrollingState, followingState) = pair ?: return
-	snapshotFlow { scrollingState.currentPage + scrollingState.currentPageOffset }
-		.collect { pagePart ->
-			val divideAndRemainder = BigDecimal.valueOf(pagePart.toDouble())
-				.divideAndRemainder(BigDecimal.ONE)
-
-			followingState.scrollToPage(
-				divideAndRemainder[0].toInt(),
-				divideAndRemainder[1].toFloat(),
-			)
-		}
-}

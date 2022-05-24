@@ -34,7 +34,6 @@ internal fun LessonsPager(
 		count = 6
 	) { day ->
 		val dayLessons = lessons[week][day]
-		println(dayLessons)
 		when {
 			dayLessons.isEmpty() -> {
 				ImagePlaceholder(
